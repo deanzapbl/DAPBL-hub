@@ -316,6 +316,21 @@ textarea{resize:vertical;min-height:120px;}
 .prof-name{font-size:17px;font-weight:700;}
 .prof-role{font-size:10px;color:var(--t3);margin-top:3px;letter-spacing:.5px;text-transform:uppercase;}
 .empty{text-align:center;padding:30px 20px;color:var(--t4);font-size:11px;}
+/* ── NESTED BUDGET TABS ─────────────────────────────────────────────────── */
+.bud-acct-tabs{display:flex;gap:4px;margin-bottom:14px;background:var(--s2);padding:4px;border-radius:7px;border:1px solid var(--bd);}
+.bud-acct-tab{flex:1;text-align:center;padding:7px 10px;font-size:11.5px;font-weight:600;border-radius:5px;cursor:pointer;color:var(--t3);font-family:'IBM Plex Sans',sans-serif;transition:all .12s;user-select:none;}
+.bud-acct-tab.active{background:#F7F5F2;color:var(--t1);box-shadow:0 1px 3px rgba(0,0,0,.08);}
+.bud-acct-panel{display:none;}.bud-acct-panel.active{display:block;}
+.bud-sub-tabs{display:flex;gap:3px;margin-bottom:12px;flex-wrap:wrap;}
+.bud-sub-tab{padding:5px 12px;font-size:10.5px;font-weight:600;border-radius:4px;cursor:pointer;color:var(--t3);font-family:'IBM Plex Sans',sans-serif;transition:all .12s;user-select:none;border:1px solid transparent;}
+.bud-sub-tab.active{color:var(--cr);border-color:var(--cr);background:rgba(139,26,26,.06);}
+.bud-sub-panel{display:none;}.bud-sub-panel.active{display:block;}
+.pbl-balance-card{background:linear-gradient(135deg,var(--cr),var(--cr3));color:#fff;border-radius:9px;padding:16px 20px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;}
+.pbl-bal-label{font-size:10px;text-transform:uppercase;letter-spacing:1px;opacity:.8;margin-bottom:4px;}
+.pbl-bal-amount{font-size:28px;font-weight:700;letter-spacing:-.5px;}
+.imp-tab{flex:1;padding:6px 10px;font-size:11px;font-weight:600;border-radius:5px;cursor:pointer;background:transparent;border:none;color:var(--t3);font-family:'IBM Plex Sans',sans-serif;transition:background .15s,color .15s;}
+.imp-tab.active{background:var(--bg);color:var(--t1);box-shadow:0 1px 3px rgba(0,0,0,.08);}
+.imp-tab:hover:not(.active){background:var(--s3);color:var(--t2);}
 </style>
 </head>
 <body>
@@ -453,7 +468,7 @@ textarea{resize:vertical;min-height:120px;}
     </div>
     <div class="nav-group">
       <div class="ngl">Chapter</div>
-      <div class="ni" onclick="showPage('budget')">
+      <div class="ni" onclick="showPage('portal-finance');setTimeout(()=>{showTab('portal-finance','budget');initFinBudget();},50)">
         <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="4" width="12" height="9" rx="1"/><path d="M2 7h12M6 4V3M10 4V3"/></svg>Budget
       </div>
       <div class="ni" onclick="showPage('recruitment')">
@@ -493,6 +508,15 @@ textarea{resize:vertical;min-height:120px;}
 
       <!-- CALENDAR -->
       <div class="page" id="page-calendar">
+        <div class="card" style="margin-bottom:12px">
+          <div class="ch"><div class="ct">Google Calendar Import</div><div id="ical-status" style="font-size:10px;color:var(--grn)"></div></div>
+          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+            <input id="ical-url" type="text" placeholder="Paste public Google Calendar iCal URL (ends in .ics)..." style="flex:1;min-width:200px;background:var(--s2);border:1px solid var(--bd);border-radius:5px;padding:7px 10px;font-size:11px;font-family:'IBM Plex Mono',monospace;color:var(--t1);outline:none">
+            <button class="btn btn-p btn-sm" onclick="importIcal()">Import</button>
+            <button class="btn btn-g btn-sm" onclick="clearImportedCal()">Clear</button>
+          </div>
+          <div style="font-size:10px;color:var(--t3);margin-top:6px;line-height:1.5">Calendar must be set to <strong>public</strong> in Google Calendar settings. In Google Calendar: Settings → your calendar → Access permissions → Make available to public. Then copy the <strong>iCal address</strong> link.</div>
+        </div>
         <div class="card">
           <div class="cal-nav">
             <button onclick="calPrev()">&#8249;</button>
@@ -555,7 +579,7 @@ textarea{resize:vertical;min-height:120px;}
           <div class="sc"><div class="sl">Best Session</div><div class="sv"><span class="sa">92%</span></div><div class="sm">SBLC Prep Final</div></div>
         </div>
         <div class="card">
-          <div class="ch"><div class="ct">Member Roster</div><div style="display:flex;gap:6px"><button class="btn btn-g btn-sm" onclick="exportMembersCSV()">Export CSV</button><button class="btn-csv" onclick="triggerCsv('members')">Import CSV</button><button class="btn btn-p btn-sm" onclick="openModal('member-modal')">+ Add Member</button></div></div>
+          <div class="ch"><div class="ct">Member Roster</div><div style="display:flex;gap:6px"><button class="btn btn-g btn-sm" onclick="exportMembersCSV()">Export CSV</button><button class="btn-csv" onclick="openImportDataModal('members')">Import CSV</button><button class="btn btn-p btn-sm" onclick="openModal('member-modal')">+ Add Member</button></div></div>
           <div id="member-list"></div>
         </div>
       </div>
@@ -563,7 +587,7 @@ textarea{resize:vertical;min-height:120px;}
       <!-- EXEC -->
       <div class="page" id="page-exec">
         <div class="card">
-          <div class="ch"><div class="ct">Executive Board</div><div style="display:flex;gap:6px"><button class="btn-csv" onclick="triggerCsv('exec')">Import CSV</button><button class="btn btn-p btn-sm" onclick="openModal('exec-modal')">+ Add Exec</button></div></div>
+          <div class="ch"><div class="ct">Executive Board</div><div style="display:flex;gap:6px"><button class="btn-csv" onclick="openImportDataModal('exec')">Import CSV</button><button class="btn btn-p btn-sm" onclick="openModal('exec-modal')">+ Add Exec</button></div></div>
           <div id="exec-list"></div>
         </div>
       </div>
@@ -578,7 +602,7 @@ textarea{resize:vertical;min-height:120px;}
         </div>
         <div class="g2">
           <div class="card">
-            <div class="ch"><div class="ct">Mentor Pairs</div><div style="display:flex;gap:6px"><button class="btn-csv" onclick="triggerCsv('mentors')">Import CSV</button><button class="btn btn-p btn-sm" onclick="addMentorPair()">+ New Pair</button></div></div>
+            <div class="ch"><div class="ct">Mentor Pairs</div><div style="display:flex;gap:6px"><button class="btn-csv" onclick="openImportDataModal('mentors')">Import CSV</button><button class="btn btn-p btn-sm" onclick="addMentorPair()">+ New Pair</button></div></div>
             <table><thead><tr><th>Mentor</th><th>Mentee</th><th>Check-ins</th><th>Goal</th><th>Status</th></tr></thead>
             <tbody id="mentor-table"></tbody></table>
           </div>
@@ -592,7 +616,7 @@ textarea{resize:vertical;min-height:120px;}
       <!-- BOOTCAMPS -->
       <div class="page" id="page-bootcamps">
         <div class="card">
-          <div class="ch"><div class="ct">Bootcamp Sessions</div><div style="display:flex;gap:6px"><button class="btn-csv" onclick="triggerCsv('bootcamps')">Import CSV</button><button class="btn btn-p btn-sm" onclick="openModal('bc-modal')">+ New Session</button></div></div>
+          <div class="ch"><div class="ct">Bootcamp Sessions</div><div style="display:flex;gap:6px"><button class="btn-csv" onclick="openImportDataModal('bootcamps')">Import CSV</button><button class="btn btn-p btn-sm" onclick="openModal('bc-modal')">+ New Session</button></div></div>
           <table><thead><tr><th>Session</th><th>Date</th><th>Topic</th><th>Attended</th><th>Rate</th><th>Drive Files</th></tr></thead>
           <tbody id="bc-table"></tbody></table>
         </div>
@@ -610,13 +634,13 @@ textarea{resize:vertical;min-height:120px;}
           <div class="tab" onclick="showTab('tasks','agendas')">Agendas</div>
         </div>
         <div class="sub active" id="tasks-ebod">
-          <div class="card"><div class="ch"><div class="ct">EBOD Task Board</div><div style="display:flex;gap:6px"><button class="btn-csv" onclick="triggerCsv('ebod')">Import CSV</button><button class="btn btn-p btn-sm" onclick="openTaskModal('ebod')">+ Add Task</button></div></div><div id="ebod-tasks"></div></div>
+          <div class="card"><div class="ch"><div class="ct">EBOD Task Board</div><div style="display:flex;gap:6px"><button class="btn-csv" onclick="openImportDataModal('ebod')">Import CSV</button><button class="btn btn-p btn-sm" onclick="openTaskModal('ebod')">+ Add Task</button></div></div><div id="ebod-tasks"></div></div>
         </div>
         <div class="sub" id="tasks-general">
-          <div class="card"><div class="ch"><div class="ct">General Tasks</div><div style="display:flex;gap:6px"><button class="btn-csv" onclick="triggerCsv('general')">Import CSV</button><button class="btn btn-p btn-sm" onclick="openTaskModal('general')">+ Add Task</button></div></div><div id="general-tasks"></div></div>
+          <div class="card"><div class="ch"><div class="ct">General Tasks</div><div style="display:flex;gap:6px"><button class="btn-csv" onclick="openImportDataModal('general')">Import CSV</button><button class="btn btn-p btn-sm" onclick="openTaskModal('general')">+ Add Task</button></div></div><div id="general-tasks"></div></div>
         </div>
         <div class="sub" id="tasks-agendas">
-          <div class="card"><div class="ch"><div class="ct">Meeting Agendas</div><div style="display:flex;gap:6px"><button class="btn-csv" onclick="triggerCsv('agendas')">Import CSV</button><button class="btn btn-p btn-sm" onclick="openModal('ag-modal')">+ New Agenda</button></div></div>
+          <div class="card"><div class="ch"><div class="ct">Meeting Agendas</div><div style="display:flex;gap:6px"><button class="btn-csv" onclick="openImportDataModal('agendas')">Import CSV</button><button class="btn btn-p btn-sm" onclick="openModal('ag-modal')">+ New Agenda</button></div></div>
             <table><thead><tr><th>Meeting</th><th>Date</th><th>Items</th><th>Status</th><th>Drive Files</th><th>Print</th></tr></thead><tbody id="ag-table"></tbody></table>
           </div>
         </div>
@@ -672,13 +696,13 @@ textarea{resize:vertical;min-height:120px;}
         </div>
         <div class="sub active" id="sponsors-active">
           <div class="card">
-            <div class="ch"><div class="ct">Confirmed Sponsors</div><div style="display:flex;gap:6px"><button class="btn-csv" onclick="triggerCsv('sponsors')">Import CSV</button><button class="btn btn-p btn-sm" onclick="addSponsor()">+ Add Sponsor</button></div></div>
+            <div class="ch"><div class="ct">Confirmed Sponsors</div><div style="display:flex;gap:6px"><button class="btn-csv" onclick="openImportDataModal('sponsors')">Import CSV</button><button class="btn btn-p btn-sm" onclick="addSponsor()">+ Add Sponsor</button></div></div>
             <div id="sponsor-active-list"></div>
           </div>
         </div>
         <div class="sub" id="sponsors-pipeline">
           <div class="card">
-            <div class="ch"><div class="ct">Pipeline</div><div style="display:flex;gap:6px"><button class="btn-csv" onclick="triggerCsv('pipeline')">Import CSV</button><button class="btn btn-p btn-sm" onclick="addPipelineLead()">+ Add Lead</button></div></div>
+            <div class="ch"><div class="ct">Pipeline</div><div style="display:flex;gap:6px"><button class="btn-csv" onclick="openImportDataModal('pipeline')">Import CSV</button><button class="btn btn-p btn-sm" onclick="addPipelineLead()">+ Add Lead</button></div></div>
             <table><thead><tr><th>Company</th><th>Ask</th><th>Stage</th><th>Next Step</th></tr></thead><tbody id="pipeline-list"></tbody></table>
           </div>
         </div>
@@ -702,13 +726,13 @@ textarea{resize:vertical;min-height:120px;}
         </div>
         <div class="sub active" id="consulting-projects">
           <div class="card">
-            <div class="ch"><div class="ct">Active &amp; Past Projects</div><div style="display:flex;gap:6px"><button class="btn-csv" onclick="triggerCsv('consulting')">Import CSV</button><button class="btn btn-p btn-sm" onclick="addConsultingProject()">+ New Project</button></div></div>
+            <div class="ch"><div class="ct">Active &amp; Past Projects</div><div style="display:flex;gap:6px"><button class="btn-csv" onclick="openImportDataModal('consulting')">Import CSV</button><button class="btn btn-p btn-sm" onclick="addConsultingProject()">+ New Project</button></div></div>
             <table><thead><tr><th>Project</th><th>Client</th><th>Lead</th><th>Start</th><th>Status</th><th>Drive</th></tr></thead><tbody id="con-projects-table"></tbody></table>
           </div>
         </div>
         <div class="sub" id="consulting-clients">
           <div class="card">
-            <div class="ch"><div class="ct">Client Directory</div><div style="display:flex;gap:6px"><button class="btn-csv" onclick="triggerCsv('clients')">Import CSV</button><button class="btn btn-p btn-sm" onclick="addClient()">+ Add Client</button></div></div>
+            <div class="ch"><div class="ct">Client Directory</div><div style="display:flex;gap:6px"><button class="btn-csv" onclick="openImportDataModal('clients')">Import CSV</button><button class="btn btn-p btn-sm" onclick="addClient()">+ Add Client</button></div></div>
             <div id="con-clients-list"></div>
           </div>
         </div>
@@ -729,7 +753,7 @@ textarea{resize:vertical;min-height:120px;}
         </div>
         <div class="sub active" id="competition-tracker">
           <div class="card">
-            <div class="ch"><div class="ct">Member Competition Results</div><div style="display:flex;gap:6px"><button class="btn-csv" onclick="triggerCsv('compresults')">Import CSV</button><button class="btn btn-p btn-sm" onclick="addCompResult()">+ Add Result</button></div></div>
+            <div class="ch"><div class="ct">Member Competition Results</div><div style="display:flex;gap:6px"><button class="btn-csv" onclick="openImportDataModal('compresults')">Import CSV</button><button class="btn btn-p btn-sm" onclick="addCompResult()">+ Add Result</button></div></div>
             <table><thead><tr><th>Member</th><th>Event</th><th>Competition</th><th>Placement</th><th>Year</th></tr></thead><tbody id="comp-results-table"></tbody></table>
           </div>
         </div>
@@ -762,13 +786,13 @@ textarea{resize:vertical;min-height:120px;}
         </div>
         <div class="sub active" id="budget-income">
           <div class="card">
-            <div class="ch"><div class="ct">Income Log</div><div style="display:flex;gap:6px"><button class="btn-csv" onclick="triggerCsv('income')">Import CSV</button><button class="btn btn-p btn-sm" onclick="addTransaction('income')">+ Add Income</button></div></div>
+            <div class="ch"><div class="ct">Income Log</div><div style="display:flex;gap:6px"><button class="btn-csv" onclick="openImportDataModal('income')">Import CSV</button><button class="btn btn-p btn-sm" onclick="addTransaction('income')">+ Add Income</button></div></div>
             <table><thead><tr><th>Description</th><th>Category</th><th>Date</th><th>Amount</th></tr></thead><tbody id="income-table"></tbody></table>
           </div>
         </div>
         <div class="sub" id="budget-expenses">
           <div class="card">
-            <div class="ch"><div class="ct">Expense Log</div><div style="display:flex;gap:6px"><button class="btn-csv" onclick="triggerCsv('expense')">Import CSV</button><button class="btn btn-p btn-sm" onclick="addTransaction('expense')">+ Add Expense</button></div></div>
+            <div class="ch"><div class="ct">Expense Log</div><div style="display:flex;gap:6px"><button class="btn-csv" onclick="openImportDataModal('expense')">Import CSV</button><button class="btn btn-p btn-sm" onclick="addTransaction('expense')">+ Add Expense</button></div></div>
             <table><thead><tr><th>Description</th><th>Category</th><th>Date</th><th>Amount</th></tr></thead><tbody id="expense-table"></tbody></table>
           </div>
         </div>
@@ -783,7 +807,7 @@ textarea{resize:vertical;min-height:120px;}
       <!-- MINUTES -->
       <div class="page" id="page-minutes">
         <div class="card">
-          <div class="ch"><div class="ct">Meeting Minutes Log</div><div style="display:flex;gap:6px"><button class="btn-csv" onclick="triggerCsv('minutes')">Import CSV</button><button class="btn btn-p btn-sm" onclick="addMinutes()">+ Add Minutes</button></div></div>
+          <div class="ch"><div class="ct">Meeting Minutes Log</div><div style="display:flex;gap:6px"><button class="btn-csv" onclick="openImportDataModal('minutes')">Import CSV</button><button class="btn btn-p btn-sm" onclick="addMinutes()">+ Add Minutes</button></div></div>
           <table><thead><tr><th>Meeting</th><th>Date</th><th>Recorded By</th><th>Action Items</th><th>Drive</th></tr></thead><tbody id="minutes-table"></tbody></table>
         </div>
       </div>
@@ -797,7 +821,7 @@ textarea{resize:vertical;min-height:120px;}
           <div class="sc"><div class="sl">Source</div><div class="sv" style="font-size:14px">Club Rush</div><div class="sm">Top channel</div></div>
         </div>
         <div class="card">
-          <div class="ch"><div class="ct">Prospect Pipeline</div><div style="display:flex;gap:6px"><button class="btn-csv" onclick="triggerCsv('prospects')">Import CSV</button><button class="btn btn-p btn-sm" onclick="addProspect()">+ Add Prospect</button></div></div>
+          <div class="ch"><div class="ct">Prospect Pipeline</div><div style="display:flex;gap:6px"><button class="btn-csv" onclick="openImportDataModal('prospects')">Import CSV</button><button class="btn btn-p btn-sm" onclick="addProspect()">+ Add Prospect</button></div></div>
           <table><thead><tr><th>Name</th><th>Contact</th><th>Source</th><th>Stage</th><th>Follow-up</th></tr></thead><tbody id="rec-table"></tbody></table>
         </div>
       </div>
@@ -885,8 +909,10 @@ textarea{resize:vertical;min-height:120px;}
       <div class="page" id="page-portal-finance">
         <div class="tabs">
           <div class="tab active" onclick="showTab('portal-finance','overview')">Overview</div>
-          <div class="tab" onclick="showTab('portal-finance','splitter')">Event Cost Splitter</div>
+          <div class="tab" onclick="showTab('portal-finance','splitter')">Refund Tab</div>
           <div class="tab" onclick="showTab('portal-finance','reimbursements')">Reimbursements</div>
+          <div class="tab" onclick="showTab('portal-finance','merch');renderMerch()">Merch Sales</div>
+          <div class="tab" onclick="showTab('portal-finance','budget');initFinBudget()">Budget</div>
         </div>
         <div class="sub active" id="portal-finance-overview">
           <div class="sg" id="portal-finance-stats"></div>
@@ -900,32 +926,48 @@ textarea{resize:vertical;min-height:120px;}
         <div class="sub" id="portal-finance-splitter">
           <div class="card" style="margin-bottom:14px">
             <div class="ch">
-              <div class="ct">Event Cost Splitter</div>
-              <div style="display:flex;gap:6px">
+              <div class="ct">Refund Tab</div>
+              <div style="display:flex;gap:6px;align-items:center">
                 <select id="ec-select" onchange="loadEventCost(this.value)" style="font-size:10px;padding:3px 8px;background:var(--s2);border:1px solid var(--brd);border-radius:4px;color:var(--t1)"><option value="">Select event...</option></select>
                 <button class="btn btn-p btn-sm" onclick="newEventCost()">+ New Event</button>
+                <button class="btn btn-g btn-sm" style="color:#E57373" onclick="deleteEventCost()">Delete Event</button>
               </div>
             </div>
             <div id="ec-setup" style="display:none;margin-top:12px">
-              <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
+              <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:12px">
                 <div><div style="font-size:10px;color:var(--t3);margin-bottom:4px">Event Name</div><input id="ec-name" type="text" style="width:100%;box-sizing:border-box;font-size:11px;padding:5px 8px;background:var(--s2);border:1px solid var(--brd);border-radius:4px;color:var(--t1)" placeholder="e.g. NLC 2026"></div>
                 <div><div style="font-size:10px;color:var(--t3);margin-bottom:4px">Total Invoice ($)</div><input id="ec-invoice" type="number" min="0" step="0.01" style="width:100%;box-sizing:border-box;font-size:11px;padding:5px 8px;background:var(--s2);border:1px solid var(--brd);border-radius:4px;color:var(--t1)" oninput="calcEventCost()" placeholder="18000"></div>
                 <div><div style="font-size:10px;color:var(--t3);margin-bottom:4px">Sponsor Credits ($)</div><input id="ec-sponsor" type="number" min="0" step="0.01" style="width:100%;box-sizing:border-box;font-size:11px;padding:5px 8px;background:var(--s2);border:1px solid var(--brd);border-radius:4px;color:var(--t1)" oninput="calcEventCost()" placeholder="1000"></div>
-                <div><div style="font-size:10px;color:var(--t3);margin-bottom:4px">Aid / Grant Pool ($)</div><input id="ec-aid" type="number" min="0" step="0.01" style="width:100%;box-sizing:border-box;font-size:11px;padding:5px 8px;background:var(--s2);border:1px solid var(--brd);border-radius:4px;color:var(--t1)" oninput="calcEventCost()" placeholder="0"></div>
               </div>
               <div class="sg" id="ec-summary" style="margin-bottom:14px"></div>
               <div class="ch" style="margin-bottom:8px">
                 <div class="ct">Member Payments</div>
                 <div style="display:flex;gap:6px">
-                  <button class="btn-csv" onclick="triggerCsv('ec-members')">Import CSV</button>
+                  <button class="btn-csv" onclick="openImportDataModal('ec-members')">Import CSV</button>
+                  <button class="btn btn-g btn-sm" onclick="openBulkAddModal()">Bulk Add</button>
                   <button class="btn btn-p btn-sm" onclick="addEcMember()">+ Add Member</button>
                   <button class="btn btn-g btn-sm" onclick="saveEventCost()">Save</button>
                 </div>
               </div>
+              <div id="ec-bulk-bar" style="display:none;align-items:center;gap:8px;padding:7px 10px;background:rgba(139,26,26,.06);border:1px solid rgba(139,26,26,.18);border-radius:6px;margin-bottom:8px;flex-wrap:wrap">
+                <span id="ec-sel-count" style="font-size:10.5px;font-weight:700;color:var(--cr);min-width:60px">0 selected</span>
+                <div style="display:flex;align-items:center;gap:4px">
+                  <span style="font-size:10px;color:var(--t3)">Set Paid:</span>
+                  <input id="ec-bulk-paid-val" type="number" min="0" step="0.01" placeholder="$0.00" style="width:70px;font-size:11px;padding:3px 6px;background:var(--s2);border:1px solid var(--brd);border-radius:4px;color:var(--t1);font-family:'IBM Plex Sans',sans-serif">
+                  <button class="btn btn-g btn-sm" onclick="applyBulkPaid()">Apply</button>
+                </div>
+                <div style="display:flex;align-items:center;gap:4px">
+                  <span style="font-size:10px;color:var(--t3)">Set Aid:</span>
+                  <input id="ec-bulk-aid-val" type="number" min="0" step="0.01" placeholder="$0.00" style="width:70px;font-size:11px;padding:3px 6px;background:var(--s2);border:1px solid var(--brd);border-radius:4px;color:var(--t1);font-family:'IBM Plex Sans',sans-serif">
+                  <button class="btn btn-g btn-sm" onclick="applyBulkAid()">Apply</button>
+                </div>
+                <button class="btn btn-g btn-sm" style="color:#E57373;margin-left:auto" onclick="deleteSelectedEc()">Delete Selected</button>
+              </div>
               <table>
-                <thead><tr><th>Member</th><th>Phone</th><th>Email</th><th>Paid ($)</th><th>Indiv. Aid ($)</th><th>Their Share</th><th>Refund / Owes</th><th></th></tr></thead>
+                <thead><tr><th style="width:28px;padding:6px 8px"><input type="checkbox" id="ec-select-all" onchange="toggleAllEc(this)" style="cursor:pointer"></th><th>Member</th><th>Phone</th><th>Email</th><th>Paid ($)</th><th>Indiv. Aid ($)</th><th>Their Share</th><th>Refund / Owes</th><th></th></tr></thead>
                 <tbody id="ec-members-table"></tbody>
               </table>
+              <div id="ec-roster" style="display:none;margin-top:16px;padding-top:14px;border-top:1px solid var(--brd)"></div>
             </div>
             <div id="ec-empty" style="font-size:11px;color:var(--t4);padding:12px 0">Select an event above or create a new one.</div>
           </div>
@@ -940,6 +982,136 @@ textarea{resize:vertical;min-height:120px;}
             </table>
           </div>
         </div>
+
+        <!-- MERCH SALES TAB -->
+        <div class="sub" id="portal-finance-merch">
+          <div class="sg" id="merch-stats"></div>
+          <div class="card">
+            <div class="ch">
+              <div class="ct">Merch Sales</div>
+              <div style="display:flex;gap:6px">
+                <button class="btn btn-g btn-sm" onclick="exportMerchCSV()">Export CSV</button>
+                <button class="btn btn-p btn-sm" onclick="addMerchItem()">+ Add Item</button>
+              </div>
+            </div>
+            <table>
+              <thead><tr><th>Item</th><th>Price / Unit</th><th>Qty Sold</th><th>Revenue</th><th>Notes</th><th></th></tr></thead>
+              <tbody id="merch-table"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- BUDGET TAB -->
+        <div class="sub" id="portal-finance-budget">
+          <div class="sg" style="margin-bottom:14px">
+            <div class="sc"><div class="sl">Total Income</div><div class="sv" id="fin-bud-income"><span class="sa">$0</span></div><div class="sm">All accounts</div></div>
+            <div class="sc"><div class="sl">Total Expenses</div><div class="sv" id="fin-bud-expense">$0</div><div class="sm">All accounts</div></div>
+            <div class="sc"><div class="sl">Net Balance</div><div class="sv" id="fin-bud-balance">$0</div><div class="sm">Income − Expenses</div></div>
+            <div class="sc">
+              <div class="sl">Budget Target</div>
+              <div class="sv" style="display:flex;align-items:center;gap:3px">
+                <span style="font-size:14px;color:var(--t3)">$</span>
+                <input id="fin-budget-target" type="number" min="0" value="4000" style="width:80px;background:transparent;border:none;border-bottom:1px solid var(--bd2);font-size:18px;font-weight:700;font-family:'IBM Plex Sans',sans-serif;color:var(--t1);outline:none;padding:0 2px" onchange="saveBudgetTarget(this.value)">
+              </div>
+              <div class="sm">Click to edit</div>
+            </div>
+          </div>
+          <!-- Account switcher -->
+          <div class="bud-acct-tabs">
+            <div class="bud-acct-tab active" onclick="showBudgetAcct('personal')">Personal Expense Account</div>
+            <div class="bud-acct-tab" onclick="showBudgetAcct('pbl')">PBL Bank Account</div>
+          </div>
+          <!-- Personal Account -->
+          <div class="bud-acct-panel active" id="bud-acct-personal">
+            <div class="bud-sub-tabs">
+              <div class="bud-sub-tab active" data-acct="personal" data-tab="income" onclick="showBudgetSubTab('personal','income')">Income</div>
+              <div class="bud-sub-tab" data-acct="personal" data-tab="expenses" onclick="showBudgetSubTab('personal','expenses')">Expenses</div>
+              <div class="bud-sub-tab" data-acct="personal" data-tab="summary" onclick="showBudgetSubTab('personal','summary')">Summary</div>
+            </div>
+            <div class="bud-sub-panel active" id="bud-personal-income">
+              <div class="card">
+                <div class="ch"><div class="ct">Income Log</div><button class="btn btn-p btn-sm" onclick="addFinTransaction('income')">+ Add Income</button></div>
+                <table><thead><tr><th>Description</th><th>Category</th><th>Date</th><th>Amount</th></tr></thead><tbody id="fin-income-table"></tbody></table>
+              </div>
+            </div>
+            <div class="bud-sub-panel" id="bud-personal-expenses">
+              <div class="card">
+                <div class="ch"><div class="ct">Expense Log</div><button class="btn btn-p btn-sm" onclick="addFinTransaction('expense')">+ Add Expense</button></div>
+                <table><thead><tr><th>Description</th><th>Category</th><th>Date</th><th>Amount</th></tr></thead><tbody id="fin-expense-table"></tbody></table>
+              </div>
+            </div>
+            <div class="bud-sub-panel" id="bud-personal-summary">
+              <div class="card">
+                <div class="ch"><div class="ct">By Category</div><button class="btn btn-g btn-sm" onclick="exportFinBudgetCSV()">Export CSV</button></div>
+                <div id="fin-budget-by-cat"></div>
+              </div>
+            </div>
+          </div>
+          <!-- PBL Bank Account -->
+          <div class="bud-acct-panel" id="bud-acct-pbl">
+            <div class="pbl-balance-card">
+              <div>
+                <div class="pbl-bal-label">PBL Bank Account Balance</div>
+                <div class="pbl-bal-amount" id="pbl-bal-display">$0.00</div>
+              </div>
+              <div style="text-align:right;font-size:11px;opacity:.85;line-height:1.8">
+                <div id="pbl-income-display">Income: $0</div>
+                <div id="pbl-expense-display">Expenses: $0</div>
+              </div>
+            </div>
+            <div class="bud-sub-tabs">
+              <div class="bud-sub-tab active" data-acct="pbl" data-tab="income" onclick="showBudgetSubTab('pbl','income')">Income</div>
+              <div class="bud-sub-tab" data-acct="pbl" data-tab="expenses" onclick="showBudgetSubTab('pbl','expenses')">Expenses</div>
+              <div class="bud-sub-tab" data-acct="pbl" data-tab="summary" onclick="showBudgetSubTab('pbl','summary')">Summary</div>
+              <div class="bud-sub-tab" data-acct="pbl" data-tab="log" onclick="showBudgetSubTab('pbl','log')">Transaction Log</div>
+              <div class="bud-sub-tab" data-acct="pbl" data-tab="statements" onclick="showBudgetSubTab('pbl','statements')">Statements</div>
+            </div>
+            <div class="bud-sub-panel active" id="bud-pbl-income">
+              <div class="card">
+                <div class="ch"><div class="ct">PBL Income</div><button class="btn btn-p btn-sm" onclick="addPblTransaction('income')">+ Add Income</button></div>
+                <table><thead><tr><th>Description</th><th>Category</th><th>Date</th><th>Amount</th></tr></thead><tbody id="pbl-income-table"></tbody></table>
+              </div>
+            </div>
+            <div class="bud-sub-panel" id="bud-pbl-expenses">
+              <div class="card">
+                <div class="ch"><div class="ct">PBL Expenses</div><button class="btn btn-p btn-sm" onclick="addPblTransaction('expense')">+ Add Expense</button></div>
+                <table><thead><tr><th>Description</th><th>Category</th><th>Date</th><th>Amount</th></tr></thead><tbody id="pbl-expense-table"></tbody></table>
+              </div>
+            </div>
+            <div class="bud-sub-panel" id="bud-pbl-summary">
+              <div class="card">
+                <div class="ch"><div class="ct">PBL By Category</div></div>
+                <div id="pbl-budget-by-cat"></div>
+              </div>
+            </div>
+            <div class="bud-sub-panel" id="bud-pbl-log">
+              <div class="card">
+                <div class="ch"><div class="ct">Transaction Log</div><div style="font-size:10px;color:var(--t3)">Chronological · all PBL transactions</div></div>
+                <table><thead><tr><th>Date</th><th>Description</th><th>Category</th><th>Type</th><th>Amount</th><th>Running Balance</th></tr></thead><tbody id="pbl-log-table"></tbody></table>
+              </div>
+            </div>
+            <div class="bud-sub-panel" id="bud-pbl-statements">
+              <div class="card">
+                <div class="ch">
+                  <div class="ct">Financial Statements</div>
+                  <select id="stmt-quarter" style="font-size:10px;padding:3px 8px;background:var(--s2);border:1px solid var(--bd);border-radius:4px;color:var(--t1)">
+                    <option value="fall">Fall Quarter</option>
+                    <option value="winter">Winter Quarter</option>
+                    <option value="spring">Spring Quarter</option>
+                    <option value="year">Full Year</option>
+                  </select>
+                </div>
+                <div style="padding:24px;text-align:center;color:var(--t4)">
+                  <div style="font-size:28px;margin-bottom:10px">📄</div>
+                  <div style="font-weight:600;color:var(--t2);font-size:12px;margin-bottom:4px">Statement format pending</div>
+                  <div style="font-size:11px">Send your example format and I'll build it out for each quarter.</div>
+                  <button class="btn btn-g btn-sm" style="margin-top:14px" onclick="generatePblStatement()">Preview Statement</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
       </div>
 
       <!-- OPERATIONS PORTAL -->
@@ -1216,6 +1388,83 @@ textarea{resize:vertical;min-height:120px;}
 </div>
 
 <!-- MODALS -->
+<div class="overlay" id="bulk-add-modal">
+  <div class="modal" style="max-width:400px">
+    <div class="mt">Bulk Add Members</div>
+    <p style="font-size:11px;color:var(--t3);margin-bottom:14px">Add multiple members at once with the same default paid amount. Edit names and individual amounts after.</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
+      <div>
+        <label style="font-size:10px;font-weight:600;color:var(--t3);letter-spacing:.5px;text-transform:uppercase;display:block;margin-bottom:5px">Number of Members</label>
+        <input id="bulk-count" type="number" min="1" max="200" placeholder="e.g. 47" style="width:100%;box-sizing:border-box;background:var(--s2);border:1px solid var(--bd);border-radius:5px;padding:7px 10px;font-size:12px;font-family:'IBM Plex Sans',sans-serif;color:var(--t1);outline:none">
+      </div>
+      <div>
+        <label style="font-size:10px;font-weight:600;color:var(--t3);letter-spacing:.5px;text-transform:uppercase;display:block;margin-bottom:5px">Default Paid Amount ($)</label>
+        <input id="bulk-paid" type="number" min="0" step="0.01" placeholder="e.g. 400" style="width:100%;box-sizing:border-box;background:var(--s2);border:1px solid var(--bd);border-radius:5px;padding:7px 10px;font-size:12px;font-family:'IBM Plex Sans',sans-serif;color:var(--t1);outline:none">
+      </div>
+    </div>
+    <div style="margin-bottom:14px">
+      <label style="font-size:10px;font-weight:600;color:var(--t3);letter-spacing:.5px;text-transform:uppercase;display:block;margin-bottom:5px">Name Prefix (optional)</label>
+      <input id="bulk-prefix" type="text" placeholder="e.g. Member — leaves name blank if empty" style="width:100%;box-sizing:border-box;background:var(--s2);border:1px solid var(--bd);border-radius:5px;padding:7px 10px;font-size:11.5px;font-family:'IBM Plex Sans',sans-serif;color:var(--t1);outline:none">
+    </div>
+    <div style="display:flex;gap:8px">
+      <button class="btn btn-p" onclick="executeBulkAdd()">Add Members</button>
+      <button class="btn btn-g" onclick="closeModals()">Cancel</button>
+    </div>
+  </div>
+</div>
+<div class="overlay" id="import-data-modal">
+  <div class="modal" style="max-width:500px">
+    <div class="mt">Import Data</div>
+    <p id="imp-subtitle" style="font-size:11px;color:var(--t3);margin-bottom:14px">Choose how to bring in your data. The first row must be column headers.</p>
+    <div style="display:flex;gap:3px;margin-bottom:16px;background:var(--s2);padding:3px;border-radius:6px;border:1px solid var(--bd)">
+      <button class="imp-tab active" onclick="switchImportTab('paste')">📋 Paste</button>
+      <button class="imp-tab" onclick="switchImportTab('url')">🔗 Sheets URL</button>
+      <button class="imp-tab" onclick="switchImportTab('excel')">📊 Excel</button>
+      <button class="imp-tab" onclick="switchImportTab('csv')">📄 CSV File</button>
+    </div>
+
+    <div id="imp-paste-panel">
+      <p style="font-size:11px;color:var(--t3);margin-bottom:8px">Select cells in Google Sheets or Excel → <strong>Ctrl+C / Cmd+C</strong> → click below → <strong>Ctrl+V / Cmd+V</strong>.</p>
+      <textarea id="imp-paste-area" rows="6" placeholder="Paste your spreadsheet data here..." style="width:100%;box-sizing:border-box;font-size:11px;font-family:'IBM Plex Mono',monospace;padding:8px 10px;background:var(--s2);border:1px solid var(--bd);border-radius:5px;color:var(--t1);resize:vertical;outline:none"></textarea>
+      <button class="btn btn-p" style="margin-top:8px" onclick="importPasteData()">Parse Data</button>
+    </div>
+
+    <div id="imp-url-panel" style="display:none">
+      <p style="font-size:11px;color:var(--t3);margin-bottom:8px">Paste your Google Sheets share URL. The sheet must be set to <strong>"Anyone with the link can view."</strong></p>
+      <input id="imp-url-input" type="text" placeholder="https://docs.google.com/spreadsheets/d/..." style="width:100%;box-sizing:border-box;font-size:11px;padding:7px 10px;background:var(--s2);border:1px solid var(--bd);border-radius:5px;color:var(--t1);font-family:'IBM Plex Sans',sans-serif;outline:none;margin-bottom:8px">
+      <div style="display:flex;gap:7px;align-items:center">
+        <button class="btn btn-p" onclick="fetchSheetsUrl()">Fetch Sheet</button>
+        <span id="imp-url-status" style="font-size:11px;color:var(--t3)"></span>
+      </div>
+    </div>
+
+    <div id="imp-excel-panel" style="display:none">
+      <p style="font-size:11px;color:var(--t3);margin-bottom:8px">Upload an <strong>.xlsx</strong> or <strong>.xls</strong> file directly — no conversion needed. Uses the first sheet.</p>
+      <input type="file" id="imp-excel-file" accept=".xlsx,.xls" style="font-size:11px;margin-bottom:10px;color:var(--t1)">
+      <br>
+      <button class="btn btn-p" onclick="readExcelFile()">Read File</button>
+      <span id="imp-excel-status" style="font-size:11px;color:var(--t3);margin-left:8px"></span>
+    </div>
+
+    <div id="imp-csv-panel" style="display:none">
+      <p style="font-size:11px;color:var(--t3);margin-bottom:8px">Upload a <strong>.csv</strong> file. Auto-detects comma or tab separators and strips BOM.</p>
+      <input type="file" id="imp-csv-file" accept=".csv,.tsv,.txt" style="font-size:11px;margin-bottom:10px;color:var(--t1)">
+      <br>
+      <button class="btn btn-p" onclick="readCsvFile()">Read File</button>
+      <span id="imp-csv-status" style="font-size:11px;color:var(--t3);margin-left:8px"></span>
+    </div>
+
+    <div id="imp-preview" style="display:none;margin-top:14px;padding:10px 12px;background:var(--s2);border:1px solid var(--bd);border-radius:6px">
+      <div style="font-size:11px;font-weight:600;color:var(--t1);margin-bottom:4px" id="imp-preview-info"></div>
+      <div style="font-size:10.5px;color:var(--t3)" id="imp-preview-cols"></div>
+    </div>
+
+    <div style="display:flex;gap:8px;margin-top:16px">
+      <button class="btn btn-p" id="imp-execute-btn" onclick="executeImportData()" style="display:none">Import Rows</button>
+      <button class="btn btn-g" onclick="closeModals()">Cancel</button>
+    </div>
+  </div>
+</div>
 <div class="overlay" id="member-modal">
   <div class="modal"><div class="mt">Add Member</div>
     <div class="fr"><div class="fg"><div class="fl">First Name</div><input id="m-first" type="text"></div><div class="fg"><div class="fl">Last Name</div><input id="m-last" type="text"></div></div>
@@ -2286,6 +2535,12 @@ let goals=[
   {id:4,title:'Consulting Projects',metric:'Complete 4 client projects',progress:1,target:4,unit:'projects',notes:'Orkizz active, 3 more needed. Reach out to local businesses.',status:'Behind'},
 ];let nGoal=5;
 
+// ── NEW FINANCE / CALENDAR DATA (must be before global render call) ──────────
+let pblTransactions={income:[],expense:[]};let nPblTr=1;
+let budgetTarget=parseFloat(localStorage.getItem('dapbl_budget_target'))||4000;
+let merchSales=[];let nMerch=1;
+let importedCalEvents=[];
+
 // TRANSITION
 let transitionDocs=[
   {id:1,position:'President',author:'Nisa Pradhan',updated:'May 2026',content:'KEY CONTACTS\n- Advisor: [Name, email]\n- FBLA State Office: [contact]\n- Venue Contacts: MLC 105 Facilities x1234\n\nONGOING RELATIONSHIPS\n- Bay Area Credit Union (Maria Santos) — renews annually, very receptive\n- Tech District Co. (James Wu) — prefers email, follow up in March\n\nDO NOT FORGET\n- Submit chapter dues to national by Sept 15\n- Reserve rooms for bootcamps at least 3 weeks out\n- Start SBLC prep in October, not November\n\nWHAT I WOULD DO DIFFERENTLY\n- Delegate more to VPs earlier\n- Set exec expectations in writing Week 1\n- Build sponsor relationships before you need them',files:[]},
@@ -3073,29 +3328,29 @@ function loadEventCost(id){
   document.getElementById('ec-name').value=e.name;
   document.getElementById('ec-invoice').value=e.invoice||'';
   document.getElementById('ec-sponsor').value=e.sponsor||'';
-  document.getElementById('ec-aid').value=e.aid||'';
   renderEcMembers();calcEventCost();
 }
 function calcEventCost(){
   const id=document.getElementById('ec-select').value;
   const invoice=parseFloat(document.getElementById('ec-invoice').value)||0;
   const sponsor=parseFloat(document.getElementById('ec-sponsor').value)||0;
-  const aid=parseFloat(document.getElementById('ec-aid').value)||0;
   const e=eventCosts.find(x=>x.id==id);
   const memberAid=e?e.members.reduce((s,m)=>s+(m.aid||0),0):0;
-  const net=Math.max(0,invoice-sponsor-aid-memberAid);
-  const payingMembers=e?e.members.filter(m=>!(m.aid>0)):[];
-  const count=payingMembers.length;
-  const share=count?net/count:0;
   const totalPaid=e?e.members.reduce((s,m)=>s+(m.paid||0),0):0;
+  const net=Math.max(0,invoice-sponsor-memberAid);
+  const payingMembers=e?e.members.filter(m=>!(m.aid>0)):[];
+  const count=payingMembers.length||0;
+  const share=count?net/count:0;
+  const balance=totalPaid+sponsor-invoice;
   const sum=document.getElementById('ec-summary');
   if(sum)sum.innerHTML=[
-    {l:'Invoice',v:'$'+invoice.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2}),s:'Total owed to FBLA'},
-    {l:'Offsets',v:'-$'+(sponsor+aid+memberAid).toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2}),s:'Sponsors + aid'},
-    {l:'Net Cost',v:'$'+net.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2}),s:'After all credits'},
-    {l:'Share / Member',v:'$'+share.toFixed(2),s:count+' paying ('+((e?e.members.length:0)-count)+' on aid)'},
-    {l:'Total Collected',v:'$'+totalPaid.toFixed(2),s:'From member payments'},
-  ].map(s=>`<div class="sc"><div class="sl">${s.l}</div><div class="sv" style="font-size:16px">${s.v}</div><div class="sm">${s.s}</div></div>`).join('');
+    {l:'Invoice',v:'$'+invoice.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2}),s:'Total event cost',c:''},
+    {l:'Sponsor Credits',v:'-$'+sponsor.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2}),s:'Applied to invoice',c:''},
+    {l:'Net Cost',v:'$'+net.toFixed(2),s:'After credits & individual aid',c:''},
+    {l:'Share / Member',v:'$'+share.toFixed(2),s:count+' paying · '+((e?e.members.length:0)-count)+' on aid',c:''},
+    {l:'Total Collected',v:'$'+totalPaid.toFixed(2),s:'Sum of member payments',c:''},
+    {l:'Balance',v:(balance>=0?'+ ':'')+'$'+Math.abs(balance).toFixed(2),s:balance>=0?'Surplus — available for aid':'Still owed',c:balance>=0?'var(--grn)':'#E57373'},
+  ].map(s=>`<div class="sc"><div class="sl">${s.l}</div><div class="sv" style="font-size:16px${s.c?';color:'+s.c:''}">${s.v}</div><div class="sm">${s.s}</div></div>`).join('');
   renderEcMembers();
 }
 function renderEcMembers(){
@@ -3104,11 +3359,12 @@ function renderEcMembers(){
   const t=document.getElementById('ec-members-table');if(!t||!e)return;
   const invoice=parseFloat(document.getElementById('ec-invoice').value)||0;
   const sponsor=parseFloat(document.getElementById('ec-sponsor').value)||0;
-  const aid=parseFloat(document.getElementById('ec-aid').value)||0;
   const memberAid=e.members.reduce((s,m)=>s+(m.aid||0),0);
-  const net=Math.max(0,invoice-sponsor-aid-memberAid);
+  const net=Math.max(0,invoice-sponsor-memberAid);
   const payingCount=e.members.filter(m=>!(m.aid>0)).length;
   const baseShare=payingCount?net/payingCount:0;
+  const sa=document.getElementById('ec-select-all');if(sa)sa.checked=false;
+  const bar=document.getElementById('ec-bulk-bar');if(bar)bar.style.display='none';
   const inp=(val,field,i,type='text',w='100%')=>`<input type="${type}" value="${val||''}" ${type==='number'?'min="0" step="0.01"':''} onchange="ecUpdate(${i},'${field}',${type==='number'?'parseFloat(this.value)||0':'this.value'})" style="font-size:11px;background:transparent;border:none;color:var(--t1);width:${w};font-family:'IBM Plex Sans',sans-serif">`;
   t.innerHTML=e.members.map((m,i)=>{
     const onAid=m.aid>0;
@@ -3120,6 +3376,7 @@ function renderEcMembers(){
         ?`<span style="color:#66BB6A">+$${diff.toFixed(2)} refund</span>`
         :`<span style="color:#E57373">-$${Math.abs(diff).toFixed(2)} owes</span>`;
     return`<tr>
+      <td style="width:28px;padding:4px 8px"><input type="checkbox" class="ec-chk" data-idx="${i}" onchange="ecCheckChange()" style="cursor:pointer"></td>
       <td>${inp(m.name,'name',i,'text','120px')}</td>
       <td>${inp(m.phone,'phone',i,'text','100px')}</td>
       <td>${inp(m.email,'email',i,'text','130px')}</td>
@@ -3130,6 +3387,73 @@ function renderEcMembers(){
       <td><button class="rb" onclick="removeEcMember(${i})">&times;</button></td>
     </tr>`;
   }).join('');
+  renderEcRoster(e,baseShare,invoice,sponsor);
+}
+function renderEcRoster(e,baseShare,invoice,sponsor){
+  const el=document.getElementById('ec-roster');if(!el)return;
+  if(!e||!e.members.length){el.style.display='none';return;}
+  el.style.display='';
+  const paid=e.members.filter(m=>m.paid>0||m.aid>0);
+  const unpaid=e.members.filter(m=>!(m.paid>0||m.aid>0));
+  const memberAid=e.members.reduce((s,m)=>s+(m.aid||0),0);
+  const net=Math.max(0,invoice-sponsor-memberAid);
+  const payingCount=e.members.filter(m=>!(m.aid>0)).length;
+  const share=payingCount?net/payingCount:0;
+  function card(m,i){
+    const onAid=m.aid>0;
+    const diff=(m.paid||0)-(onAid?0:share);
+    const badge=onAid
+      ?`<span style="font-size:9px;font-weight:700;padding:2px 6px;border-radius:8px;background:rgba(21,88,160,.12);color:var(--blu)">AID</span>`
+      :diff>=0
+        ?`<span style="font-size:9px;font-weight:700;padding:2px 6px;border-radius:8px;background:rgba(76,175,80,.12);color:#43A047">+$${diff.toFixed(2)} REFUND</span>`
+        :`<span style="font-size:9px;font-weight:700;padding:2px 6px;border-radius:8px;background:rgba(229,115,115,.12);color:#E57373">-$${Math.abs(diff).toFixed(2)} OWES</span>`;
+    return`<div style="display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:6px;background:var(--s2);border:1px solid var(--brd);margin-bottom:5px">
+      <div style="width:28px;height:28px;border-radius:50%;background:var(--cr);color:#fff;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0">${(m.name||'?').charAt(0).toUpperCase()}</div>
+      <div style="flex:1;min-width:0">
+        <div style="font-size:11px;font-weight:600;color:var(--t1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${m.name||'<em style="color:var(--t4)">No name</em>'}</div>
+        <div style="font-size:10px;color:var(--t3);display:flex;gap:10px;flex-wrap:wrap;margin-top:1px">
+          ${m.phone?`<span>📞 ${m.phone}</span>`:''}
+          ${m.email?`<span>✉️ ${m.email}</span>`:''}
+          ${!m.phone&&!m.email?'<span style="color:var(--t4)">No contact info</span>':''}
+        </div>
+      </div>
+      <div style="text-align:right;flex-shrink:0">
+        <div style="font-size:11px;font-weight:600;color:var(--t1)">$${(m.paid||0).toFixed(2)} paid</div>
+        <div style="margin-top:2px">${badge}</div>
+      </div>
+    </div>`;
+  }
+  el.innerHTML=`
+    <div class="ch" style="margin-bottom:10px">
+      <div class="ct">Payment Roster</div>
+      <div style="display:flex;gap:6px;align-items:center">
+        <span style="font-size:10px;color:var(--t3)">${e.members.length} total · ${paid.length} paid · ${unpaid.length} pending</span>
+        <button class="btn btn-g btn-sm" onclick="exportRosterCSV()">Export CSV</button>
+      </div>
+    </div>
+    ${paid.length?`<div style="font-size:10px;font-weight:700;color:var(--t3);letter-spacing:.04em;margin-bottom:6px;text-transform:uppercase">Paid / Aid (${paid.length})</div>${paid.map((m,i)=>card(m,e.members.indexOf(m))).join('')}`:''}
+    ${unpaid.length?`<div style="font-size:10px;font-weight:700;color:var(--t3);letter-spacing:.04em;margin:10px 0 6px;text-transform:uppercase">Pending (${unpaid.length})</div>${unpaid.map((m,i)=>card(m,e.members.indexOf(m))).join('')}`:''}
+  `;
+}
+function exportRosterCSV(){
+  const id=document.getElementById('ec-select').value;
+  const e=eventCosts.find(x=>x.id==id);if(!e)return;
+  const invoice=parseFloat(document.getElementById('ec-invoice').value)||0;
+  const sponsor=parseFloat(document.getElementById('ec-sponsor').value)||0;
+  const memberAid=e.members.reduce((s,m)=>s+(m.aid||0),0);
+  const net=Math.max(0,invoice-sponsor-memberAid);
+  const payingCount=e.members.filter(m=>!(m.aid>0)).length;
+  const share=payingCount?net/payingCount:0;
+  const rows=[['Name','Phone','Email','Paid','Aid','Their Share','Refund/Owes']];
+  e.members.forEach(m=>{
+    const onAid=m.aid>0;
+    const s=onAid?0:share;
+    const diff=(m.paid||0)-s;
+    const status=onAid?'Aid Covered':diff>=0?`+$${diff.toFixed(2)} refund`:`-$${Math.abs(diff).toFixed(2)} owes`;
+    rows.push([m.name||'',m.phone||'',m.email||'',(m.paid||0).toFixed(2),(m.aid||0).toFixed(2),s.toFixed(2),status]);
+  });
+  const csv=rows.map(r=>r.map(c=>`"${String(c).replace(/"/g,'""')}"`).join(',')).join('\n');
+  const a=document.createElement('a');a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(csv);a.download=(e.name||'roster')+'.csv';a.click();
 }
 function ecUpdate(idx,field,val){
   const id=document.getElementById('ec-select').value;
@@ -3152,7 +3476,6 @@ function saveEventCost(){
   e.name=document.getElementById('ec-name').value||e.name;
   e.invoice=parseFloat(document.getElementById('ec-invoice').value)||0;
   e.sponsor=parseFloat(document.getElementById('ec-sponsor').value)||0;
-  e.aid=parseFloat(document.getElementById('ec-aid').value)||0;
   renderEcSelect();document.getElementById('ec-select').value=id;
   calcEventCost();
 }
@@ -3647,8 +3970,9 @@ function saveData(){
     mentorPairs,sponsors,pipeline,rosData,eventCosts,reimbursements,venues,volunteerSlots,compPrep,
     curriculum,brandKit,contentPosts,memberCheckIns,
     compEvents,resources,eventSlides,lectureSlides,
+    pblTransactions,merchSales,importedCalEvents,
     nM,nE,nB,nT,nA,nEv,nEmail,nCon,nCli,nDel,nCR,nCE,nCH,nTr,nMin,nPr,nGoal,nTD,nAnn,nMP,nSp,nPl,nRos,
-    nEC,nReim,nVen,nVS,nCP,nCurr,nBKC,nBKF,nPost,nMCI
+    nEC,nReim,nVen,nVS,nCP,nCurr,nBKC,nBKF,nPost,nMCI,nPblTr,nMerch
   };
   try{localStorage.setItem(SAVE_KEY,JSON.stringify(d));}catch(e){}
   const ind=document.getElementById('save-indicator');
@@ -3693,6 +4017,11 @@ function loadData(){
     if(d.resources)resources=d.resources;
     if(d.eventSlides)eventSlides=d.eventSlides;
     if(d.lectureSlides)lectureSlides=d.lectureSlides;
+    if(d.pblTransactions)pblTransactions=d.pblTransactions;
+    if(d.merchSales)merchSales=d.merchSales;
+    if(d.importedCalEvents)importedCalEvents=d.importedCalEvents;
+    if(d.nPblTr!==undefined)nPblTr=d.nPblTr;
+    if(d.nMerch!==undefined)nMerch=d.nMerch;
     if(d.nM!==undefined)nM=d.nM;
     if(d.nE!==undefined)nE=d.nE;
     if(d.nB!==undefined)nB=d.nB;
@@ -3833,6 +4162,7 @@ function renderCalendar(){
   bootcamps.forEach(b=>addItem(b.date,'bc',b.name+': '+b.topic,'bootcamps'));
   [...tasks.ebod,...tasks.general].filter(t=>!t.done).forEach(t=>addItem(t.due,'tk',t.text,'tasks'));
   agendas.forEach(a=>addItem(a.date,'ag',a.name,'tasks'));
+  if(importedCalEvents)importedCalEvents.forEach(e=>addItem(e.date,'ev','📅 '+e.name,'calendar'));
   let html='';
   ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].forEach(d=>{html+=`<div class="cal-dow">${d}</div>`;});
   for(let i=0;i<first;i++)html+=`<div class="cal-cell out"></div>`;
@@ -5051,6 +5381,533 @@ function findEBODMember(name){
   const q=name.toLowerCase().trim();
   return ebodMembers.find(m=>(m.first+' '+m.last).toLowerCase().trim()===q);
 }
+// ── BULK ADD MEMBERS (Refund Tab) ─────────────────────────────────────────
+function openBulkAddModal(){
+  const id=document.getElementById('ec-select').value;
+  if(!id){alert('Select an event first.');return;}
+  document.getElementById('bulk-count').value='';
+  document.getElementById('bulk-paid').value='';
+  document.getElementById('bulk-prefix').value='';
+  openModal('bulk-add-modal');
+}
+function executeBulkAdd(){
+  const count=parseInt(document.getElementById('bulk-count').value)||0;
+  const paid=parseFloat(document.getElementById('bulk-paid').value)||0;
+  const prefix=document.getElementById('bulk-prefix').value.trim();
+  const id=document.getElementById('ec-select').value;
+  const e=eventCosts.find(x=>x.id==id);
+  if(!e||count<=0)return;
+  const startIdx=e.members.length+1;
+  for(let i=0;i<count;i++){
+    e.members.push({name:prefix?prefix+' '+(startIdx+i):'',phone:'',email:'',paid,aid:0});
+  }
+  closeModals();calcEventCost();
+}
+function ecCheckChange(){
+  const checked=document.querySelectorAll('.ec-chk:checked').length;
+  const total=document.querySelectorAll('.ec-chk').length;
+  const bar=document.getElementById('ec-bulk-bar');
+  if(bar)bar.style.display=checked?'flex':'none';
+  const cnt=document.getElementById('ec-sel-count');
+  if(cnt)cnt.textContent=checked+' of '+total+' selected';
+  const sa=document.getElementById('ec-select-all');
+  if(sa)sa.checked=checked>0&&checked===total;
+  sa.indeterminate=checked>0&&checked<total;
+}
+function toggleAllEc(cb){
+  document.querySelectorAll('.ec-chk').forEach(c=>c.checked=cb.checked);
+  ecCheckChange();
+}
+function applyBulkPaid(){
+  const val=parseFloat(document.getElementById('ec-bulk-paid-val').value);
+  if(isNaN(val))return;
+  const id=document.getElementById('ec-select').value;
+  const e=eventCosts.find(x=>x.id==id);if(!e)return;
+  document.querySelectorAll('.ec-chk:checked').forEach(cb=>{
+    const idx=parseInt(cb.dataset.idx);
+    if(e.members[idx])e.members[idx].paid=val;
+  });
+  calcEventCost();
+}
+function applyBulkAid(){
+  const val=parseFloat(document.getElementById('ec-bulk-aid-val').value);
+  if(isNaN(val))return;
+  const id=document.getElementById('ec-select').value;
+  const e=eventCosts.find(x=>x.id==id);if(!e)return;
+  document.querySelectorAll('.ec-chk:checked').forEach(cb=>{
+    const idx=parseInt(cb.dataset.idx);
+    if(e.members[idx])e.members[idx].aid=val;
+  });
+  calcEventCost();
+}
+function deleteSelectedEc(){
+  const id=document.getElementById('ec-select').value;
+  const e=eventCosts.find(x=>x.id==id);if(!e)return;
+  const toDelete=new Set();
+  document.querySelectorAll('.ec-chk:checked').forEach(cb=>toDelete.add(parseInt(cb.dataset.idx)));
+  if(!toDelete.size)return;
+  if(!confirm('Delete '+toDelete.size+' member(s)?'))return;
+  e.members=e.members.filter((_,i)=>!toDelete.has(i));
+  calcEventCost();
+}
+function deleteEventCost(){
+  const id=document.getElementById('ec-select').value;
+  if(!id){alert('Select an event first.');return;}
+  const e=eventCosts.find(x=>x.id==id);if(!e)return;
+  if(!confirm('Delete event "'+e.name+'" and all its members? This cannot be undone.'))return;
+  eventCosts=eventCosts.filter(x=>x.id!=id);
+  renderEcSelect();loadEventCost('');saveData();
+}
+
+// ── IMPORT FROM SHEETS (Paste / URL / Excel / CSV) ────────────────────────
+let _importCtx='';let _importRows=[];
+const _IMP_LABELS={
+  members:'Member Roster',exec:'Executive Board',mentors:'Mentor Pairs',
+  bootcamps:'Bootcamp Sessions',ebod:'EBOD Tasks',general:'General Tasks',
+  agendas:'Meeting Agendas',sponsors:'Confirmed Sponsors',pipeline:'Sponsor Pipeline',
+  consulting:'Consulting Projects',clients:'Client Directory',compresults:'Competition Results',
+  income:'Income Log',expense:'Expense Log',minutes:'Meeting Minutes',
+  prospects:'Prospect Pipeline','ec-members':'Event Members',reimbursements:'Reimbursements'
+};
+function openImportDataModal(ctx){
+  _importCtx=ctx;_importRows=[];
+  const pa=document.getElementById('imp-paste-area');if(pa)pa.value='';
+  const ui=document.getElementById('imp-url-input');if(ui)ui.value='';
+  ['imp-url-status','imp-excel-status','imp-csv-status'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent='';});
+  ['imp-excel-file','imp-csv-file'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  const pv=document.getElementById('imp-preview');if(pv)pv.style.display='none';
+  const eb=document.getElementById('imp-execute-btn');if(eb)eb.style.display='none';
+  const sub=document.getElementById('imp-subtitle');
+  if(sub)sub.textContent='Importing into: '+(_IMP_LABELS[ctx]||ctx)+'. First row must be column headers.';
+  switchImportTab('paste');
+  openModal('import-data-modal');
+}
+function switchImportTab(tab){
+  ['paste','url','excel','csv'].forEach(t=>{
+    const p=document.getElementById('imp-'+t+'-panel');if(p)p.style.display=t===tab?'':'none';
+  });
+  document.querySelectorAll('.imp-tab').forEach((btn,i)=>btn.classList.toggle('active',['paste','url','excel','csv'][i]===tab));
+}
+function _splitCsvLine(line){
+  const out=[];let cur='',q=false;
+  for(let i=0;i<line.length;i++){
+    if(line[i]==='"'){q=!q;}
+    else if(line[i]===','&&!q){out.push(cur.trim());cur='';}
+    else cur+=line[i];
+  }
+  out.push(cur.trim());return out;
+}
+function _normalizeKey(k){return k.toLowerCase().replace(/[^a-z0-9]/g,'');}
+function _parseTextToRows(text){
+  const lines=text.trim().split(/\r?\n/).filter(l=>l.trim());
+  if(lines.length<2)return[];
+  const isTsv=lines[0].includes('\t');
+  const split=l=>isTsv?l.split('\t').map(c=>c.trim()):_splitCsvLine(l);
+  const headers=split(lines[0]).map(_normalizeKey);
+  return lines.slice(1).map(line=>{
+    const cells=split(line);const row={};
+    headers.forEach((h,i)=>row[h]=(cells[i]||'').trim());
+    return row;
+  });
+}
+function _getField(row,...aliases){
+  for(const a of aliases){if(row[a]!==undefined&&row[a]!=='')return row[a];}return'';
+}
+// Smarter column lookup: exact → suffix/prefix → substring contains
+// Rule: the ROW KEY is the compound form (e.g. "studentname" for alias "name")
+//       OR the ALIAS is the compound form (e.g. alias "studentname" for key "student")
+//       NEVER: alias-ends-with-key — that causes "firstname" to match a "name" column
+function _impCol(row,...aliases){
+  const exact=col(row,...aliases);
+  if(exact!=='')return exact;
+  const norms=aliases.map(a=>a.toLowerCase().replace(/[^a-z0-9]/g,''));
+  // Pass 1: rk ends/starts with alias, OR alias starts with rk (alias is more specific version of short key)
+  for(const[rk,rv]of Object.entries(row)){
+    if(!rv&&rv!==0)continue;
+    for(const na of norms){
+      if(na.length>=3&&(rk.endsWith(na)||rk.startsWith(na)||na.startsWith(rk)))return String(rv);
+    }
+  }
+  // Pass 2: row key contains alias as substring (e.g. "studentfirstname" contains "first")
+  for(const[rk,rv]of Object.entries(row)){
+    if(!rv&&rv!==0)continue;
+    for(const na of norms){
+      if(na.length>=4&&rk.includes(na))return String(rv);
+    }
+  }
+  return'';
+}
+function _showImportPreview(rows){
+  _importRows=rows;
+  const pv=document.getElementById('imp-preview');if(pv)pv.style.display='';
+  const info=document.getElementById('imp-preview-info');
+  if(info)info.textContent='✓ '+rows.length+' row'+(rows.length===1?'':'s')+' ready to import';
+  const cols=document.getElementById('imp-preview-cols');
+  if(cols&&rows.length){
+    const keys=Object.keys(rows[0]);
+    cols.textContent='Columns found ('+keys.length+'): '+keys.join(' · ');
+  }
+  const eb=document.getElementById('imp-execute-btn');if(eb)eb.style.display='';
+}
+function importPasteData(){
+  const text=document.getElementById('imp-paste-area').value;
+  if(!text.trim()){alert('Paste your data first.');return;}
+  const rows=_parseTextToRows(text);
+  if(!rows.length){alert('No data found. Make sure the first row contains column headers.');return;}
+  _showImportPreview(rows);
+}
+async function _proxyFetch(targetUrl){
+  const enc=encodeURIComponent(targetUrl);
+  const proxies=[
+    'https://corsproxy.io/?'+enc,
+    'https://api.allorigins.win/raw?url='+enc,
+    'https://api.codetabs.com/v1/proxy?quest='+targetUrl
+  ];
+  for(const p of proxies){
+    try{
+      const r=await fetch(p);
+      if(!r.ok)continue;
+      const t=await r.text();
+      if(t&&t.trim()&&!t.includes('"error"'))return t;
+    }catch(e){/* try next */}
+  }
+  throw new Error('All proxies failed — make sure the sheet is shared as "Anyone with the link can view"');
+}
+async function fetchSheetsUrl(){
+  const raw=(document.getElementById('imp-url-input').value||'').trim();
+  const status=document.getElementById('imp-url-status');
+  status.textContent='Fetching…';
+  try{
+    const idMatch=raw.match(/\/spreadsheets\/d\/([a-zA-Z0-9_-]+)/);
+    if(!idMatch)throw new Error('Not a valid Google Sheets URL — paste the link from File → Share');
+    const gidMatch=raw.match(/[#&?]gid=(\d+)/);
+    const exportUrl='https://docs.google.com/spreadsheets/d/'+idMatch[1]+'/export?format=csv'+(gidMatch?'&gid='+gidMatch[1]:'');
+    const text=await _proxyFetch(exportUrl);
+    const rows=_parseTextToRows(text);
+    if(!rows.length)throw new Error('Sheet fetched but no data rows found — does the sheet have a header row?');
+    status.textContent='✓ '+rows.length+' rows fetched';
+    _showImportPreview(rows);
+  }catch(err){status.textContent='✗ '+err.message;}
+}
+function readExcelFile(){
+  const file=(document.getElementById('imp-excel-file').files||[])[0];
+  if(!file){alert('Select a file first.');return;}
+  const status=document.getElementById('imp-excel-status');
+  if(typeof XLSX==='undefined'){
+    status.textContent='Loading library…';
+    const s=document.createElement('script');
+    s.src='https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js';
+    s.onload=()=>{status.textContent='';readExcelFile();};
+    s.onerror=()=>{status.textContent='Failed to load SheetJS library.';};
+    document.head.appendChild(s);return;
+  }
+  const reader=new FileReader();
+  reader.onload=ev=>{
+    try{
+      const wb=XLSX.read(new Uint8Array(ev.target.result),{type:'array'});
+      const ws=wb.Sheets[wb.SheetNames[0]];
+      const data=XLSX.utils.sheet_to_json(ws,{defval:''});
+      if(!data.length){alert('No data found in the file.');return;}
+      const rows=data.map(r=>{
+        const norm={};
+        Object.entries(r).forEach(([k,v])=>norm[_normalizeKey(k)]=String(v).trim());
+        return norm;
+      });
+      status.textContent='✓ Read '+rows.length+' rows from "'+wb.SheetNames[0]+'"';
+      _showImportPreview(rows);
+    }catch(err){alert('Could not read file: '+err.message);}
+  };
+  reader.readAsArrayBuffer(file);
+}
+function readCsvFile(){
+  const file=(document.getElementById('imp-csv-file').files||[])[0];
+  if(!file){alert('Select a file first.');return;}
+  const status=document.getElementById('imp-csv-status');
+  const reader=new FileReader();
+  reader.onload=ev=>{
+    try{
+      const rows=parseCsv(ev.target.result);
+      if(!rows.length){alert('No data found in the file.');return;}
+      status.textContent='✓ '+rows.length+' rows read';
+      _showImportPreview(rows);
+    }catch(err){status.textContent='✗ '+err.message;}
+  };
+  reader.readAsText(file);
+}
+function executeImportData(){
+  if(!_importRows.length){alert('No data loaded yet.');return;}
+  const t=_importCtx;
+  if(!t){alert('Import context lost — close and reopen the modal.');return;}
+  let added=0;
+  const r=_importRows;
+  const c=_impCol;
+  try{
+    if(t==='members'){r.forEach(row=>{let nm=c(row,'name','fullname','studentname','membername','student','member','person','attendee','participant','preferredname');if(!nm){const nk=Object.keys(row).find(k=>k.includes('name'));if(nk)nm=String(row[nk]);}if(!nm){const vals=Object.values(row).filter(v=>v&&String(v).trim()&&!/^\d+$/.test(String(v)));nm=vals[0]?String(vals[0]).trim():'';}let first=c(row,'first','firstname','fname','givenname','preferredfirst')||(nm?nm.split(' ')[0]:'');let last=c(row,'last','lastname','lname','surname','familyname')||(nm?nm.split(' ').slice(1).join(' '):'');// Safety: if full name ended up in first field, split it
+if(first&&first.includes(' ')&&!last){last=first.split(' ').slice(1).join(' ');first=first.split(' ')[0];}members.push({id:nM++,first:first||nm||'',last,role:c(row,'role','type','position','title')||'Member',email:c(row,'email','emailaddress','mail')||'',phone:c(row,'phone','phonenumber','cell','mobile','tel')||'',att:[0,0,0,0,0,0]});added++;});renderMembers();}
+    else if(t==='exec'){r.forEach(row=>{let nm=c(row,'name','fullname','membername','studentname','student','member','person');if(!nm){const nk=Object.keys(row).find(k=>k.includes('name'));if(nk)nm=String(row[nk]);}execTeam.push({id:nE++,name:nm||Object.values(row).find(v=>v&&!/^\d+$/.test(String(v)))||'',position:c(row,'position','title','role','pos')||'Member'});added++;});renderExec();}
+    else if(t==='mentors'){r.forEach(row=>{mentorPairs.push({id:nMP++,mentor:c(row,'mentor','mentorname'),mentee:c(row,'mentee','menteename'),checkins:parseInt(c(row,'checkins','checkindone','done'))||0,goal:parseInt(c(row,'goal','checkinsgoal','total'))||4,status:c(row,'status')||'In Progress',notes:c(row,'notes','note')});added++;});renderMentorship();}
+    else if(t==='bootcamps'){r.forEach(row=>{bootcamps.push({id:nB++,name:c(row,'name','session','sessionname'),date:c(row,'date'),topic:c(row,'topic','subject'),att:parseInt(c(row,'attended','attendance','att','present'))||0,tot:parseInt(c(row,'total','totalmembers','capacity'))||47,notes:c(row,'notes','note'),files:[]});added++;});renderBootcamps();}
+    else if(t==='ebod'||t==='general'){r.forEach(row=>{tasks[t].push({id:nT++,text:c(row,'task','text','name','title','description'),owner:c(row,'owner','assignedto','assigned')||'President',due:c(row,'due','duedate','deadline','date')||'TBD',cat:c(row,'category','cat','type')||'General',done:(c(row,'status','done','complete')||'').toLowerCase()==='complete',notes:c(row,'notes','note'),files:[]});added++;});renderTasks();}
+    else if(t==='agendas'){r.forEach(row=>{agendas.push({id:nA++,name:c(row,'name','meeting','title'),date:c(row,'date'),items:c(row,'items','agenda','agendaitems'),notes:c(row,'notes','note'),status:c(row,'status')||'Draft',files:[]});added++;});renderAgendas();}
+    else if(t==='sponsors'){r.forEach(row=>{sponsors.push({id:nSp++,abbr:(c(row,'name','company')||'??').slice(0,2).toUpperCase(),name:c(row,'name','company','organization'),tier:c(row,'tier','level','type')||'Bronze',contact:c(row,'contact','contactname'),email:c(row,'email','contactemail'),amount:c(row,'amount','donation')||''});added++;});renderSponsors();}
+    else if(t==='pipeline'){r.forEach(row=>{pipeline.push({id:nPl++,name:c(row,'name','company','organization'),ask:c(row,'ask','amount','target')||'',stage:c(row,'stage','status')||'Identified',next:c(row,'next','nextstep')||''});added++;});renderSponsors();}
+    else if(t==='consulting'){r.forEach(row=>{consultingProjects.push({id:nCon++,name:c(row,'name','project','projectname'),client:c(row,'client','company','clientname'),lead:c(row,'lead','owner','projectlead'),start:c(row,'start','startdate','date')||'',status:c(row,'status')||'Active',notes:c(row,'notes','note'),files:[]});added++;});renderConsulting();}
+    else if(t==='clients'){r.forEach(row=>{clients.push({id:nCli++,name:c(row,'name','company','organization'),contact:c(row,'contact','contactname'),email:c(row,'email'),industry:c(row,'industry','sector','type')||'',status:c(row,'status')||'Active',notes:c(row,'notes','note')});added++;});renderConsulting();}
+    else if(t==='compresults'){r.forEach(row=>{compResults.push({id:nCR++,member:c(row,'member','name','student','membername'),event:c(row,'event','eventname'),competition:c(row,'competition','comp'),placement:c(row,'placement','place','result')||'Participated',year:c(row,'year')||'2026'});added++;});renderCompetition();}
+    else if(t==='income'||t==='expense'){r.forEach(row=>{transactions[t].push({id:nTr++,desc:c(row,'description','desc','name','item'),cat:c(row,'category','cat','type')||'Other',date:c(row,'date')||'',amount:parseFloat(c(row,'amount','total','cost','value','revenue'))||0});added++;});renderBudget();}
+    else if(t==='minutes'){r.forEach(row=>{meetingMinutes.push({id:nMin++,name:c(row,'name','meeting','title'),date:c(row,'date')||'',recorder:c(row,'recorder','recordedby','secretary')||'',actions:c(row,'actions','actionitems'),notes:c(row,'notes','note'),files:[]});added++;});renderMinutes();}
+    else if(t==='prospects'){r.forEach(row=>{prospects.push({id:nPr++,name:c(row,'name','fullname','studentname','membername'),contact:c(row,'contact','email','phone'),source:c(row,'source','referral','channel')||'Other',stage:c(row,'stage','status')||'Interested',followup:c(row,'followup','followupdate')||'',notes:c(row,'notes','note')});added++;});renderRecruitment();}
+    else if(t==='ec-members'){const id=document.getElementById('ec-select').value;const e=eventCosts.find(x=>x.id==id);if(!e){alert('Select an event first, then re-open this modal.');return;}r.forEach(row=>{let nm=c(row,'name','member','membername','fullname','studentname','student','person','attendee');if(!nm){const nk=Object.keys(row).find(k=>k.includes('name'));if(nk)nm=String(row[nk]);}if(!nm){const vals=Object.values(row).filter(v=>v&&String(v).trim()&&!/^\d+$/.test(String(v)));nm=vals[0]?String(vals[0]).trim():'';}e.members.push({name:nm,phone:c(row,'phone','phonenumber','cell','mobile','contact','tel')||'',email:c(row,'email','emailaddress','mail')||'',paid:parseFloat(c(row,'paid','amount','payment','amountpaid','totalpaid','cost'))||0,aid:parseFloat(c(row,'aid','financialaid','scholarship','grant'))||0});added++;});calcEventCost();}
+    else if(t==='reimbursements'){r.forEach(row=>{reimbursements.push({id:nReim++,member:c(row,'member','name','submittedby','studentname'),item:c(row,'item','description','desc'),amount:parseFloat(c(row,'amount','cost','total'))||0,date:c(row,'date')||'',receipt:c(row,'receipt','receiptlink','link')||'',notes:c(row,'notes','note')||'',status:c(row,'status')||'Pending'});added++;});renderReimbursements();}
+    else{alert('Unknown import type: "'+t+'". Try closing and reopening the modal.');return;}
+  }catch(err){
+    alert('Import error: '+err.message+'\n\nColumns detected: '+(_importRows.length?Object.keys(_importRows[0]).join(', '):'none'));
+    return;
+  }
+  if(!added){
+    const detectedCols=_importRows.length?Object.keys(_importRows[0]).join(', '):'none';
+    alert('⚠️ 0 rows were imported.\n\nColumns detected in your data:\n'+detectedCols+'\n\nTip: Make sure your sheet has a header row with column names the app can recognize (e.g. Name, Email, Phone, Paid).');
+    return; // keep modal open so they can try again
+  }
+  renderDashboard();saveData();
+  closeModals();
+  alert('✓ Imported '+added+' row'+(added!==1?'s':'')+' into '+(_IMP_LABELS[t]||t)+'.');
+}
+
+// ── MERCH SALES ──────────────────────────────────────────────────────────
+function renderMerch(){
+  const totalRev=merchSales.reduce((s,m)=>s+m.price*m.qty,0);
+  const totalQty=merchSales.reduce((s,m)=>s+m.qty,0);
+  const top=merchSales.length?[...merchSales].sort((a,b)=>b.price*b.qty-a.price*a.qty)[0]:null;
+  const ss=document.getElementById('merch-stats');
+  if(ss)ss.innerHTML=[
+    {l:'Total Revenue',v:'$'+totalRev.toFixed(2),s:'All items'},
+    {l:'Units Sold',v:totalQty,s:'Across all items'},
+    {l:'Items Listed',v:merchSales.length,s:'SKUs'},
+    {l:'Top Item',v:top?top.item:'—',s:top?'$'+(top.price*top.qty).toFixed(2)+' revenue':''},
+  ].map(s=>`<div class="sc"><div class="sl">${s.l}</div><div class="sv">${s.v}</div><div class="sm">${s.s}</div></div>`).join('');
+  const t=document.getElementById('merch-table');if(!t)return;
+  if(!merchSales.length){t.innerHTML=`<tr><td colspan="6" style="font-size:11px;color:var(--t4);padding:12px">No merch items yet. Click + Add Item to start.</td></tr>`;return;}
+  t.innerHTML=merchSales.map(m=>`<tr class="cr" onclick="openMerchDetail(${m.id})"><td class="nm">${m.item}</td><td>$${parseFloat(m.price).toFixed(2)}</td><td>${m.qty}</td><td style="color:var(--gold2);font-weight:600">$${(m.price*m.qty).toFixed(2)}</td><td style="color:var(--t3);font-size:10px">${m.notes||'—'}</td><td><button class="rb" onclick="event.stopPropagation();merchSales=merchSales.filter(x=>x.id!==${m.id});renderMerch()">&times;</button></td></tr>`).join('');
+}
+function addMerchItem(){
+  merchSales.push({id:nMerch++,item:'New Item',price:0,qty:0,notes:''});
+  renderMerch();openMerchDetail(merchSales[merchSales.length-1].id);
+}
+function openMerchDetail(id){
+  const m=merchSales.find(x=>x.id===id);if(!m)return;
+  openDetail(m.item,'Merch Item',
+    row2(fld('Item Name',inp('ed-mitem',m.item)),fld('Price / Unit ($)',inp('ed-mprice',m.price,'number')))+
+    row2(fld('Qty Sold',inp('ed-mqty',m.qty,'number')),fld('Notes',inp('ed-mnotes',m.notes)))+
+    `<div style="display:flex;gap:7px"><button class="btn btn-p btn-sm" onclick="saveMerchItem(${id},this)">Save</button><button class="btn btn-g btn-sm" style="color:#E57373" onclick="merchSales=merchSales.filter(x=>x.id!==${id});renderMerch();closeDetail()">Delete</button></div>`,m);
+}
+function saveMerchItem(id,btn){
+  const m=merchSales.find(x=>x.id===id);if(!m)return;
+  m.item=g('ed-mitem');m.price=parseFloat(g('ed-mprice'))||0;m.qty=parseInt(g('ed-mqty'))||0;m.notes=g('ed-mnotes');
+  renderMerch();saved(btn);
+  document.getElementById('d-title').textContent=m.item;
+}
+function exportMerchCSV(){
+  const rows=[['Item','Price','Qty','Revenue','Notes'],...merchSales.map(m=>[m.item,m.price,m.qty,(m.price*m.qty).toFixed(2),m.notes])];
+  const csv=rows.map(r=>r.map(c=>'"'+String(c).replace(/"/g,'""')+'"').join(',')).join('\n');
+  const a=document.createElement('a');a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(csv);a.download='merch-sales.csv';a.click();
+}
+
+// ── FINANCE PORTAL BUDGET ─────────────────────────────────────────────────
+function saveBudgetTarget(val){
+  budgetTarget=parseFloat(val)||0;
+  localStorage.setItem('dapbl_budget_target',budgetTarget);
+}
+function initFinBudget(){
+  const inp=document.getElementById('fin-budget-target');
+  if(inp)inp.value=budgetTarget;
+  renderFinBudget();
+}
+function showBudgetAcct(acct){
+  document.querySelectorAll('#portal-finance-budget .bud-acct-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('#portal-finance-budget .bud-acct-tab').forEach(t=>t.classList.remove('active'));
+  const panel=document.getElementById('bud-acct-'+acct);if(panel)panel.classList.add('active');
+  document.querySelectorAll('#portal-finance-budget .bud-acct-tab').forEach(t=>{
+    if(t.getAttribute('onclick')&&t.getAttribute('onclick').includes("'"+acct+"'"))t.classList.add('active');
+  });
+  if(acct==='personal')renderFinBudget();else renderPblBudget();
+}
+function showBudgetSubTab(acct,tab){
+  const container=document.getElementById('bud-acct-'+acct);if(!container)return;
+  container.querySelectorAll('.bud-sub-panel').forEach(p=>p.classList.remove('active'));
+  container.querySelectorAll('.bud-sub-tab').forEach(t=>t.classList.remove('active'));
+  const panel=document.getElementById('bud-'+acct+'-'+tab);if(panel)panel.classList.add('active');
+  container.querySelectorAll('.bud-sub-tab').forEach(t=>{
+    if(t.dataset.acct===acct&&t.dataset.tab===tab)t.classList.add('active');
+  });
+  if(acct==='personal')renderFinBudget();else renderPblBudget();
+}
+function renderFinBudget(){
+  const totalInc=transactions.income.reduce((s,t)=>s+t.amount,0);
+  const totalExp=transactions.expense.reduce((s,t)=>s+t.amount,0);
+  const pblInc=pblTransactions.income.reduce((s,t)=>s+t.amount,0);
+  const pblExp=pblTransactions.expense.reduce((s,t)=>s+t.amount,0);
+  const totalAll=(totalInc+pblInc)-(totalExp+pblExp);
+  const el=id=>document.getElementById(id);
+  if(el('fin-bud-income'))el('fin-bud-income').innerHTML=`<span class="sa">$${(totalInc+pblInc).toLocaleString()}</span>`;
+  if(el('fin-bud-expense'))el('fin-bud-expense').textContent='$'+(totalExp+pblExp).toLocaleString();
+  if(el('fin-bud-balance')){el('fin-bud-balance').textContent='$'+totalAll.toLocaleString();el('fin-bud-balance').style.color=totalAll>=0?'var(--gold2)':'#E57373';}
+  // Personal account tables
+  const it=el('fin-income-table');
+  if(it)it.innerHTML=transactions.income.map(t=>`<tr class="cr" onclick="openFinTransactionDetail(${t.id},'income')"><td class="nm">${t.desc}</td><td><span class="badge bg">${t.cat}</span></td><td>${t.date}</td><td style="color:var(--gold2);font-weight:600">+$${t.amount}</td></tr>`).join('');
+  const et=el('fin-expense-table');
+  if(et)et.innerHTML=transactions.expense.map(t=>`<tr class="cr" onclick="openFinTransactionDetail(${t.id},'expense')"><td class="nm">${t.desc}</td><td><span class="badge br">${t.cat}</span></td><td>${t.date}</td><td style="color:#E57373;font-weight:600">-$${t.amount}</td></tr>`).join('');
+  // Personal summary by category
+  const cats={};
+  transactions.income.forEach(t=>{cats[t.cat]=(cats[t.cat]||{inc:0,exp:0});cats[t.cat].inc+=t.amount;});
+  transactions.expense.forEach(t=>{cats[t.cat]=(cats[t.cat]||{inc:0,exp:0});cats[t.cat].exp+=t.amount;});
+  const bc=el('fin-budget-by-cat');
+  if(bc)bc.innerHTML=Object.entries(cats).map(([cat,v])=>`<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--bd)"><span style="font-size:12px">${cat}</span><div style="display:flex;gap:12px"><span style="font-size:11px;color:var(--gold2)">${v.inc?'+$'+v.inc:''}</span><span style="font-size:11px;color:#E57373">${v.exp?'-$'+v.exp:''}</span></div></div>`).join('');
+}
+function renderPblBudget(){
+  const pblInc=pblTransactions.income.reduce((s,t)=>s+t.amount,0);
+  const pblExp=pblTransactions.expense.reduce((s,t)=>s+t.amount,0);
+  const bal=pblInc-pblExp;
+  const el=id=>document.getElementById(id);
+  if(el('pbl-bal-display'))el('pbl-bal-display').textContent='$'+bal.toFixed(2);
+  if(el('pbl-income-display'))el('pbl-income-display').textContent='Income: $'+pblInc.toLocaleString();
+  if(el('pbl-expense-display'))el('pbl-expense-display').textContent='Expenses: $'+pblExp.toLocaleString();
+  // PBL income table
+  const pit=el('pbl-income-table');
+  if(pit)pit.innerHTML=pblTransactions.income.length?pblTransactions.income.map(t=>`<tr class="cr" onclick="openPblTransactionDetail(${t.id},'income')"><td class="nm">${t.desc}</td><td><span class="badge bg">${t.cat}</span></td><td>${t.date}</td><td style="color:var(--gold2);font-weight:600">+$${t.amount}</td></tr>`).join(''):`<tr><td colspan="4" style="font-size:11px;color:var(--t4);padding:12px">No PBL income entries yet.</td></tr>`;
+  // PBL expense table
+  const pet=el('pbl-expense-table');
+  if(pet)pet.innerHTML=pblTransactions.expense.length?pblTransactions.expense.map(t=>`<tr class="cr" onclick="openPblTransactionDetail(${t.id},'expense')"><td class="nm">${t.desc}</td><td><span class="badge br">${t.cat}</span></td><td>${t.date}</td><td style="color:#E57373;font-weight:600">-$${t.amount}</td></tr>`).join(''):`<tr><td colspan="4" style="font-size:11px;color:var(--t4);padding:12px">No PBL expense entries yet.</td></tr>`;
+  // PBL category summary
+  const cats={};
+  pblTransactions.income.forEach(t=>{cats[t.cat]=(cats[t.cat]||{inc:0,exp:0});cats[t.cat].inc+=t.amount;});
+  pblTransactions.expense.forEach(t=>{cats[t.cat]=(cats[t.cat]||{inc:0,exp:0});cats[t.cat].exp+=t.amount;});
+  const bc=el('pbl-budget-by-cat');
+  if(bc)bc.innerHTML=Object.keys(cats).length?Object.entries(cats).map(([cat,v])=>`<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--bd)"><span style="font-size:12px">${cat}</span><div style="display:flex;gap:12px"><span style="font-size:11px;color:var(--gold2)">${v.inc?'+$'+v.inc:''}</span><span style="font-size:11px;color:#E57373">${v.exp?'-$'+v.exp:''}</span></div></div>`).join(''):'<div style="font-size:11px;color:var(--t4);padding:12px">No transactions yet.</div>';
+  // Transaction log (chronological)
+  renderPblLog(bal);
+}
+function renderPblLog(runningStart){
+  const lt=document.getElementById('pbl-log-table');if(!lt)return;
+  const all=[
+    ...pblTransactions.income.map(t=>({...t,type:'income'})),
+    ...pblTransactions.expense.map(t=>({...t,type:'expense'}))
+  ].sort((a,b)=>{const da=new Date('2026/'+a.date),db=new Date('2026/'+b.date);return isNaN(da)||isNaN(db)?0:da-db;});
+  let running=0;
+  if(!all.length){lt.innerHTML=`<tr><td colspan="6" style="font-size:11px;color:var(--t4);padding:12px">No transactions yet.</td></tr>`;return;}
+  lt.innerHTML=all.map(t=>{
+    running+=t.type==='income'?t.amount:-t.amount;
+    return`<tr class="cr" onclick="openPblTransactionDetail(${t.id},'${t.type}')">
+      <td>${t.date}</td><td class="nm">${t.desc}</td><td><span class="badge ${t.type==='income'?'bg':'br'}">${t.cat}</span></td>
+      <td style="font-size:10px;color:${t.type==='income'?'var(--grn)':'#E57373'}">${t.type}</td>
+      <td style="font-weight:600;color:${t.type==='income'?'var(--gold2)':'#E57373'}">${t.type==='income'?'+':'-'}$${t.amount}</td>
+      <td style="font-weight:600;color:${running>=0?'var(--grn)':'#E57373'}">$${running.toFixed(2)}</td>
+    </tr>`;
+  }).join('');
+}
+function addFinTransaction(type){
+  const newT={id:nTr++,desc:'New Entry',cat:'Other',date:'',amount:0};
+  transactions[type].push(newT);
+  renderFinBudget();openFinTransactionDetail(newT.id,type);
+}
+function openFinTransactionDetail(id,type){
+  const t=transactions[type].find(x=>x.id===id);if(!t)return;
+  const incCats=['Sponsorship','Dues','Event','Fundraiser','Other'];
+  const expCats=['Travel','Competition','Education','Events','Marketing','Design','Operations','Other'];
+  openDetail(t.desc,type==='income'?'Personal Income':'Personal Expense',
+    fld('Description',inp('ed-trdesc',t.desc))+
+    row2(fld('Category',sel('ed-trcat',type==='income'?incCats:expCats,t.cat)),fld('Date',inp('ed-trdate',t.date)))+
+    fld('Amount ($)',inp('ed-tramt',t.amount,'number'))+
+    `<div style="display:flex;gap:7px"><button class="btn btn-p btn-sm" onclick="saveFinTransaction(${id},'${type}',this)">Save</button><button class="btn btn-g btn-sm" style="color:#E57373" onclick="transactions['${type}']=transactions['${type}'].filter(x=>x.id!==${id});renderFinBudget();renderBudget();closeDetail()">Delete</button></div>`,t);
+}
+function saveFinTransaction(id,type,btn){
+  const t=transactions[type].find(x=>x.id===id);if(!t)return;
+  t.desc=g('ed-trdesc');t.cat=g('ed-trcat');t.date=g('ed-trdate');t.amount=parseFloat(g('ed-tramt'))||0;
+  renderFinBudget();renderBudget();saved(btn);
+  document.getElementById('d-title').textContent=t.desc;
+}
+function addPblTransaction(type){
+  const newT={id:nPblTr++,desc:'New Entry',cat:'Other',date:'',amount:0};
+  pblTransactions[type].push(newT);
+  renderPblBudget();openPblTransactionDetail(newT.id,type);
+}
+function openPblTransactionDetail(id,type){
+  const t=pblTransactions[type].find(x=>x.id===id);if(!t)return;
+  const incCats=['Sponsorship','Dues','Event','Fundraiser','Grant','Other'];
+  const expCats=['Travel','Competition','Education','Events','Marketing','Design','Operations','Admin','Other'];
+  openDetail(t.desc,'PBL Bank — '+(type==='income'?'Income':'Expense'),
+    fld('Description',inp('ed-ptrdesc',t.desc))+
+    row2(fld('Category',sel('ed-ptrcat',type==='income'?incCats:expCats,t.cat)),fld('Date',inp('ed-ptrdate',t.date)))+
+    fld('Amount ($)',inp('ed-ptramt',t.amount,'number'))+
+    `<div style="display:flex;gap:7px"><button class="btn btn-p btn-sm" onclick="savePblTransaction(${id},'${type}',this)">Save</button><button class="btn btn-g btn-sm" style="color:#E57373" onclick="pblTransactions['${type}']=pblTransactions['${type}'].filter(x=>x.id!==${id});renderPblBudget();closeDetail()">Delete</button></div>`,t);
+}
+function savePblTransaction(id,type,btn){
+  const t=pblTransactions[type].find(x=>x.id===id);if(!t)return;
+  t.desc=g('ed-ptrdesc');t.cat=g('ed-ptrcat');t.date=g('ed-ptrdate');t.amount=parseFloat(g('ed-ptramt'))||0;
+  renderPblBudget();saved(btn);
+  document.getElementById('d-title').textContent=t.desc;
+}
+function generatePblStatement(){
+  const q=document.getElementById('stmt-quarter').value;
+  alert('Statement format not yet configured. Send your example format and it will be built for '+q+' quarter.');
+}
+function exportFinBudgetCSV(){
+  const rows=[['Type','Description','Category','Date','Amount'],
+    ...transactions.income.map(t=>['Income',t.desc,t.cat,t.date,t.amount]),
+    ...transactions.expense.map(t=>['Expense',t.desc,t.cat,t.date,-t.amount])];
+  const csv=rows.map(r=>r.map(c=>'"'+String(c).replace(/"/g,'""')+'"').join(',')).join('\n');
+  const a=document.createElement('a');a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(csv);a.download='personal-budget.csv';a.click();
+}
+
+// ── GOOGLE CALENDAR iCAL IMPORT ────────────────────────────────────────────
+async function importIcal(){
+  const url=document.getElementById('ical-url').value.trim();
+  if(!url){alert('Please paste an iCal URL first.');return;}
+  const status=document.getElementById('ical-status');
+  if(status)status.textContent='Importing...';
+  try{
+    const proxy='https://api.allorigins.win/raw?url='+encodeURIComponent(url);
+    const resp=await fetch(proxy);
+    if(!resp.ok)throw new Error('Could not fetch calendar (status '+resp.status+'). Make sure the calendar is public.');
+    const text=await resp.text();
+    if(!text.includes('BEGIN:VCALENDAR'))throw new Error('URL does not appear to be a valid iCal feed. Check the URL and that the calendar is public.');
+    parseIcalText(text);
+  }catch(e){
+    if(status)status.textContent='';
+    alert('Import failed: '+e.message);
+  }
+}
+function parseIcalText(text){
+  const MONTHS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const unfolded=text.replace(/\r\n/g,'\n').replace(/\r/g,'\n').replace(/\n[ \t]/g,'');
+  const blocks=unfolded.split('BEGIN:VEVENT').slice(1);
+  const events=[];
+  blocks.forEach(block=>{
+    const get=key=>{const m=block.match(new RegExp(key+'[^:\\n]*:([^\\n]+)'));return m?m[1].trim():''};
+    const summary=get('SUMMARY');
+    const dtstart=get('DTSTART');
+    const location=get('LOCATION');
+    const desc=get('DESCRIPTION');
+    if(!summary||!dtstart)return;
+    const dm=dtstart.match(/^(\d{4})(\d{2})(\d{2})/);
+    if(!dm)return;
+    const dateStr=MONTHS[parseInt(dm[2])-1]+' '+parseInt(dm[3])+', '+dm[1];
+    events.push({name:summary.replace(/\\n/g,' ').replace(/\\,/g,','),date:dateStr,loc:location.replace(/\\,/g,',')||'',desc:desc.replace(/\\n/g,'\n').replace(/\\,/g,',')||''});
+  });
+  importedCalEvents=events;
+  renderCalendar();
+  const status=document.getElementById('ical-status');
+  if(status)status.textContent='✓ '+events.length+' events imported';
+  saveData();
+}
+function clearImportedCal(){
+  importedCalEvents=[];
+  const status=document.getElementById('ical-status');
+  if(status)status.textContent='Cleared';
+  setTimeout(()=>{if(status)status.textContent='';},1500);
+  renderCalendar();saveData();
+}
+
 function loginIM(){
   const name=document.getElementById('land-im-name').value.trim();
   const err=document.getElementById('land-im-err');
