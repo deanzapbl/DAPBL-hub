@@ -332,6 +332,21 @@ textarea{resize:vertical;min-height:120px;}
 .imp-tab.active{background:var(--bg);color:var(--t1);box-shadow:0 1px 3px rgba(0,0,0,.08);}
 .imp-tab:hover:not(.active){background:var(--s3);color:var(--t2);}
 </style>
+
+<!-- ── FIREBASE ──────────────────────────────────────────────────────────── -->
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<script>
+  firebase.initializeApp({
+    apiKey:"AIzaSyAd176So-lY5IFJoeh0J08edWh4ytXmuTs",
+    authDomain:"dapblclub-hub.firebaseapp.com",
+    projectId:"dapblclub-hub",
+    storageBucket:"dapblclub-hub.firebasestorage.app",
+    messagingSenderId:"1059697973377",
+    appId:"1:1059697973377:web:223f9315410bd40a9b5580"
+  });
+  window._db=firebase.firestore();
+</script>
 </head>
 <body>
 
@@ -3975,6 +3990,11 @@ function saveData(){
     nEC,nReim,nVen,nVS,nCP,nCurr,nBKC,nBKF,nPost,nMCI,nPblTr,nMerch
   };
   try{localStorage.setItem(SAVE_KEY,JSON.stringify(d));}catch(e){}
+  // Save to Firestore (async, non-blocking — keeps all devices in sync)
+  if(window._db){
+    window._db.collection('chapter').doc('main').set(d)
+      .catch(err=>console.warn('Firestore write failed:',err));
+  }
   const ind=document.getElementById('save-indicator');
   if(ind){ind.classList.add('show');clearTimeout(ind._t);ind._t=setTimeout(()=>ind.classList.remove('show'),1800);}
 }
@@ -4389,6 +4409,77 @@ function handleCsvImport(e){
 (function(){const sb=document.getElementById('sidebar');const rz=document.getElementById('sb-resizer');let dragging=false,startX=0,startW=0;rz.addEventListener('mousedown',e=>{dragging=true;startX=e.clientX;startW=sb.offsetWidth;rz.classList.add('dragging');document.body.style.cursor='col-resize';document.body.style.userSelect='none';e.preventDefault();});document.addEventListener('mousemove',e=>{if(!dragging)return;const w=Math.min(360,Math.max(160,startW+(e.clientX-startX)));sb.style.setProperty('--sb-width',w+'px');sb.style.width=w+'px';});document.addEventListener('mouseup',()=>{if(!dragging)return;dragging=false;rz.classList.remove('dragging');document.body.style.cursor='';document.body.style.userSelect='';});})();
 loadData();
 renderMembers();renderExec();renderBootcamps();renderTasks();renderAgendas();renderEvents();renderRos();renderTemplates();renderSponsors();renderEmailList();renderConsulting();renderCompetition();renderBudget();renderMinutes();renderRecruitment();renderGoals();renderTransition();renderAnnouncements();renderMentorship();renderDashboard();renderPortals();renderEcSelect();renderReimbursements();renderVenues();renderVolSlots();renderCompPrep();renderCurriculum();renderBrandKit();renderContentCalendar();renderCaMentors();renderMemberCheckIns();renderCalendar();
+
+// ── FIRESTORE REAL-TIME SYNC ─────────────────────────────────────────────────
+// Applies a Firestore snapshot to all in-memory variables (mirrors loadData)
+function _applyFirestoreData(d){
+  if(d.members)members=d.members;
+  if(d.execTeam)execTeam=d.execTeam;
+  if(d.bootcamps)bootcamps=d.bootcamps;
+  if(d.tasks)tasks=d.tasks;
+  if(d.agendas)agendas=d.agendas;
+  if(d.eventsData)eventsData=d.eventsData;
+  if(d.emails)emails=d.emails;
+  if(d.consultingProjects)consultingProjects=d.consultingProjects;
+  if(d.clients)clients=d.clients;
+  if(d.deliverables)deliverables=d.deliverables;
+  if(d.compResults)compResults=d.compResults;
+  if(d.compEvents)compEvents=d.compEvents;
+  if(d.compHistory)compHistory=d.compHistory;
+  if(d.transactions)transactions=d.transactions;
+  if(d.meetingMinutes)meetingMinutes=d.meetingMinutes;
+  if(d.prospects)prospects=d.prospects;
+  if(d.goals)goals=d.goals;
+  if(d.transitionDocs)transitionDocs=d.transitionDocs;
+  if(d.announcements)announcements=d.announcements;
+  if(d.mentorPairs)mentorPairs=d.mentorPairs;
+  if(d.sponsors)sponsors=d.sponsors;
+  if(d.pipeline)pipeline=d.pipeline;
+  if(d.rosData)rosData=d.rosData;
+  if(d.eventCosts)eventCosts=d.eventCosts;
+  if(d.reimbursements)reimbursements=d.reimbursements;
+  if(d.venues)venues=d.venues;
+  if(d.volunteerSlots)volunteerSlots=d.volunteerSlots;
+  if(d.compPrep)compPrep=d.compPrep;
+  if(d.curriculum)curriculum=d.curriculum;
+  if(d.brandKit)brandKit=d.brandKit;
+  if(d.contentPosts)contentPosts=d.contentPosts;
+  if(d.memberCheckIns)memberCheckIns=d.memberCheckIns;
+  if(d.resources)resources=d.resources;
+  if(d.eventSlides)eventSlides=d.eventSlides;
+  if(d.lectureSlides)lectureSlides=d.lectureSlides;
+  if(d.pblTransactions)pblTransactions=d.pblTransactions;
+  if(d.merchSales)merchSales=d.merchSales;
+  if(d.importedCalEvents)importedCalEvents=d.importedCalEvents;
+  // Also write to localStorage so syncFromEBOD() still works same-device
+  try{localStorage.setItem(SAVE_KEY,JSON.stringify(d));}catch(e){}
+}
+function _renderAll(){
+  renderMembers();renderExec();renderBootcamps();renderTasks();renderAgendas();
+  renderEvents();renderSponsors();renderConsulting();renderCompetition();
+  renderBudget();renderMinutes();renderRecruitment();renderAnnouncements();
+  renderMentorship();renderDashboard();renderEcSelect();renderReimbursements();
+  renderMemberContent();renderMerch();
+}
+function initFirestore(){
+  if(!window._db)return;
+  window._db.collection('chapter').doc('main')
+    .onSnapshot({includeMetadataChanges:true},snap=>{
+      // hasPendingWrites=true means this is our OWN local write already in memory — skip
+      if(snap.metadata.hasPendingWrites)return;
+      if(!snap.exists)return;
+      const d=snap.data();if(!d)return;
+      _applyFirestoreData(d);
+      _renderAll();
+      // If IM portal is open, refresh it too
+      const imApp=document.getElementById('app-im');
+      if(imApp&&imApp.style.display!=='none'){
+        syncFromEBOD();
+        mRenderBootcamps();mRenderAnnouncements();mRenderEvents();renderHome();renderResources();renderTeam();
+      }
+    },err=>console.warn('Firestore listener error:',err));
+}
+initFirestore();
 
 // ─── IM JS ───────────────────────────────────────────────────────────────────
 // ============================================================
