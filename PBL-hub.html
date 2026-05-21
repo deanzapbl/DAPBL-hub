@@ -4576,6 +4576,15 @@ function mShowPage(id){
   appIm.querySelectorAll('.ni').forEach(n=>{
     if(n.getAttribute('onclick')===`mShowPage('${id}')`)n.classList.add('active');
   });
+  // Re-sync EBOD data and re-render the target page so changes are always live
+  syncFromEBOD();
+  if(id==='bootcamps')mRenderBootcamps();
+  else if(id==='dashboard')renderHome();
+  else if(id==='announcements')mRenderAnnouncements();
+  else if(id==='events')mRenderEvents();
+  else if(id==='competition')mRenderCompetition();
+  else if(id==='resources')renderResources();
+  else if(id==='team')renderTeam();
 }
 
 function mShowTab(page,tab){
@@ -4591,6 +4600,14 @@ function mShowTab(page,tab){
   const prefix=conflicting.includes(subId)?'m-':'';
   const subEl=document.getElementById(prefix+subId);
   if(subEl)subEl.classList.add('active');
+  // Re-sync so EBOD changes are always reflected immediately
+  syncFromEBOD();
+  if(page==='bootcamps'){
+    if(tab==='eventslides')renderEventSlides();
+    else if(tab==='lectureslides')renderLectureSlides();
+    else if(tab==='sessions')mRenderBootcamps();
+    else if(tab==='homework')renderHomework();
+  }
 }
 
 // ============================================================
