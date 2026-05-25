@@ -373,12 +373,6 @@ textarea{resize:vertical;min-height:120px;}
       <div class="land-card-sub">IM portal — events, bootcamps, competition prep, resources, and your profile.</div>
       <div class="land-card-tag" style="background:rgba(21,88,160,.1);color:var(--blu)">All Members</div>
     </div>
-    <div class="land-card" onclick="openInterestForm()" style="border-color:rgba(21,88,160,.25);cursor:pointer">
-      <div class="land-card-icon">📝</div>
-      <div class="land-card-title">Interest Form</div>
-      <div class="land-card-sub">Prospective members — let us know you're interested in joining De Anza PBL.</div>
-      <div class="land-card-tag" style="background:rgba(21,88,160,.1);color:var(--blu)">No login needed</div>
-    </div>
   </div>
   <!-- EBOD sign-in form -->
   <div class="land-form" id="land-ebod-form">
@@ -849,10 +843,6 @@ textarea{resize:vertical;min-height:120px;}
         <div class="card">
           <div class="ch"><div class="ct">Prospect Pipeline</div><div style="display:flex;gap:6px"><button class="btn-csv" onclick="openImportDataModal('prospects')">Import CSV</button><button class="btn btn-p btn-sm" onclick="addProspect()">+ Add Prospect</button></div></div>
           <table><thead><tr><th>Name</th><th>Contact</th><th>Source</th><th>Stage</th><th>Follow-up</th></tr></thead><tbody id="rec-table"></tbody></table>
-        </div>
-        <div class="card" style="margin-top:14px">
-          <div class="ch"><div class="ct">Interest Form Leads<span class="nbadge" id="leads-badge" style="display:none">0</span></div><div style="font-size:10px;color:var(--t3)">Submitted via landing page · no login required</div></div>
-          <div id="leads-table-wrap"><div style="font-size:11px;color:var(--t4);padding:10px 0">No leads yet. Share the interest form from the landing page.</div></div>
         </div>
       </div>
 
@@ -1425,27 +1415,6 @@ textarea{resize:vertical;min-height:120px;}
   <div class="dpb" id="d-body"></div>
 </div>
 
-<!-- INTEREST FORM MODAL (landing page, no login) -->
-<div class="overlay" id="interest-form-modal">
-  <div class="modal" style="max-width:440px">
-    <div class="mt">Join De Anza PBL — Interest Form</div>
-    <p style="font-size:11px;color:var(--t3);margin-bottom:16px">Fill this out and our exec team will reach out with next steps. No account needed.</p>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
-      <div><div class="fl">Full Name *</div><input id="if-name" type="text" placeholder="Your name" style="width:100%;box-sizing:border-box;background:var(--s2);border:1px solid var(--bd);border-radius:5px;padding:7px 10px;font-size:12px;color:var(--t1);outline:none"></div>
-      <div><div class="fl">Email *</div><input id="if-email" type="email" placeholder="you@email.com" style="width:100%;box-sizing:border-box;background:var(--s2);border:1px solid var(--bd);border-radius:5px;padding:7px 10px;font-size:12px;color:var(--t1);outline:none"></div>
-    </div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
-      <div><div class="fl">School Year</div><select id="if-year" style="width:100%;box-sizing:border-box;background:var(--s2);border:1px solid var(--bd);border-radius:5px;padding:7px 10px;font-size:12px;color:var(--t1);outline:none"><option value="">Select year</option><option>Freshman</option><option>Sophomore</option><option>Transfer</option><option>Other</option></select></div>
-      <div><div class="fl">How did you hear about us?</div><select id="if-source" style="width:100%;box-sizing:border-box;background:var(--s2);border:1px solid var(--bd);border-radius:5px;padding:7px 10px;font-size:12px;color:var(--t1);outline:none"><option>Club Rush</option><option>Instagram</option><option>Referral</option><option>Class</option><option>Event</option><option>Other</option></select></div>
-    </div>
-    <div style="margin-bottom:12px"><div class="fl">Anything else? (optional)</div><textarea id="if-notes" rows="2" placeholder="Why are you interested, what events you'd like to compete in, etc." style="width:100%;box-sizing:border-box;background:var(--s2);border:1px solid var(--bd);border-radius:5px;padding:7px 10px;font-size:11px;color:var(--t1);outline:none;resize:vertical;font-family:'IBM Plex Sans',sans-serif"></textarea></div>
-    <div id="if-status" style="font-size:11px;min-height:16px;margin-bottom:10px"></div>
-    <div style="display:flex;gap:8px">
-      <button class="btn btn-p" onclick="submitInterestForm()">Submit →</button>
-      <button class="btn btn-g" onclick="closeModals()">Cancel</button>
-    </div>
-  </div>
-</div>
 
 <!-- MODALS -->
 <div class="overlay" id="bulk-add-modal">
@@ -4581,7 +4550,6 @@ let _imReimbs=[];
 let _officeHourReqs=[];
 let _compSignupsMap={};
 let _mySignups=new Set();
-let _leads=[];
 let _mentorCheckins={};
 let _mentorCheckinsList=[];
 let _fsExtListenersStarted=false;
@@ -4616,12 +4584,6 @@ function initExtraListeners(){
     });
     renderCompetition();mRenderCompetition();
   },e=>console.warn('signups:',e));
-
-  // Recruitment leads
-  _db.collection('leads').onSnapshot(snap=>{
-    _leads=snap.docs.map(d=>({...d.data(),_id:d.id}));
-    renderLeads();
-  },e=>console.warn('leads:',e));
 
   // Mentor check-ins
   _db.collection('mentorCheckins').onSnapshot(snap=>{
@@ -6496,63 +6458,6 @@ function toggleSignup(eventId){
     interests:Array.from(_mySignups)
   },{merge:true}).catch(e=>console.warn('toggleSignup:',e));
   mRenderCompetition();
-}
-
-// ============================================================
-// ── RECRUITMENT LEADS ────────────────────────────────────────
-// ============================================================
-function openInterestForm(){
-  if(window._db){
-    ['if-name','if-email','if-notes'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
-    const yr=document.getElementById('if-year');if(yr)yr.value='';
-    const src=document.getElementById('if-source');if(src)src.value='Club Rush';
-    const st=document.getElementById('if-status');if(st){st.textContent='';st.style.color='#E57373';}
-    openModal('interest-form-modal');
-  } else {
-    alert('Database not connected. Please refresh and try again.');
-  }
-}
-function submitInterestForm(){
-  const name=(document.getElementById('if-name')||{}).value?.trim()||'';
-  const email=(document.getElementById('if-email')||{}).value?.trim()||'';
-  const year=(document.getElementById('if-year')||{}).value||'';
-  const source=(document.getElementById('if-source')||{}).value||'Other';
-  const notes=(document.getElementById('if-notes')||{}).value?.trim()||'';
-  const st=document.getElementById('if-status');
-  if(!name||!email){if(st){st.style.color='#E57373';st.textContent='Name and email are required.';}return;}
-  if(st)st.textContent='Submitting…';
-  _db.collection('leads').add({
-    name,email,year,source,notes,
-    submittedAt:new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}),
-    stage:'Interested'
-  }).then(()=>{
-    if(st){st.style.color='var(--grn)';st.textContent="✓ Thanks! We'll be in touch soon.";}
-    setTimeout(()=>closeModals(),2500);
-  }).catch(e=>{if(st){st.style.color='#E57373';st.textContent='Error: '+e.message;}});
-}
-function renderLeads(){
-  const el=document.getElementById('leads-table-wrap');
-  const badge=document.getElementById('leads-badge');
-  if(badge){badge.textContent=_leads.length;badge.style.display=_leads.length>0?'':'none';}
-  if(!el)return;
-  if(!_leads.length){el.innerHTML='<div style="font-size:11px;color:var(--t4);padding:10px 0">No interest form submissions yet.</div>';return;}
-  el.innerHTML=`<table><thead><tr><th>Name</th><th>Email</th><th>Year</th><th>Source</th><th>Submitted</th><th>Stage</th><th>Update</th></tr></thead><tbody>${
-    _leads.map(l=>{
-      const sc=l.stage==='Converted'?'bg':l.stage==='Dropped'?'br':'bo';
-      return`<tr><td class="nm">${l.name}</td><td style="font-size:10px">${l.email}</td>
-      <td style="font-size:10px;color:var(--t3)">${l.year||'—'}</td>
-      <td><span class="badge bb">${l.source||'Other'}</span></td>
-      <td style="font-size:10px;color:var(--t3)">${l.submittedAt||'—'}</td>
-      <td><span class="badge ${sc}">${l.stage||'Interested'}</span></td>
-      <td><select onchange="updateLeadStage('${l._id}',this.value)" style="font-size:9px;padding:2px 5px;background:var(--s2);border:1px solid var(--bd);border-radius:3px;color:var(--t1)">
-        ${['Interested','Attended Meeting','Followed Up','Converted','Dropped'].map(s=>`<option${s===l.stage?' selected':''}>${s}</option>`).join('')}
-      </select></td></tr>`;
-    }).join('')
-  }</tbody></table>`;
-}
-function updateLeadStage(id,stage){
-  if(!window._db)return;
-  _db.collection('leads').doc(id).update({stage}).catch(e=>console.warn('updateLeadStage:',e));
 }
 
 // ============================================================
