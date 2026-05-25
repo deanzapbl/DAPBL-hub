@@ -373,6 +373,12 @@ textarea{resize:vertical;min-height:120px;}
       <div class="land-card-sub">IM portal — events, bootcamps, competition prep, resources, and your profile.</div>
       <div class="land-card-tag" style="background:rgba(21,88,160,.1);color:var(--blu)">All Members</div>
     </div>
+    <div class="land-card" onclick="openInterestForm()" style="border-color:rgba(21,88,160,.25);cursor:pointer">
+      <div class="land-card-icon">📝</div>
+      <div class="land-card-title">Interest Form</div>
+      <div class="land-card-sub">Prospective members — let us know you're interested in joining De Anza PBL.</div>
+      <div class="land-card-tag" style="background:rgba(21,88,160,.1);color:var(--blu)">No login needed</div>
+    </div>
   </div>
   <!-- EBOD sign-in form -->
   <div class="land-form" id="land-ebod-form">
@@ -780,7 +786,7 @@ textarea{resize:vertical;min-height:120px;}
         <div class="sub" id="competition-events-list">
           <div class="card">
             <div class="ch"><div class="ct">Registered Events &amp; Members</div><button class="btn btn-p btn-sm" onclick="addCompEvent()">+ Add Event</button></div>
-            <table><thead><tr><th>Event Name</th><th>Members</th><th>Competition</th><th>Type</th><th>Notes</th></tr></thead><tbody id="comp-events-table"></tbody></table>
+            <table><thead><tr><th>Event Name</th><th>Members</th><th>Competition</th><th>Type</th><th>Notes</th><th>IM Interest</th></tr></thead><tbody id="comp-events-table"></tbody></table>
           </div>
         </div>
         <div class="sub" id="competition-history">
@@ -843,6 +849,10 @@ textarea{resize:vertical;min-height:120px;}
         <div class="card">
           <div class="ch"><div class="ct">Prospect Pipeline</div><div style="display:flex;gap:6px"><button class="btn-csv" onclick="openImportDataModal('prospects')">Import CSV</button><button class="btn btn-p btn-sm" onclick="addProspect()">+ Add Prospect</button></div></div>
           <table><thead><tr><th>Name</th><th>Contact</th><th>Source</th><th>Stage</th><th>Follow-up</th></tr></thead><tbody id="rec-table"></tbody></table>
+        </div>
+        <div class="card" style="margin-top:14px">
+          <div class="ch"><div class="ct">Interest Form Leads<span class="nbadge" id="leads-badge" style="display:none">0</span></div><div style="font-size:10px;color:var(--t3)">Submitted via landing page · no login required</div></div>
+          <div id="leads-table-wrap"><div style="font-size:11px;color:var(--t4);padding:10px 0">No leads yet. Share the interest form from the landing page.</div></div>
         </div>
       </div>
 
@@ -995,11 +1005,19 @@ textarea{resize:vertical;min-height:120px;}
         <div class="sub" id="portal-finance-reimbursements">
           <div class="sg" id="reim-summary-stats"></div>
           <div class="card">
-            <div class="ch"><div class="ct">Reimbursement Requests</div><button class="btn btn-p btn-sm" onclick="addReimbursement()">+ Log Receipt</button></div>
+            <div class="ch"><div class="ct">EBOD Receipts &amp; Reimbursements</div><button class="btn btn-p btn-sm" onclick="addReimbursement()">+ Log Receipt</button></div>
             <table>
               <thead><tr><th>Member</th><th>Item</th><th>Amount</th><th>Date</th><th>Receipt</th><th>Status</th><th></th></tr></thead>
               <tbody id="reim-table"></tbody>
             </table>
+          </div>
+          <div class="card" style="margin-top:14px">
+            <div class="ch"><div class="ct">Member Reimbursement Requests<span class="nbadge" id="im-reimb-badge" style="display:none">0</span></div><div style="font-size:10px;color:var(--t3)">Submitted via IM portal</div></div>
+            <div id="ebod-im-reimb-list"><div style="font-size:11px;color:var(--t4);padding:10px 0">No member requests yet.</div></div>
+          </div>
+          <div class="card" style="margin-top:14px">
+            <div class="ch"><div class="ct">Office Hour Requests<span class="nbadge" id="oh-badge" style="display:none">0</span></div><div style="font-size:10px;color:var(--t3)">Members requesting 1-on-1 sessions</div></div>
+            <div id="ebod-office-hours-list"><div style="font-size:11px;color:var(--t4);padding:10px 0">No session requests yet.</div></div>
           </div>
         </div>
 
@@ -1407,6 +1425,28 @@ textarea{resize:vertical;min-height:120px;}
   <div class="dpb" id="d-body"></div>
 </div>
 
+<!-- INTEREST FORM MODAL (landing page, no login) -->
+<div class="overlay" id="interest-form-modal">
+  <div class="modal" style="max-width:440px">
+    <div class="mt">Join De Anza PBL — Interest Form</div>
+    <p style="font-size:11px;color:var(--t3);margin-bottom:16px">Fill this out and our exec team will reach out with next steps. No account needed.</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+      <div><div class="fl">Full Name *</div><input id="if-name" type="text" placeholder="Your name" style="width:100%;box-sizing:border-box;background:var(--s2);border:1px solid var(--bd);border-radius:5px;padding:7px 10px;font-size:12px;color:var(--t1);outline:none"></div>
+      <div><div class="fl">Email *</div><input id="if-email" type="email" placeholder="you@email.com" style="width:100%;box-sizing:border-box;background:var(--s2);border:1px solid var(--bd);border-radius:5px;padding:7px 10px;font-size:12px;color:var(--t1);outline:none"></div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+      <div><div class="fl">School Year</div><select id="if-year" style="width:100%;box-sizing:border-box;background:var(--s2);border:1px solid var(--bd);border-radius:5px;padding:7px 10px;font-size:12px;color:var(--t1);outline:none"><option value="">Select year</option><option>Freshman</option><option>Sophomore</option><option>Transfer</option><option>Other</option></select></div>
+      <div><div class="fl">How did you hear about us?</div><select id="if-source" style="width:100%;box-sizing:border-box;background:var(--s2);border:1px solid var(--bd);border-radius:5px;padding:7px 10px;font-size:12px;color:var(--t1);outline:none"><option>Club Rush</option><option>Instagram</option><option>Referral</option><option>Class</option><option>Event</option><option>Other</option></select></div>
+    </div>
+    <div style="margin-bottom:12px"><div class="fl">Anything else? (optional)</div><textarea id="if-notes" rows="2" placeholder="Why are you interested, what events you'd like to compete in, etc." style="width:100%;box-sizing:border-box;background:var(--s2);border:1px solid var(--bd);border-radius:5px;padding:7px 10px;font-size:11px;color:var(--t1);outline:none;resize:vertical;font-family:'IBM Plex Sans',sans-serif"></textarea></div>
+    <div id="if-status" style="font-size:11px;min-height:16px;margin-bottom:10px"></div>
+    <div style="display:flex;gap:8px">
+      <button class="btn btn-p" onclick="submitInterestForm()">Submit →</button>
+      <button class="btn btn-g" onclick="closeModals()">Cancel</button>
+    </div>
+  </div>
+</div>
+
 <!-- MODALS -->
 <div class="overlay" id="bulk-add-modal">
   <div class="modal" style="max-width:400px">
@@ -1631,6 +1671,15 @@ textarea{resize:vertical;min-height:120px;}
         <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="5" cy="5" r="2.5"/><circle cx="11" cy="5" r="2.5"/><path d="M1 14c0-2.5 1.8-4 4-4"/><path d="M15 14c0-2.5-1.8-4-4-4"/><path d="M7 11h2"/></svg>Exec Team
       </div>
     </div>
+    <div class="nav-group">
+      <div class="ngl">My Activity</div>
+      <div class="ni" onclick="mShowPage('finance')">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="4" width="12" height="9" rx="1"/><path d="M5 4V3a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v1"/><path d="M8 9v.01M5 9h.01M11 9h.01"/></svg>Finance &amp; Office Hours
+      </div>
+      <div class="ni" onclick="mShowPage('mentorship')">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="5" cy="5" r="2.5"/><path d="M1 14c0-2.5 1.8-4 4-4"/><path d="M10 10l2 2 3-3"/></svg>Mentorship
+      </div>
+    </div>
   </div>
   <div class="sb-footer">
     <div class="sf-member" id="sb-member-info" style="display:none">
@@ -1756,8 +1805,8 @@ textarea{resize:vertical;min-height:120px;}
         <div class="sub active" id="competition-events">
           <div class="sg" id="comp-stats"></div>
           <div class="card">
-            <div class="ch"><div class="ct">NLC 2026 — Registered Events</div></div>
-            <table><thead><tr><th>Event</th><th>Members</th><th>Type</th><th>Notes</th></tr></thead><tbody id="m-comp-events-table"></tbody></table>
+            <div class="ch"><div class="ct">NLC 2026 — Registered Events</div><div style="font-size:10px;color:var(--t3)">Express interest if you'd like to compete</div></div>
+            <table><thead><tr><th>Event</th><th>Members</th><th>Type</th><th>Notes</th><th>Interest</th></tr></thead><tbody id="m-comp-events-table"></tbody></table>
           </div>
         </div>
         <div class="sub" id="competition-results">
@@ -1804,6 +1853,36 @@ textarea{resize:vertical;min-height:120px;}
           <div class="ch"><div class="ct">Executive Board — Spring 2026</div></div>
           <div class="exec-grid" id="exec-grid"></div>
         </div>
+      </div>
+
+      <!-- FINANCE (IM) -->
+      <div class="page" id="m-page-finance">
+        <div class="card" style="margin-bottom:14px">
+          <div class="ch"><div class="ct">Submit Reimbursement Request</div></div>
+          <div style="padding:0 4px">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+              <div><div style="font-size:10px;color:var(--t3);margin-bottom:4px">Item / Description *</div><input id="imr-item" type="text" placeholder="e.g. Name badge supplies" style="width:100%;box-sizing:border-box;padding:7px 10px;border:1px solid var(--bd);border-radius:6px;background:var(--s2);color:var(--t1);font-size:11px;outline:none"></div>
+              <div><div style="font-size:10px;color:var(--t3);margin-bottom:4px">Amount ($) *</div><input id="imr-amount" type="number" min="0" step="0.01" placeholder="0.00" style="width:100%;box-sizing:border-box;padding:7px 10px;border:1px solid var(--bd);border-radius:6px;background:var(--s2);color:var(--t1);font-size:11px;outline:none"></div>
+            </div>
+            <div style="margin-bottom:10px"><div style="font-size:10px;color:var(--t3);margin-bottom:4px">Receipt / Invoice Link</div><input id="imr-receipt" type="url" placeholder="Google Drive link to receipt..." style="width:100%;box-sizing:border-box;padding:7px 10px;border:1px solid var(--bd);border-radius:6px;background:var(--s2);color:var(--t1);font-size:11px;font-family:var(--mono);outline:none"></div>
+            <div style="margin-bottom:12px"><div style="font-size:10px;color:var(--t3);margin-bottom:4px">Notes</div><textarea id="imr-notes" rows="2" placeholder="Any additional details..." style="width:100%;box-sizing:border-box;padding:7px 10px;border:1px solid var(--bd);border-radius:6px;background:var(--s2);color:var(--t1);font-size:11px;outline:none;resize:vertical;font-family:'IBM Plex Sans',sans-serif"></textarea></div>
+            <div id="imr-err" style="font-size:10px;min-height:14px;margin-bottom:8px"></div>
+            <button onclick="submitImReimb()" style="padding:8px 18px;background:var(--cr);color:#fff;border:none;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer">Submit Request</button>
+          </div>
+        </div>
+        <div class="card" style="margin-bottom:14px">
+          <div class="ch"><div class="ct">My Reimbursement Requests</div></div>
+          <div id="im-reimb-list"></div>
+        </div>
+        <div class="card">
+          <div class="ch"><div class="ct">Book an Office Hour Session</div><div style="font-size:10px;color:var(--t3)">1-on-1 with an exec officer</div></div>
+          <div id="im-consult-list"></div>
+        </div>
+      </div>
+
+      <!-- MENTORSHIP (IM) -->
+      <div class="page" id="m-page-mentorship">
+        <div id="im-mentor-content"><div class="empty">Sign in to view your mentorship details.</div></div>
       </div>
 
     </div><!-- /content -->
@@ -2680,7 +2759,11 @@ function renderCompetition(){
   const rt=document.getElementById('comp-results-table');
   if(rt)rt.innerHTML=compResults.map(r=>`<tr class="cr" onclick="openCompResultDetail(${r.id})"><td class="nm">${r.member}</td><td>${r.event}</td><td>${r.competition}</td><td><span class="badge ${r.placement==='1st'?'bg':r.placement==='2nd'||r.placement==='3rd'?'bo':'bx'}">${r.placement}</span></td><td>${r.year}</td></tr>`).join('');
   const et=document.getElementById('comp-events-table');
-  if(et)et.innerHTML=compEvents.map(e=>`<tr class="cr" onclick="openCompEventDetail(${e.id})"><td class="nm">${e.name}</td><td>${e.members}</td><td>${e.competition}</td><td><span class="badge bb">${e.type}</span></td><td style="color:var(--t3);font-size:10px">${e.notes||'—'}</td></tr>`).join('');
+  if(et)et.innerHTML=compEvents.map(e=>{
+    const sups=_compSignupsMap[e.id]||[];
+    const supBadge=sups.length?`<span class="badge bg" title="${sups.map(s=>s.name).join(', ')}" style="cursor:default">${sups.length} interested</span>`:'';
+    return`<tr class="cr" onclick="openCompEventDetail(${e.id})"><td class="nm">${e.name}</td><td>${e.members}</td><td>${e.competition}</td><td><span class="badge bb">${e.type}</span></td><td style="color:var(--t3);font-size:10px">${e.notes||'—'}</td><td>${supBadge}</td></tr>`;
+  }).join('');
   const ht=document.getElementById('comp-history-table');
   if(ht)ht.innerHTML=compHistory.map(h=>`<tr class="cr" onclick="openCompHistoryDetail(${h.id})"><td class="nm">${h.year}</td><td>${h.competition}</td><td>${h.entries}</td><td><span class="badge bg">${h.first}</span></td><td>${h.top5}</td><td style="color:var(--t3);font-size:10px">${h.notes||'—'}</td></tr>`).join('');
 }
@@ -3115,7 +3198,10 @@ function renderMentorship(){
   const t=document.getElementById('mentor-table');
   if(t)t.innerHTML=mentorPairs.map(p=>{
     const sc=p.status==='Complete'?'bg':p.status==='Behind'?'br':'bo';
-    return`<tr class="cr" onclick="openMentorPairDetail(${p.id})"><td class="nm">${p.mentor}</td><td class="nm">${p.mentee}</td><td>${p.checkins}</td><td>${p.goal}</td><td><span class="badge ${sc}">${p.status}</span></td></tr>`;
+    const pairKey=p.mentor+'→'+p.mentee;
+    const fsCheckins=_mentorCheckins[pairKey]||0;
+    const totalCheckins=p.checkins+fsCheckins;
+    return`<tr class="cr" onclick="openMentorPairDetail(${p.id})"><td class="nm">${p.mentor}</td><td class="nm">${p.mentee}</td><td>${totalCheckins}${fsCheckins>0?` <span style="font-size:9px;color:var(--grn)">(+${fsCheckins} live)</span>`:''}</td><td>${p.goal}</td><td><span class="badge ${sc}">${p.status}</span></td></tr>`;
   }).join('');
   const ontrack=mentorPairs.filter(p=>p.status==='In Progress').length;
   const behind=mentorPairs.filter(p=>p.status==='Behind').length;
@@ -4489,6 +4575,82 @@ function initFirestore(){
 }
 initFirestore();
 
+// ── EXTRA FIRESTORE LISTENERS (competition signups, reimbursements, leads, mentor check-ins, office hours)
+let _ebodAllMembersHW={};
+let _imReimbs=[];
+let _officeHourReqs=[];
+let _compSignupsMap={};
+let _mySignups=new Set();
+let _leads=[];
+let _mentorCheckins={};
+let _mentorCheckinsList=[];
+let _fsExtListenersStarted=false;
+
+function initExtraListeners(){
+  if(!window._db||_fsExtListenersStarted)return;
+  _fsExtListenersStarted=true;
+
+  // IM Reimbursements
+  _db.collection('im-reimbursements').onSnapshot(snap=>{
+    _imReimbs=snap.docs.map(d=>({...d.data(),_id:d.id}));
+    renderEBODImReimbs();renderIMMyReimbs();
+  },e=>console.warn('im-reimbursements:',e));
+
+  // Office hours requests
+  _db.collection('office-hours').onSnapshot(snap=>{
+    _officeHourReqs=snap.docs.map(d=>({...d.data(),_id:d.id}));
+    renderEBODOfficeHours();renderIMConsulting();
+  },e=>console.warn('office-hours:',e));
+
+  // Competition sign-ups
+  _db.collection('signups').onSnapshot(snap=>{
+    _compSignupsMap={};
+    const uid=firebase.auth().currentUser?.uid;
+    snap.docs.forEach(d=>{
+      const data=d.data();
+      if(d.id===uid)_mySignups=new Set(data.interests||[]);
+      (data.interests||[]).forEach(eid=>{
+        if(!_compSignupsMap[eid])_compSignupsMap[eid]=[];
+        _compSignupsMap[eid].push({name:data.name,uid:d.id});
+      });
+    });
+    renderCompetition();mRenderCompetition();
+  },e=>console.warn('signups:',e));
+
+  // Recruitment leads
+  _db.collection('leads').onSnapshot(snap=>{
+    _leads=snap.docs.map(d=>({...d.data(),_id:d.id}));
+    renderLeads();
+  },e=>console.warn('leads:',e));
+
+  // Mentor check-ins
+  _db.collection('mentorCheckins').onSnapshot(snap=>{
+    _mentorCheckinsList=snap.docs.map(d=>d.data()).sort((a,b)=>(b.loggedAt||0)-(a.loggedAt||0));
+    _mentorCheckins={};
+    _mentorCheckinsList.forEach(c=>{
+      const k=c.pairKey||'';
+      if(k)_mentorCheckins[k]=(_mentorCheckins[k]||0)+1;
+    });
+    renderMentorship();renderCaMentors();renderIMMyMentorship();renderIMCheckinLog();
+  },e=>console.warn('mentorCheckins:',e));
+}
+
+function loadEBODHWFromFirestore(){
+  if(!window._db)return;
+  const el=document.getElementById('ebod-hw-table');
+  if(el)el.innerHTML='<div style="font-size:11px;color:var(--t4);padding:14px 0;text-align:center">Loading from Firestore…</div>';
+  _db.collection('members').get().then(snap=>{
+    _ebodAllMembersHW={};
+    snap.forEach(doc=>{
+      const d=doc.data();
+      if(d.homework&&Object.keys(d.homework).length>0){
+        _ebodAllMembersHW[doc.id]={name:d.name||d.email||doc.id,email:d.email||'',hw:d.homework};
+      }
+    });
+    renderEBODHomework();
+  }).catch(e=>console.warn('loadEBODHWFromFirestore:',e));
+}
+
 // ─── IM JS ───────────────────────────────────────────────────────────────────
 // ============================================================
 // DATA
@@ -4658,6 +4820,8 @@ const M_META={
   attendance:{title:'My Attendance',sub:'Bootcamp session tracker'},
   resources:{title:'Prep & Templates',sub:'Guides, frameworks, templates'},
   team:{title:'Exec Team',sub:'Spring 2026 leadership'},
+  finance:{title:'Finance & Office Hours',sub:'Reimbursements · Book a session'},
+  mentorship:{title:'Mentorship',sub:'Your mentor · Check-in log'},
 };
 
 // ============================================================
@@ -4684,6 +4848,8 @@ function mShowPage(id){
   else if(id==='competition')mRenderCompetition();
   else if(id==='resources')renderResources();
   else if(id==='team')renderTeam();
+  else if(id==='finance'){renderIMMyReimbs();renderIMConsulting();}
+  else if(id==='mentorship')renderIMMyMentorship();
 }
 
 function mShowTab(page,tab){
@@ -4742,6 +4908,7 @@ function _onIMAuthSuccess(user){
   document.getElementById('landing').style.display='none';
   document.getElementById('app-im').style.display='block';
   currentApp='im';
+  initExtraListeners();
   initIM();
   _loadMemberData(user.uid);
 }
@@ -4754,6 +4921,13 @@ function _loadMemberData(uid){
     if(d.checklist&&d.checklist.length)checklistState=d.checklist;
     renderHomework();renderChecklist();
   }).catch(e=>console.warn('Member data load failed:',e));
+  // Load this member's competition sign-ups
+  window._db.collection('signups').doc(uid).get().then(snap=>{
+    if(!snap.exists)return;
+    const d=snap.data();
+    if(d.interests)_mySignups=new Set(d.interests);
+    mRenderCompetition();
+  }).catch(()=>{});
 }
 function _saveMemberData(){
   const uid=firebase.auth().currentUser?.uid;
@@ -4837,9 +5011,10 @@ function doSignIn(){
 }
 function signOut(){
   firebase.auth().signOut().then(()=>{
-    selectedMember=null;_hwData={};
+    selectedMember=null;_hwData={};_mySignups=new Set();
     localStorage.removeItem('_lastPortal');
     updateMemberUI();renderProfile();renderAttendance();showSignIn();
+    renderIMMyReimbs();renderIMConsulting();renderIMMyMentorship();
   });
 }
 function updateMemberUI(){
@@ -5177,8 +5352,16 @@ function mRenderCompetition(){
     <div class="sc"><div class="sl">1st Place Wins</div><div class="sv">${mCompResults.filter(r=>r.placement==='1st').length}</div><div class="sm">SBLC 2026</div></div>
     <div class="sc"><div class="sl">Total Entries</div><div class="sv">${mCompResults.length}</div><div class="sm">SBLC 2026</div></div>
     <div class="sc"><div class="sl">Best Result</div><div class="sv" style="font-size:14px">1st Place</div><div class="sm">CSP & Entrepreneurship</div></div>`;
-  document.getElementById('m-comp-events-table').innerHTML=mCompEvents.map(e=>`
-    <tr><td class="nm">${e.name}</td><td>${e.members}</td><td><span class="badge bb">${e.type}</span></td><td style="color:var(--t3);font-size:10px">${e.notes||'—'}</td></tr>`).join('');
+  document.getElementById('m-comp-events-table').innerHTML=mCompEvents.map(e=>{
+    const interested=_mySignups.has(e.id);
+    const count=(_compSignupsMap[e.id]||[]).length;
+    const btnStyle=interested
+      ?'padding:4px 10px;background:var(--grn);color:#fff;border:none;border-radius:5px;font-size:10px;font-weight:600;cursor:pointer'
+      :'padding:4px 10px;background:var(--s3);color:var(--t2);border:1px solid var(--bd);border-radius:5px;font-size:10px;cursor:pointer';
+    return`<tr><td class="nm">${e.name}</td><td>${e.members}</td><td><span class="badge bb">${e.type}</span></td><td style="color:var(--t3);font-size:10px">${e.notes||'—'}</td>
+    <td><button onclick="toggleSignup(${e.id})" style="${btnStyle}">${interested?'✓ Interested':'+ Interested'}${count?` (${count})`:''}
+    </button></td></tr>`;
+  }).join('');
   document.getElementById('m-comp-results-table').innerHTML=mCompResults.map(r=>`
     <tr><td class="nm">${r.member}</td><td>${r.event}</td><td><span class="badge ${r.placement==='1st'?'bg':r.placement==='2nd'||r.placement==='3rd'?'bo':'bx'}">${r.placement}</span></td><td>${r.year}</td></tr>`).join('');
   document.getElementById('m-comp-history-table').innerHTML=mCompHistory.map(h=>`
@@ -5368,6 +5551,9 @@ function initIM(){
   renderTeam();
   renderProfile();
   renderAttendance();
+  renderIMMyReimbs();
+  renderIMConsulting();
+  renderIMMyMentorship();
   updateMemberUI();
   // Show sign-in if Firebase says no one is logged in
   if(!firebase.auth().currentUser)setTimeout(showSignIn,400);
@@ -5419,23 +5605,22 @@ function renderEBODHomework(){
   const filterSession=document.getElementById('hw-filter-session')?document.getElementById('hw-filter-session').value:'';
   const filterStatus=document.getElementById('hw-filter-status')?document.getElementById('hw-filter-status').value:'';
 
-  // collect all submissions from all members
-  const allMembers=typeof members!=='undefined'?members:[];
+  // If Firestore data is available, use it; otherwise show a load button
   const rows=[];
-  allMembers.forEach(m=>{
-    if(!m.email)return;
-    const key='pblmember_v1_hw_'+m.email;
-    const stored=JSON.parse(localStorage.getItem(key)||'{}');
-    Object.entries(stored).forEach(([sid,sub])=>{
-      if(!sub.link)return;
-      if(filterSession&&String(sid)!==String(filterSession))return;
-      const isGraded=!!(sub.grade);
-      if(filterStatus==='graded'&&!isGraded)return;
-      if(filterStatus==='ungraded'&&isGraded)return;
-      const session=mBootcamps.find(b=>String(b.id)===String(sid));
-      rows.push({member:m,sid,sub,session,isGraded});
+  const hasFirestoreData=Object.keys(_ebodAllMembersHW).length>0;
+  if(hasFirestoreData){
+    Object.entries(_ebodAllMembersHW).forEach(([uid,mdata])=>{
+      Object.entries(mdata.hw||{}).forEach(([sid,sub])=>{
+        if(!sub.link)return;
+        if(filterSession&&String(sid)!==String(filterSession))return;
+        const isGraded=!!(sub.grade);
+        if(filterStatus==='graded'&&!isGraded)return;
+        if(filterStatus==='ungraded'&&isGraded)return;
+        const session=mBootcamps.find(b=>String(b.id)===String(sid));
+        rows.push({uid,name:mdata.name||mdata.email||uid,sid,sub,session,isGraded});
+      });
     });
-  });
+  }
 
   // update badge
   const ungraded=rows.filter(r=>!r.isGraded).length;
@@ -5444,15 +5629,19 @@ function renderEBODHomework(){
 
   const el=document.getElementById('ebod-hw-table');
   if(!el)return;
-  if(!rows.length){
-    el.innerHTML='<div style="font-size:11px;color:var(--t4);padding:14px 0;text-align:center">No submissions yet.</div>';
+  if(!hasFirestoreData){
+    el.innerHTML='<div style="text-align:center;padding:20px 0"><button onclick="loadEBODHWFromFirestore()" style="padding:8px 18px;background:var(--cr);color:#fff;border:none;border-radius:6px;font-size:12px;cursor:pointer">Load Submissions from Firestore</button><div style="font-size:10px;color:var(--t4);margin-top:8px">Submissions are stored per-member in Firebase. Click to load all.</div></div>';
     return;
+  }
+  if(!rows.length){
+    el.innerHTML='<div style="font-size:11px;color:var(--t4);padding:14px 0;text-align:center">No submissions match the current filters.</div>';
+    renderHWAssignments();return;
   }
   el.innerHTML=`<table><thead><tr><th>Member</th><th>Session</th><th>Submitted</th><th>Note</th><th>Grade</th><th>Status</th><th></th></tr></thead><tbody>${
     rows.map(r=>{
       const statusColor=r.sub.gradeStatus==='Resubmit'?'var(--gold)':r.sub.gradeStatus==='Late'?'#E57373':r.isGraded?'var(--grn)':'var(--t4)';
-      return`<tr class="cr" onclick="openHWGrade('${r.member.email}','${r.sid}')">
-        <td><strong>${r.member.first} ${r.member.last}</strong></td>
+      return`<tr class="cr" onclick="openHWGrade('${r.uid}','${r.sid}')">
+        <td><strong>${r.name}</strong></td>
         <td style="font-size:10px;color:var(--t3)">${r.session?'S'+r.session.id+' — '+r.session.topic:'Session '+r.sid}</td>
         <td style="font-size:10px;color:var(--t3)">${r.sub.submittedAt||'—'}</td>
         <td style="font-size:10px;color:var(--t2);max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${r.sub.note||'—'}</td>
@@ -5467,40 +5656,48 @@ function renderEBODHomework(){
   renderHWAssignments();
 }
 
-function openHWGrade(email,sid){
-  const key='pblmember_v1_hw_'+email;
-  const stored=JSON.parse(localStorage.getItem(key)||'{}');
-  const sub=stored[sid]||{};
-  const m=members.find(x=>x.email===email)||{};
+function openHWGrade(uid,sid){
+  // uid is now the Firestore doc id (was email in old localStorage approach)
+  const mdata=_ebodAllMembersHW[uid]||{};
+  const sub=(mdata.hw||{})[sid]||{};
   const session=mBootcamps.find(b=>String(b.id)===String(sid));
-  document.getElementById('hw-grade-email').value=email;
+  document.getElementById('hw-grade-email').value=uid; // repurposed: stores uid
   document.getElementById('hw-grade-session').value=sid;
   document.getElementById('hw-grade-score').value=sub.grade||'';
   document.getElementById('hw-grade-status').value=sub.gradeStatus||'Graded';
   document.getElementById('hw-grade-feedback').value=sub.feedback||'';
   document.getElementById('hw-grade-preview').innerHTML=
-    `<strong>${m.first||''} ${m.last||''}</strong> &nbsp;·&nbsp; ${session?'Session '+session.id+' — '+session.topic:'Session '+sid}<br>`+
+    `<strong>${mdata.name||uid}</strong> &nbsp;·&nbsp; ${session?'Session '+session.id+' — '+session.topic:'Session '+sid}<br>`+
     `<span style="color:var(--t3);font-size:10px">Submitted: ${sub.submittedAt||'unknown'}</span><br>`+
-    `<a href="${sub.link}" target="_blank" style="font-size:11px;color:var(--cr2);word-break:break-all">${sub.link}</a>`+
+    `<a href="${sub.link||''}" target="_blank" style="font-size:11px;color:var(--cr2);word-break:break-all">${sub.link||'(no link)'}</a>`+
     (sub.note?`<div style="margin-top:4px;font-size:10px;color:var(--t2)">Note: ${sub.note}</div>`:'');
   openModal('hw-grade-modal');
 }
 
 function saveHWGrade(){
-  const email=document.getElementById('hw-grade-email').value;
+  const uid=document.getElementById('hw-grade-email').value; // field repurposed to store uid
   const sid=document.getElementById('hw-grade-session').value;
   const grade=document.getElementById('hw-grade-score').value.trim();
   const gradeStatus=document.getElementById('hw-grade-status').value;
   const feedback=document.getElementById('hw-grade-feedback').value.trim();
   if(!grade){alert('Please enter a grade.');return;}
-  const key='pblmember_v1_hw_'+email;
-  const stored=JSON.parse(localStorage.getItem(key)||'{}');
-  if(!stored[sid])stored[sid]={};
-  stored[sid].grade=grade;
-  stored[sid].gradeStatus=gradeStatus;
-  stored[sid].feedback=feedback;
-  stored[sid].gradedAt=new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
-  localStorage.setItem(key,JSON.stringify(stored));
+  const gradedAt=new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+  // Write to Firestore
+  if(window._db&&uid){
+    const update={};
+    update[`homework.${sid}.grade`]=grade;
+    update[`homework.${sid}.gradeStatus`]=gradeStatus;
+    update[`homework.${sid}.feedback`]=feedback;
+    update[`homework.${sid}.gradedAt`]=gradedAt;
+    _db.collection('members').doc(uid).update(update).catch(e=>console.warn('saveHWGrade:',e));
+    // Update local cache immediately
+    if(_ebodAllMembersHW[uid]&&_ebodAllMembersHW[uid].hw[sid]){
+      _ebodAllMembersHW[uid].hw[sid].grade=grade;
+      _ebodAllMembersHW[uid].hw[sid].gradeStatus=gradeStatus;
+      _ebodAllMembersHW[uid].hw[sid].feedback=feedback;
+      _ebodAllMembersHW[uid].hw[sid].gradedAt=gradedAt;
+    }
+  }
   closeModals();
   renderEBODHomework();
 }
@@ -5551,11 +5748,14 @@ function deleteHWAssignment(i){
 
 function _enterEBOD(){
   currentApp='ebod';
+  localStorage.setItem('_lastPortal','ebod');
   document.getElementById('landing').style.display='none';
   document.getElementById('app-ebod').style.display='block';
   loadData();
   renderMembers();renderExec();renderBootcamps();renderTasks();renderAgendas();renderEvents();renderRos();renderTemplates();renderSponsors();renderEmailList();renderConsulting();renderCompetition();renderBudget();renderMinutes();renderRecruitment();renderGoals();renderTransition();renderAnnouncements();renderMentorship();renderDashboard();renderPortals();renderEcSelect();renderReimbursements();renderVenues();renderVolSlots();renderCompPrep();renderCurriculum();renderBrandKit();renderContentCalendar();renderCaMentors();renderMemberCheckIns();renderCalendar();renderEBODHomework();renderMemberContent();
   if(typeof updateMemberDisplay==='function')updateMemberDisplay();
+  initExtraListeners();
+  loadEBODHWFromFirestore();
 }
 function loginEBOD(){
   const email=document.getElementById('land-ebod-email').value.trim();
@@ -5593,6 +5793,7 @@ firebase.auth().onAuthStateChanged(user=>{
       currentApp='im';
       document.getElementById('landing').style.display='none';
       document.getElementById('app-im').style.display='block';
+      initExtraListeners();
       initIM();
       _loadMemberData(user.uid);
     }
@@ -6132,6 +6333,297 @@ function clearImportedCal(){
 }
 
 // loginIM() is now defined in the IM AUTH section above (Firebase Auth)
+
+// ============================================================
+// ── IM REIMBURSEMENTS ────────────────────────────────────────
+// ============================================================
+function submitImReimb(){
+  const uid=firebase.auth().currentUser?.uid;
+  const errEl=document.getElementById('imr-err');
+  if(!uid){if(errEl){errEl.style.color='#E57373';errEl.textContent='Please sign in first.';}showSignIn();return;}
+  const item=(document.getElementById('imr-item')||{}).value?.trim();
+  const amount=parseFloat((document.getElementById('imr-amount')||{}).value)||0;
+  const receipt=(document.getElementById('imr-receipt')||{}).value?.trim()||'';
+  const notes=(document.getElementById('imr-notes')||{}).value?.trim()||'';
+  if(!item){if(errEl){errEl.style.color='#E57373';errEl.textContent='Item description is required.';}return;}
+  if(!amount){if(errEl){errEl.style.color='#E57373';errEl.textContent='Amount is required.';}return;}
+  if(errEl)errEl.textContent='Submitting…';
+  _db.collection('im-reimbursements').add({
+    uid,memberName:selectedMember?.name||'',memberEmail:selectedMember?.email||'',
+    item,amount,receipt,notes,
+    submittedAt:new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}),
+    status:'Pending'
+  }).then(()=>{
+    if(errEl){errEl.style.color='var(--grn)';errEl.textContent='✓ Request submitted!';}
+    ['imr-item','imr-amount','imr-receipt','imr-notes'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+    setTimeout(()=>{if(errEl){errEl.textContent='';errEl.style.color='#E57373';}},3000);
+  }).catch(e=>{if(errEl){errEl.style.color='#E57373';errEl.textContent='Error: '+e.message;}});
+}
+function renderIMMyReimbs(){
+  const el=document.getElementById('im-reimb-list');if(!el)return;
+  const uid=firebase.auth().currentUser?.uid;
+  if(!uid){el.innerHTML='<div class="empty">Sign in to see your requests.</div>';return;}
+  const mine=_imReimbs.filter(r=>r.uid===uid);
+  if(!mine.length){el.innerHTML='<div style="font-size:11px;color:var(--t4);padding:10px 0">No requests submitted yet.</div>';return;}
+  el.innerHTML=mine.map(r=>{
+    const sc=r.status==='Approved'||r.status==='Reimbursed'?'bg':r.status==='Denied'?'br':'bo';
+    return`<div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--bd)">
+      <div style="flex:1"><div style="font-size:12px;font-weight:600">${r.item}</div>
+      <div style="font-size:10px;color:var(--t3);margin-top:2px">$${(r.amount||0).toFixed(2)} &nbsp;·&nbsp; ${r.submittedAt||'—'}</div>
+      ${r.notes?`<div style="font-size:10px;color:var(--t4);margin-top:2px">${r.notes}</div>`:''}</div>
+      ${r.receipt?`<a href="${r.receipt}" target="_blank" style="font-size:10px;color:var(--grn);font-weight:600;flex-shrink:0">Receipt ↗</a>`:''}
+      <span class="badge ${sc}" style="flex-shrink:0">${r.status}</span></div>`;
+  }).join('');
+}
+function renderEBODImReimbs(){
+  const el=document.getElementById('ebod-im-reimb-list');
+  const badge=document.getElementById('im-reimb-badge');
+  const pending=_imReimbs.filter(r=>r.status==='Pending').length;
+  if(badge){badge.textContent=pending;badge.style.display=pending>0?'':'none';}
+  if(!el)return;
+  if(!_imReimbs.length){el.innerHTML='<div style="font-size:11px;color:var(--t4);padding:10px 0">No member requests yet.</div>';return;}
+  el.innerHTML=`<table><thead><tr><th>Member</th><th>Item</th><th>Amount</th><th>Submitted</th><th>Receipt</th><th>Status</th><th></th></tr></thead><tbody>${
+    _imReimbs.map(r=>{
+      const sc=r.status==='Approved'||r.status==='Reimbursed'?'bg':r.status==='Denied'?'br':'bo';
+      return`<tr><td class="nm">${r.memberName||r.memberEmail||'—'}</td><td>${r.item}</td><td>$${(r.amount||0).toFixed(2)}</td>
+      <td style="font-size:10px;color:var(--t3)">${r.submittedAt||'—'}</td>
+      <td>${r.receipt?`<a href="${r.receipt}" target="_blank" style="font-size:10px;color:var(--grn);font-weight:600">View ↗</a>`:'<span style="color:var(--t4);font-size:10px">None</span>'}</td>
+      <td><span class="badge ${sc}">${r.status}</span></td>
+      <td style="white-space:nowrap">${r.status==='Pending'
+        ?`<button onclick="updateImReimb('${r._id}','Approved')" style="font-size:9px;padding:3px 7px;background:var(--grn);color:#fff;border:none;border-radius:4px;cursor:pointer;margin-right:3px">Approve</button><button onclick="updateImReimb('${r._id}','Denied')" style="font-size:9px;padding:3px 7px;background:#E57373;color:#fff;border:none;border-radius:4px;cursor:pointer">Deny</button>`
+        :`<button onclick="updateImReimb('${r._id}','Pending')" style="font-size:9px;padding:3px 7px;background:var(--s3);color:var(--t2);border:none;border-radius:4px;cursor:pointer">Reset</button>`}
+      </td></tr>`;
+    }).join('')
+  }</tbody></table>`;
+}
+function updateImReimb(id,status){
+  if(!window._db)return;
+  _db.collection('im-reimbursements').doc(id).update({status}).catch(e=>console.warn('updateImReimb:',e));
+}
+
+// ============================================================
+// ── OFFICE HOURS ─────────────────────────────────────────────
+// ============================================================
+function renderIMConsulting(){
+  const el=document.getElementById('im-consult-list');if(!el)return;
+  const uid=firebase.auth().currentUser?.uid;
+  if(!uid){el.innerHTML='<div class="empty">Sign in to request a session.</div>';return;}
+  const myReqs=_officeHourReqs.filter(r=>r.uid===uid);
+  el.innerHTML=`<div style="padding:0 4px">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
+      <div><div style="font-size:10px;color:var(--t3);margin-bottom:4px">Exec Officer</div>
+        <select id="oh-exec" style="width:100%;box-sizing:border-box;padding:7px 10px;border:1px solid var(--bd);border-radius:6px;background:var(--s2);color:var(--t1);font-size:11px;outline:none">
+          ${mExecTeam.map(e=>`<option value="${e.name}">${e.name} — ${e.position}</option>`).join('')}
+        </select></div>
+      <div><div style="font-size:10px;color:var(--t3);margin-bottom:4px">Topic *</div>
+        <input id="oh-topic" type="text" placeholder="e.g. NLC competition prep" style="width:100%;box-sizing:border-box;padding:7px 10px;border:1px solid var(--bd);border-radius:6px;background:var(--s2);color:var(--t1);font-size:11px;outline:none"></div>
+    </div>
+    <div style="margin-bottom:10px"><div style="font-size:10px;color:var(--t3);margin-bottom:4px">Preferred Time / Days</div>
+      <input id="oh-time" type="text" placeholder="e.g. Mon/Wed after 4pm, or anytime Friday" style="width:100%;box-sizing:border-box;padding:7px 10px;border:1px solid var(--bd);border-radius:6px;background:var(--s2);color:var(--t1);font-size:11px;outline:none"></div>
+    <div id="oh-err" style="font-size:10px;min-height:14px;margin-bottom:8px"></div>
+    <button onclick="submitOfficeHour()" style="padding:7px 16px;background:var(--cr);color:#fff;border:none;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer">Request Session</button>
+  </div>
+  ${myReqs.length?`<div style="margin-top:16px;padding-top:14px;border-top:1px solid var(--bd)">
+    <div style="font-size:10px;font-weight:600;color:var(--t3);letter-spacing:1px;text-transform:uppercase;margin-bottom:8px">My Requests</div>
+    ${myReqs.map(r=>{
+      const sc=r.status==='Confirmed'?'bg':r.status==='Denied'?'br':'bo';
+      return`<div style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--bd)">
+        <div style="flex:1"><div style="font-size:11px;font-weight:600">${r.exec}</div>
+        <div style="font-size:10px;color:var(--t3)">${r.topic} · ${r.submittedAt}</div>
+        ${r.preferredTime?`<div style="font-size:10px;color:var(--t4)">${r.preferredTime}</div>`:''}</div>
+        <span class="badge ${sc}">${r.status}</span></div>`;
+    }).join('')}
+  </div>`:''}`;
+}
+function submitOfficeHour(){
+  const uid=firebase.auth().currentUser?.uid;
+  const errEl=document.getElementById('oh-err');
+  if(!uid){showSignIn();return;}
+  const exec=(document.getElementById('oh-exec')||{}).value||'';
+  const topic=(document.getElementById('oh-topic')||{}).value?.trim()||'';
+  const time=(document.getElementById('oh-time')||{}).value?.trim()||'';
+  if(!topic){if(errEl){errEl.style.color='#E57373';errEl.textContent='Please describe the topic.';}return;}
+  if(errEl)errEl.textContent='Submitting…';
+  _db.collection('office-hours').add({
+    uid,memberName:selectedMember?.name||'',memberEmail:selectedMember?.email||'',
+    exec,topic,preferredTime:time,
+    submittedAt:new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}),
+    status:'Pending'
+  }).then(()=>{
+    if(errEl){errEl.style.color='var(--grn)';errEl.textContent='✓ Request sent!';}
+    const t=document.getElementById('oh-topic');if(t)t.value='';
+    const ti=document.getElementById('oh-time');if(ti)ti.value='';
+    setTimeout(()=>{if(errEl){errEl.textContent='';errEl.style.color='#E57373';}},3000);
+  }).catch(e=>{if(errEl){errEl.style.color='#E57373';errEl.textContent='Error: '+e.message;}});
+}
+function renderEBODOfficeHours(){
+  const el=document.getElementById('ebod-office-hours-list');
+  const badge=document.getElementById('oh-badge');
+  const pending=_officeHourReqs.filter(r=>r.status==='Pending').length;
+  if(badge){badge.textContent=pending;badge.style.display=pending>0?'':'none';}
+  if(!el)return;
+  if(!_officeHourReqs.length){el.innerHTML='<div style="font-size:11px;color:var(--t4);padding:10px 0">No session requests yet.</div>';return;}
+  el.innerHTML=`<table><thead><tr><th>Member</th><th>Exec</th><th>Topic</th><th>Preferred Time</th><th>Submitted</th><th>Status</th><th></th></tr></thead><tbody>${
+    _officeHourReqs.map(r=>{
+      const sc=r.status==='Confirmed'?'bg':r.status==='Denied'?'br':'bo';
+      return`<tr><td class="nm">${r.memberName||r.memberEmail||'—'}</td><td>${r.exec}</td><td>${r.topic}</td>
+      <td style="font-size:10px;color:var(--t3)">${r.preferredTime||'—'}</td>
+      <td style="font-size:10px;color:var(--t3)">${r.submittedAt||'—'}</td>
+      <td><span class="badge ${sc}">${r.status}</span></td>
+      <td style="white-space:nowrap">${r.status==='Pending'
+        ?`<button onclick="updateOfficeHour('${r._id}','Confirmed')" style="font-size:9px;padding:3px 7px;background:var(--grn);color:#fff;border:none;border-radius:4px;cursor:pointer;margin-right:3px">Confirm</button><button onclick="updateOfficeHour('${r._id}','Denied')" style="font-size:9px;padding:3px 7px;background:#E57373;color:#fff;border:none;border-radius:4px;cursor:pointer">Deny</button>`
+        :`<button onclick="updateOfficeHour('${r._id}','Pending')" style="font-size:9px;padding:3px 7px;background:var(--s3);color:var(--t2);border:none;border-radius:4px;cursor:pointer">Reset</button>`}
+      </td></tr>`;
+    }).join('')
+  }</tbody></table>`;
+}
+function updateOfficeHour(id,status){
+  if(!window._db)return;
+  _db.collection('office-hours').doc(id).update({status}).catch(e=>console.warn('updateOfficeHour:',e));
+}
+
+// ============================================================
+// ── COMPETITION SIGN-UPS ─────────────────────────────────────
+// ============================================================
+function toggleSignup(eventId){
+  const uid=firebase.auth().currentUser?.uid;
+  if(!uid){showSignIn();return;}
+  if(_mySignups.has(eventId))_mySignups.delete(eventId);
+  else _mySignups.add(eventId);
+  _db.collection('signups').doc(uid).set({
+    name:selectedMember?.name||'',
+    email:selectedMember?.email||'',
+    interests:Array.from(_mySignups)
+  },{merge:true}).catch(e=>console.warn('toggleSignup:',e));
+  mRenderCompetition();
+}
+
+// ============================================================
+// ── RECRUITMENT LEADS ────────────────────────────────────────
+// ============================================================
+function openInterestForm(){
+  if(window._db){
+    ['if-name','if-email','if-notes'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+    const yr=document.getElementById('if-year');if(yr)yr.value='';
+    const src=document.getElementById('if-source');if(src)src.value='Club Rush';
+    const st=document.getElementById('if-status');if(st){st.textContent='';st.style.color='#E57373';}
+    openModal('interest-form-modal');
+  } else {
+    alert('Database not connected. Please refresh and try again.');
+  }
+}
+function submitInterestForm(){
+  const name=(document.getElementById('if-name')||{}).value?.trim()||'';
+  const email=(document.getElementById('if-email')||{}).value?.trim()||'';
+  const year=(document.getElementById('if-year')||{}).value||'';
+  const source=(document.getElementById('if-source')||{}).value||'Other';
+  const notes=(document.getElementById('if-notes')||{}).value?.trim()||'';
+  const st=document.getElementById('if-status');
+  if(!name||!email){if(st){st.style.color='#E57373';st.textContent='Name and email are required.';}return;}
+  if(st)st.textContent='Submitting…';
+  _db.collection('leads').add({
+    name,email,year,source,notes,
+    submittedAt:new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}),
+    stage:'Interested'
+  }).then(()=>{
+    if(st){st.style.color='var(--grn)';st.textContent="✓ Thanks! We'll be in touch soon.";}
+    setTimeout(()=>closeModals(),2500);
+  }).catch(e=>{if(st){st.style.color='#E57373';st.textContent='Error: '+e.message;}});
+}
+function renderLeads(){
+  const el=document.getElementById('leads-table-wrap');
+  const badge=document.getElementById('leads-badge');
+  if(badge){badge.textContent=_leads.length;badge.style.display=_leads.length>0?'':'none';}
+  if(!el)return;
+  if(!_leads.length){el.innerHTML='<div style="font-size:11px;color:var(--t4);padding:10px 0">No interest form submissions yet.</div>';return;}
+  el.innerHTML=`<table><thead><tr><th>Name</th><th>Email</th><th>Year</th><th>Source</th><th>Submitted</th><th>Stage</th><th>Update</th></tr></thead><tbody>${
+    _leads.map(l=>{
+      const sc=l.stage==='Converted'?'bg':l.stage==='Dropped'?'br':'bo';
+      return`<tr><td class="nm">${l.name}</td><td style="font-size:10px">${l.email}</td>
+      <td style="font-size:10px;color:var(--t3)">${l.year||'—'}</td>
+      <td><span class="badge bb">${l.source||'Other'}</span></td>
+      <td style="font-size:10px;color:var(--t3)">${l.submittedAt||'—'}</td>
+      <td><span class="badge ${sc}">${l.stage||'Interested'}</span></td>
+      <td><select onchange="updateLeadStage('${l._id}',this.value)" style="font-size:9px;padding:2px 5px;background:var(--s2);border:1px solid var(--bd);border-radius:3px;color:var(--t1)">
+        ${['Interested','Attended Meeting','Followed Up','Converted','Dropped'].map(s=>`<option${s===l.stage?' selected':''}>${s}</option>`).join('')}
+      </select></td></tr>`;
+    }).join('')
+  }</tbody></table>`;
+}
+function updateLeadStage(id,stage){
+  if(!window._db)return;
+  _db.collection('leads').doc(id).update({stage}).catch(e=>console.warn('updateLeadStage:',e));
+}
+
+// ============================================================
+// ── MENTOR CHECK-INS ─────────────────────────────────────────
+// ============================================================
+function renderIMMyMentorship(){
+  const el=document.getElementById('im-mentor-content');if(!el)return;
+  if(!selectedMember){el.innerHTML='<div class="empty">Sign in to view your mentorship details.</div>';return;}
+  const fullName=selectedMember.name;
+  const myMentor=mMentorPairs.find(p=>p.mentee===fullName);
+  const myMentees=mMentorPairs.filter(p=>p.mentor===fullName);
+  let html='';
+  if(myMentor){
+    const exec=mExecTeam.find(e=>e.name===myMentor.mentor);
+    html+=`<div class="card" style="margin-bottom:14px">
+      <div class="ch"><div class="ct">My Mentor</div></div>
+      <div style="display:flex;align-items:center;gap:12px;padding:12px;background:var(--s2);border:1px solid var(--bd);border-radius:7px">
+        <div style="width:42px;height:42px;border-radius:50%;background:var(--blu);color:#fff;font-size:14px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0">${myMentor.mentor.slice(0,2).toUpperCase()}</div>
+        <div><div style="font-weight:700;font-size:13px">${myMentor.mentor}</div>
+          <div style="font-size:10px;color:var(--t3);margin-top:2px">${exec?exec.position:'Exec Team'}</div>
+          <div style="font-size:10px;color:var(--t4);margin-top:2px">Reach out via GroupMe or Instagram DM</div></div>
+      </div></div>`;
+  }
+  if(myMentees.length){
+    html+=`<div class="card" style="margin-bottom:14px">
+      <div class="ch"><div class="ct">My Mentees</div><span class="badge bb">${myMentees.length}</span></div>
+      ${myMentees.map(p=>{
+        const pairKey=p.mentor+'→'+p.mentee;
+        const ci=_mentorCheckins[pairKey]||0;
+        return`<div style="display:flex;align-items:center;gap:10px;padding:11px 0;border-bottom:1px solid var(--bd)">
+          <div style="width:34px;height:34px;border-radius:50%;background:var(--cr3);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0">${p.mentee.slice(0,2).toUpperCase()}</div>
+          <div style="flex:1"><div style="font-weight:600;font-size:12px">${p.mentee}</div>
+            <div style="font-size:10px;color:var(--t3);margin-top:2px">${ci} check-in${ci!==1?'s':''} logged</div></div>
+          <button onclick="logCheckin('${p.mentor.replace(/'/g,"\\'")}','${p.mentee.replace(/'/g,"\\'")}',this)" style="padding:5px 12px;background:var(--cr);color:#fff;border:none;border-radius:6px;font-size:11px;cursor:pointer;flex-shrink:0">+ Log Check-in</button>
+        </div>`;
+      }).join('')}
+    </div>
+    <div class="card"><div class="ch"><div class="ct">Recent Check-ins</div></div><div id="im-checkin-log"></div></div>`;
+  }
+  if(!myMentor&&!myMentees.length){
+    html='<div class="card"><div style="padding:20px;text-align:center"><div style="font-size:24px;margin-bottom:8px">👥</div><div style="font-size:13px;font-weight:600;margin-bottom:4px">Not in mentorship program</div><div style="font-size:11px;color:var(--t3)">Talk to your VP of Club Affairs to get matched with a mentor.</div></div></div>';
+  }
+  el.innerHTML=html;
+  renderIMCheckinLog();
+}
+function renderIMCheckinLog(){
+  const el=document.getElementById('im-checkin-log');if(!el||!selectedMember)return;
+  const fullName=selectedMember.name;
+  const logs=_mentorCheckinsList.filter(c=>c.mentorName===fullName||c.menteeName===fullName).slice(0,10);
+  if(!logs.length){el.innerHTML='<div style="font-size:11px;color:var(--t4);padding:10px 0">No check-ins logged yet.</div>';return;}
+  el.innerHTML=logs.map(c=>`<div style="padding:9px 0;border-bottom:1px solid var(--bd)">
+    <div style="font-size:11px;font-weight:600">${c.mentorName} → ${c.menteeName}</div>
+    <div style="font-size:10px;color:var(--t3);margin-top:2px">${c.date||'—'}${c.notes?' · '+c.notes:''}</div>
+  </div>`).join('');
+}
+function logCheckin(mentorName,menteeName,btn){
+  const uid=firebase.auth().currentUser?.uid;
+  if(!uid){showSignIn();return;}
+  const notes=prompt('Add a note for this check-in (optional):')||'';
+  const date=new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
+  const pairKey=mentorName+'→'+menteeName;
+  if(btn){btn.textContent='Saving…';btn.disabled=true;}
+  _db.collection('mentorCheckins').add({
+    mentorName,menteeName,pairKey,date,notes,loggedBy:uid,loggedAt:Date.now()
+  }).then(()=>{
+    // optimistic local update
+    _mentorCheckins[pairKey]=(_mentorCheckins[pairKey]||0)+1;
+    _mentorCheckinsList.unshift({mentorName,menteeName,pairKey,date,notes,loggedAt:Date.now()});
+    renderIMMyMentorship();renderMentorship();renderCaMentors();
+  }).catch(e=>{alert('Error: '+e.message);if(btn){btn.textContent='+ Log Check-in';btn.disabled=false;}});
+}
 
 function switchToLanding(){
   // Sign out of Firebase Auth if leaving EBOD
