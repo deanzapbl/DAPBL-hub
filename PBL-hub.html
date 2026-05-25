@@ -1887,6 +1887,9 @@ textarea{resize:vertical;min-height:120px;}
 </div>
 
 <script>
+// ─── GLOBAL STATE ────────────────────────────────────────────────────────────
+let currentApp = null; // declared first to avoid TDZ errors from async callbacks
+
 // ─── IM CONSTANTS ────────────────────────────────────────────────────────────
 const IM_SAVE_KEY = 'pblmember_v1';
 
@@ -5525,7 +5528,6 @@ function initIM(){
 
 
 // ─── LANDING LOGIC ───────────────────────────────────────────────────────────
-let currentApp = null;
 
 function selectSide(side){
   document.getElementById('land-ebod-card').classList.remove('selected');
@@ -6542,4 +6544,5 @@ function switchToLanding(){
 
 </script>
 </body>
+</html>
 </html>
