@@ -6,6 +6,8 @@
 <title>PBL Hub — De Anza</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap');
 :root{
   --cr:#8B1A1A;--cr2:#A52020;--cr3:#6B1414;
   --gold:#B07818;--gold2:#C48A1A;
@@ -229,12 +231,42 @@ textarea{resize:vertical;min-height:120px;}
 .cal-bc{background:rgba(128,0,200,.12);color:#8B00CC;}
 .cal-tk{background:rgba(229,115,115,.15);color:#C62828;}
 .cal-ag{background:rgba(176,120,24,.15);color:#9A6A10;}
+/* POLARIS INTERNAL NAV */
+.polaris-tab-btn{font-size:11px;padding:5px 13px;border-radius:6px;border:1px solid var(--bd);background:var(--s2);color:var(--t2);cursor:pointer;font-family:inherit;transition:background .15s,color .15s;}
+.polaris-tab-btn:hover{background:var(--s3);color:var(--t1);}
+.polaris-tab-btn.active{background:var(--cr);border-color:var(--cr);color:#fff;font-weight:700;}
 /* MY ROLE CARD */
 @media print{
+  /* ── Normal page print ── */
   .sb,.topbar,.dp,.detail-panel,.tb-right{display:none!important;}
   .ca{display:block;}
   .content{overflow:visible;padding:10px;}
   .page{display:block!important;}
+  /* ── Statement-of-Activities print (body gets .stmt-printing when overlay is open) ── */
+  body.stmt-printing>*:not(#stmt-preview-overlay){display:none!important;}
+  body.stmt-printing #stmt-preview-overlay{
+    display:block!important;position:static!important;background:white!important;
+    padding:0!important;overflow:visible!important;
+  }
+  body.stmt-printing #stmt-preview-bar{display:none!important;}
+  body.stmt-printing #stmt-preview-overlay>div{
+    box-shadow:none!important;border-radius:0!important;margin:0!important;
+    padding:32px 48px!important;max-width:100%!important;
+    overflow:visible!important;height:auto!important;
+  }
+  /* Let the table flow across printed pages */
+  body.stmt-printing #prev-body,
+  body.stmt-printing #prev-body table{
+    overflow:visible!important;height:auto!important;
+    page-break-inside:auto;
+  }
+  body.stmt-printing #prev-body tr{
+    page-break-inside:avoid;
+    page-break-after:auto;
+  }
+  body.stmt-printing #prev-body div{
+    page-break-inside:avoid;
+  }
 }
 
 
@@ -329,107 +361,6 @@ textarea{resize:vertical;min-height:120px;}
 .imp-tab{flex:1;padding:6px 10px;font-size:11px;font-weight:600;border-radius:5px;cursor:pointer;background:transparent;border:none;color:var(--t3);font-family:'IBM Plex Sans',sans-serif;transition:background .15s,color .15s;}
 .imp-tab.active{background:var(--bg);color:var(--t1);box-shadow:0 1px 3px rgba(0,0,0,.08);}
 .imp-tab:hover:not(.active){background:var(--s3);color:var(--t2);}
-
-/* ─── MOBILE RESPONSIVENESS ─────────────────────────────────── */
-.mob-menu-btn{display:none;background:none;border:none;cursor:pointer;padding:6px 8px;color:var(--t2);flex-shrink:0;align-items:center;justify-content:center;border-radius:4px;}
-.mob-menu-btn:hover{background:var(--s3);}
-.sb-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:298;}
-.sb-overlay.open{display:block;}
-
-@media(max-width:768px){
-  /* Hamburger & sidebar slide-over */
-  .mob-menu-btn{display:flex;}
-  .sb{position:fixed;left:-240px;top:0;bottom:0;z-index:299;width:220px!important;min-width:220px!important;transition:left .22s ease;box-shadow:4px 0 20px rgba(0,0,0,.18);}
-  .sb.mob-open{left:0;}
-  /* Main area fills full width */
-  .main{width:100%;}
-  /* Topbar */
-  .topbar{padding:0 10px;height:48px;gap:8px;}
-  .topbar .btn{padding:4px 10px;font-size:10px;}
-  .tb-sub{display:none;}
-  .gs-wrap{max-width:160px;min-width:80px;}
-  .tb-right{gap:4px;}
-  #save-indicator{display:none;}
-  /* Nav touch targets */
-  .ni{padding:10px 8px;}
-  /* Content */
-  .content{padding:14px;-webkit-overflow-scrolling:touch;}
-  .sb-nav{-webkit-overflow-scrolling:touch;}
-  /* Stats grid: 2 columns */
-  .sg{grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:14px;}
-  /* Dashboard grids collapse to 1 column; zero out card margin so only gap spacing applies */
-  .g2,.g3{grid-template-columns:1fr;gap:12px;}
-  .g2 .card,.g3 .card{margin-bottom:0;}
-  /* Tables: horizontal scroll within cards; min-width keeps columns readable */
-  .card{overflow-x:auto;}
-  .card table{min-width:460px;}
-  /* Modal: full-width, internal scroll for wide tables */
-  .modal{width:calc(100vw - 24px);max-width:calc(100vw - 24px);padding:18px;overflow-x:auto;}
-  /* Form rows */
-  .fr{grid-template-columns:1fr;}
-  /* Detail panel full-width */
-  .detail-panel{width:100%;left:0;}
-  /* Drive panel full-width below topbar */
-  .dp{width:100%;min-width:unset;position:fixed;top:48px;right:0;bottom:0;z-index:200;}
-  /* Budget balance card */
-  .pbl-balance-card{flex-direction:column;gap:8px;align-items:flex-start;}
-  /* Calendar */
-  .cal-cell{min-height:60px;}
-  /* Tabs: horizontal scroll without wrapping */
-  .tabs{overflow-x:auto;-webkit-overflow-scrolling:touch;flex-wrap:nowrap;padding-bottom:1px;}
-  .tab{white-space:nowrap;flex-shrink:0;}
-  .bud-acct-tabs{flex-wrap:wrap;}
-  /* Landing: scrollable on small phones, top-aligned */
-  #landing{overflow-y:auto;justify-content:flex-start;padding:28px 0 32px;}
-  .land-cards{flex-direction:column;align-items:center;gap:14px;padding:0 16px;box-sizing:border-box;width:100%;}
-  .land-card{width:100%;max-width:340px;}
-  .land-form{width:calc(100vw - 32px);max-width:540px;box-sizing:border-box;margin-top:16px;}
-  /* Next event hero */
-  .next-hero{flex-direction:column;gap:12px;padding:16px;}
-}
-
-@media(max-width:480px){
-  html,body{font-size:12px;}
-  /* Stats: single column */
-  .sg{grid-template-columns:1fr;}
-  /* Topbar */
-  .topbar{padding:0 8px;height:46px;}
-  .tb-title{font-size:13px;}
-  .gs-wrap{display:none;}
-  /* Drive panel: align with 46px topbar */
-  .dp{top:46px;}
-  /* Content & cards */
-  .content{padding:10px;}
-  .card{padding:12px;margin-bottom:10px;}
-  .sc{padding:12px;}
-  .sv{font-size:22px;}
-  .btn{padding:5px 10px;font-size:10px;}
-  .modal{padding:14px;}
-  /* Landing */
-  .land-header{margin-bottom:24px;}
-  .land-phi{width:46px;height:46px;}
-  .land-title{font-size:18px;}
-  .land-card{padding:16px 14px;}
-  .land-card-title{font-size:14px;}
-  /* Calendar */
-  .cal-dow{font-size:8px;padding:4px 1px;letter-spacing:.2px;}
-  .cal-cell{min-height:42px;padding:3px;}
-  .cal-dn{font-size:9px;}
-  .cal-badge{font-size:7px;padding:1px 3px;}
-  .cal-month{font-size:14px;}
-  /* Profile */
-  .prof-header{flex-direction:column;text-align:center;gap:10px;}
-  .prof-av{margin:0 auto;}
-  /* Exec grid: 2 columns */
-  .exec-grid{grid-template-columns:repeat(2,1fr);}
-  /* Next hero */
-  .next-hero{padding:12px;}
-  .nh-dy{font-size:24px;}
-  .nh-name{font-size:14px;}
-  /* Detail panel */
-  .dph{padding:12px 14px;}
-  .dpb{padding:12px;}
-}
 </style>
 
 <!-- ── FIREBASE ──────────────────────────────────────────────────────────── -->
@@ -608,10 +539,8 @@ textarea{resize:vertical;min-height:120px;}
   </div>
 </div>
 
-<div class="sb-overlay" id="ebod-overlay" onclick="closeMobSidebar('sidebar','ebod-overlay')"></div>
 <div class="main">
   <div class="topbar">
-    <button class="mob-menu-btn" onclick="toggleMobSidebar('sidebar','ebod-overlay')" aria-label="Menu"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 4h14M2 9h14M2 14h14"/></svg></button>
     <div><span class="tb-title" id="page-title">Dashboard</span><span class="tb-sub" id="page-sub">Spring 2026 &middot; De Anza PBL</span></div>
     <div class="gs-wrap">
       <input class="gs-input" id="gs-input" type="text" placeholder="Search members, tasks, sponsors..." autocomplete="off" oninput="gsSearch(this.value)" onkeydown="if(event.key==='Escape'){this.value='';gsClose();}">
@@ -888,8 +817,8 @@ textarea{resize:vertical;min-height:120px;}
       <!-- BUDGET -->
       <div class="page" id="page-budget">
         <div class="sg">
-          <div class="sc"><div class="sl">Total Income</div><div class="sv" id="bud-income"><span class="sa">$0</span></div><div class="sm">Spring 2026</div></div>
-          <div class="sc"><div class="sl">Total Expenses</div><div class="sv" id="bud-expense">$0</div><div class="sm">Spring 2026</div></div>
+          <div class="sc"><div class="sl">Total Income</div><div class="sv" id="bud-income"><span class="sa">$0</span></div><div class="sm">FY 2024–2025</div></div>
+          <div class="sc"><div class="sl">Total Expenses</div><div class="sv" id="bud-expense">$0</div><div class="sm">FY 2024–2025</div></div>
           <div class="sc"><div class="sl">Balance</div><div class="sv" id="bud-balance">$0</div><div class="sm">Running total</div></div>
           <div class="sc"><div class="sl">Budget Goal</div><div class="sv">$4,000</div><div class="sm">Sponsor target</div></div>
         </div>
@@ -1023,13 +952,15 @@ textarea{resize:vertical;min-height:120px;}
       <div class="page" id="page-portal-finance">
         <div class="tabs">
           <div class="tab active" onclick="showTab('portal-finance','overview')">Overview</div>
-          <div class="tab" onclick="showTab('portal-finance','splitter')">Refund Tab</div>
+          <div class="tab" onclick="showTab('portal-finance','vpdash');renderVPDash()">VP Dashboard</div>
+          <div class="tab" onclick="showTab('portal-finance','confpayments');renderConfPayLedger()">Conf. Payments</div>
+          <div class="tab" onclick="showTab('portal-finance','splitter')">Event Cost Split</div>
           <div class="tab" onclick="showTab('portal-finance','reimbursements')">Reimbursements</div>
           <div class="tab" onclick="showTab('portal-finance','merch');renderMerch()">Merch Sales</div>
           <div class="tab" onclick="showTab('portal-finance','budget');initFinBudget()">Budget</div>
           <div class="tab" onclick="showTab('portal-finance','roi');renderROITable()">ROI Analysis</div>
           <div class="tab" onclick="showTab('portal-finance','iccforms');renderICCForms()">ICC Forms</div>
-          <div class="tab" onclick="showTab('portal-finance','finreports');renderFinReports()">Reports</div>
+          <div class="tab" onclick="showTab('portal-finance','finreports');renderStatementBuilder();renderFinReports()">Reports</div>
         </div>
         <div class="sub active" id="portal-finance-overview">
           <div class="sg" id="portal-finance-stats"></div>
@@ -1040,10 +971,84 @@ textarea{resize:vertical;min-height:120px;}
           <div class="ch" style="margin-bottom:10px"><div class="ct">Quick Access</div></div>
           <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px" id="portal-finance-links"></div>
         </div>
+
+        <!-- VP DASHBOARD TAB -->
+        <div class="sub" id="portal-finance-vpdash">
+          <div class="sg" id="vp-dash-stats"></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px">
+            <div class="card">
+              <div class="ch"><div class="ct">Outstanding Payments</div><span class="nbadge" id="vp-outstanding-badge" style="display:none">0</span></div>
+              <div id="vp-outstanding-list" style="padding:0 16px 12px"><div style="font-size:11px;color:var(--t4);padding:10px 0">No outstanding payments.</div></div>
+            </div>
+            <div class="card">
+              <div class="ch"><div class="ct">Pending Refunds</div><span class="nbadge" id="vp-refunds-badge" style="display:none">0</span></div>
+              <div id="vp-refunds-list" style="padding:0 16px 12px"><div style="font-size:11px;color:var(--t4);padding:10px 0">No pending refunds.</div></div>
+            </div>
+          </div>
+          <div class="card" style="margin-top:14px">
+            <div class="ch"><div class="ct">Finance Officer Checklist</div><div style="font-size:10px;color:var(--t3)">End-of-cycle tasks</div></div>
+            <div style="padding:4px 16px 14px">
+              <div id="vp-checklist-items"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- CONFERENCE PAYMENTS TAB -->
+        <div class="sub" id="portal-finance-confpayments">
+          <div class="card">
+            <div class="ch">
+              <div style="display:flex;flex-direction:column;gap:2px">
+                <div class="ct">Conference Payment Ledger</div>
+                <div style="font-size:10px;color:var(--t3)" id="cpl-conf-subtitle">Select a conference</div>
+              </div>
+              <div style="display:flex;gap:6px;align-items:center">
+                <select id="cpl-conf-select" onchange="switchConfPayConf(this.value)" style="font-size:10px;padding:3px 8px;background:var(--s2);border:1px solid var(--bd);border-radius:4px;color:var(--t1)"></select>
+                <button class="btn btn-p btn-sm" onclick="newConfPayConf()">+ New Conference</button>
+              </div>
+            </div>
+            <!-- Summary stats -->
+            <div class="sg" id="cpl-stats" style="margin:10px 16px 0"></div>
+            <!-- Actions bar -->
+            <div style="display:flex;gap:6px;padding:10px 16px 8px;border-bottom:1px solid var(--bd)">
+              <button class="btn btn-p btn-sm" onclick="addConfPayMember()">+ Add Member</button>
+              <button class="btn btn-p btn-sm" onclick="openCplBulkModal()" style="background:var(--blu);border-color:var(--blu)">⊞ Mass Add</button>
+              <button class="btn btn-g btn-sm" onclick="exportConfPayCSV()">Export CSV</button>
+              <div style="margin-left:auto;display:flex;align-items:center;gap:6px">
+                <span style="font-size:10px;color:var(--t3)">Filter:</span>
+                <select id="cpl-filter" onchange="renderConfPayLedger()" style="font-size:10px;padding:3px 8px;background:var(--s2);border:1px solid var(--bd);border-radius:4px;color:var(--t1)">
+                  <option value="">All Members</option>
+                  <option value="outstanding">Outstanding</option>
+                  <option value="refund-pending">Refund Pending</option>
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+                </select>
+              </div>
+            </div>
+            <!-- Payment table -->
+            <div style="overflow-x:auto">
+              <table>
+                <thead><tr>
+                  <th>Name</th>
+                  <th>Gender</th>
+                  <th style="text-align:center">$250 Deposit</th>
+                  <th style="text-align:center">$15 Fee</th>
+                  <th style="text-align:center">$235 Final</th>
+                  <th>Method</th>
+                  <th>Total Rcvd</th>
+                  <th>Refund</th>
+                  <th style="max-width:160px">Notes</th>
+                  <th></th>
+                </tr></thead>
+                <tbody id="cpl-table"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
         <div class="sub" id="portal-finance-splitter">
           <div class="card" style="margin-bottom:14px">
             <div class="ch">
-              <div class="ct">Refund Tab</div>
+              <div class="ct">Event Cost Split</div>
               <div style="display:flex;gap:6px;align-items:center">
                 <select id="ec-select" onchange="loadEventCost(this.value)" style="font-size:10px;padding:3px 8px;background:var(--s2);border:1px solid var(--brd);border-radius:4px;color:var(--t1)"><option value="">Select event...</option></select>
                 <button class="btn btn-p btn-sm" onclick="newEventCost()">+ New Event</button>
@@ -1267,8 +1272,65 @@ textarea{resize:vertical;min-height:120px;}
 
         <!-- FINANCIAL REPORTS TAB -->
         <div class="sub" id="portal-finance-finreports">
+          <!-- STATEMENT BUILDER -->
           <div class="card" style="margin-bottom:14px">
-            <div class="ch"><div class="ct">Quarterly Reports</div><button class="btn btn-p btn-sm" onclick="addFinReport()">+ New Report</button></div>
+            <div class="ch">
+              <div>
+                <div class="ct">Statement of Activities Builder</div>
+                <div style="font-size:10px;color:var(--t3);margin-top:2px">Add line items below, then click Preview &amp; Print</div>
+              </div>
+              <div style="display:flex;gap:6px;align-items:center">
+                <button class="btn btn-g btn-sm" onclick="addStmtLine('revenue')">+ Revenue</button>
+                <button class="btn btn-g btn-sm" onclick="addStmtLine('expense')">+ Expense</button>
+                <button class="btn btn-p btn-sm" onclick="previewStatement()" style="font-weight:700">Preview &amp; Print ↗</button>
+              </div>
+            </div>
+            <!-- Period + Net Assets fields -->
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;padding:10px 16px 12px;border-bottom:1px solid var(--bd)">
+              <div>
+                <div style="font-size:10px;color:var(--t3);margin-bottom:4px">Chapter Name</div>
+                <input id="stmt-chapter" type="text" value="De Anza Phi Beta Lambda" oninput="saveStmtMeta()" style="width:100%;box-sizing:border-box;font-size:11px;padding:5px 8px;background:var(--s2);border:1px solid var(--bd);border-radius:4px;color:var(--t1)">
+              </div>
+              <div>
+                <div style="font-size:10px;color:var(--t3);margin-bottom:4px">Period</div>
+                <input id="stmt-period" type="text" value="For Year ended 6/29/25" oninput="saveStmtMeta()" style="width:100%;box-sizing:border-box;font-size:11px;padding:5px 8px;background:var(--s2);border:1px solid var(--bd);border-radius:4px;color:var(--t1)">
+              </div>
+              <div>
+                <div style="font-size:10px;color:var(--t3);margin-bottom:4px">Net Assets, Beginning of Year ($)</div>
+                <input id="stmt-net-start" type="number" value="225" oninput="saveStmtMeta();renderStmtSummary()" style="width:100%;box-sizing:border-box;font-size:11px;padding:5px 8px;background:var(--s2);border:1px solid var(--bd);border-radius:4px;color:var(--t1)">
+              </div>
+            </div>
+            <!-- Revenue + Expense two-column layout -->
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:0;min-height:200px">
+              <!-- REVENUE -->
+              <div style="padding:12px 16px;border-right:1px solid var(--bd)">
+                <div style="font-size:11px;font-weight:700;color:var(--grn);text-transform:uppercase;letter-spacing:.04em;margin-bottom:10px">Revenue</div>
+                <div id="stmt-revenue-list"></div>
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px;padding-top:8px;border-top:2px solid var(--bd)">
+                  <span style="font-size:11px;font-weight:700;color:var(--t1)">Total Revenue</span>
+                  <span style="font-size:13px;font-weight:700;color:var(--grn)" id="stmt-total-revenue">$0</span>
+                </div>
+              </div>
+              <!-- EXPENSES -->
+              <div style="padding:12px 16px">
+                <div style="font-size:11px;font-weight:700;color:var(--cr);text-transform:uppercase;letter-spacing:.04em;margin-bottom:10px">Expenses</div>
+                <div id="stmt-expense-list"></div>
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px;padding-top:8px;border-top:2px solid var(--bd)">
+                  <span style="font-size:11px;font-weight:700;color:var(--t1)">Total Expenses</span>
+                  <span style="font-size:13px;font-weight:700;color:var(--cr)" id="stmt-total-expense">$0</span>
+                </div>
+              </div>
+            </div>
+            <!-- Net Assets summary strip -->
+            <div style="background:var(--s2);border-top:1px solid var(--bd);padding:10px 16px;display:flex;gap:24px;align-items:center;flex-wrap:wrap">
+              <div><span style="font-size:10px;color:var(--t3)">Change in Net Assets </span><span style="font-weight:700;font-size:12px" id="stmt-change-net">$0</span></div>
+              <div><span style="font-size:10px;color:var(--t3)">Net Assets, Beginning </span><span style="font-weight:700;font-size:12px" id="stmt-net-begin">$225</span></div>
+              <div><span style="font-size:10px;color:var(--t3)">Net Assets, End </span><span style="font-weight:700;font-size:13px;color:var(--gold2)" id="stmt-net-end">$225</span></div>
+            </div>
+          </div>
+          <!-- SAVED REPORTS -->
+          <div class="card">
+            <div class="ch"><div class="ct">Saved Reports</div><button class="btn btn-p btn-sm" onclick="addFinReport()">+ Save Summary</button></div>
             <div id="fin-reports-list" style="padding:0 16px 16px"></div>
           </div>
         </div>
@@ -1284,6 +1346,8 @@ textarea{resize:vertical;min-height:120px;}
           <div class="tab" onclick="showTab('portal-operations','conflogistics');renderConfLogistics()">Conference Logistics</div>
           <div class="tab" onclick="showTab('portal-operations','kpis');renderKPIs()">KPI Dashboard</div>
           <div class="tab" onclick="showTab('portal-operations','iccexcursions');renderICCExcursions()">ICC Excursions</div>
+          <div class="tab" onclick="showTab('portal-operations','eventchecklist');renderEventChecklists()">Event Checklist</div>
+          <div class="tab" onclick="showTab('portal-operations','vendors');renderVendors()">Vendors</div>
         </div>
         <div class="sub active" id="portal-operations-overview">
           <div class="sg" id="portal-operations-stats"></div>
@@ -1337,6 +1401,24 @@ textarea{resize:vertical;min-height:120px;}
             <tbody id="icc-excursions-table"></tbody></table>
           </div>
         </div>
+
+        <!-- EVENT CHECKLIST TAB -->
+        <div class="sub" id="portal-operations-eventchecklist">
+          <div class="card">
+            <div class="ch"><div class="ct">Pre / Post Event Checklists</div><button class="btn btn-p btn-sm" onclick="addEventChecklist()">+ Add Event</button></div>
+            <table><thead><tr><th>Event</th><th>Date</th><th>Pre-Event Items</th><th>Post-Event Items</th><th>Owner</th><th>Status</th><th></th></tr></thead>
+            <tbody id="event-checklist-table"></tbody></table>
+          </div>
+        </div>
+
+        <!-- VENDOR DIRECTORY TAB -->
+        <div class="sub" id="portal-operations-vendors">
+          <div class="card">
+            <div class="ch"><div class="ct">Vendor &amp; Contact Directory</div><button class="btn btn-p btn-sm" onclick="addVendorEntry()">+ Add Vendor</button></div>
+            <table><thead><tr><th>Vendor / Contact</th><th>Category</th><th>Contact Name</th><th>Email / Phone</th><th>Last Used</th><th>Rating</th><th>Notes</th><th></th></tr></thead>
+            <tbody id="vendors-directory-table"></tbody></table>
+          </div>
+        </div>
       </div>
 
       <!-- STRATEGY PORTAL -->
@@ -1348,6 +1430,7 @@ textarea{resize:vertical;min-height:120px;}
           <div class="tab" onclick="showTab('portal-strategy','prg');renderPRG()">Polaris (PRG)</div>
           <div class="tab" onclick="showTab('portal-strategy','onboarding');renderOnboarding()">Onboarding</div>
           <div class="tab" onclick="showTab('portal-strategy','devgoals');renderDevGoals()">Dev Goals</div>
+          <div class="tab" onclick="showTab('portal-strategy','comphistory');renderCompHistory()">Competition History</div>
         </div>
         <div class="sub active" id="portal-strategy-overview">
           <div class="sg" id="portal-strategy-stats"></div>
@@ -1375,18 +1458,80 @@ textarea{resize:vertical;min-height:120px;}
 
         <!-- POLARIS PRG TAB -->
         <div class="sub" id="portal-strategy-prg">
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px">
-            <div class="card">
-              <div class="ch"><div class="ct">PRG Member Roster</div><button class="btn btn-p btn-sm" onclick="addPRGMember()">+ Add Member</button></div>
-              <table><thead><tr><th>Name</th><th>Focus Area</th><th>Status</th><th>Joined</th><th></th></tr></thead>
-              <tbody id="prg-roster-table"></tbody></table>
-            </div>
-            <div class="card">
-              <div class="ch"><div class="ct">Active Initiatives</div><button class="btn btn-p btn-sm" onclick="addPRGInitiative()">+ Add Initiative</button></div>
-              <table><thead><tr><th>Initiative</th><th>Lead</th><th>Target</th><th>Status</th><th></th></tr></thead>
-              <tbody id="prg-initiatives-table"></tbody></table>
+
+          <!-- Internal Polaris Sub-Nav -->
+          <div style="display:flex;gap:7px;margin-bottom:16px;flex-wrap:wrap">
+            <button class="polaris-tab-btn active" id="ptab-roster"      onclick="showPolarisTab('roster')">👥 Roster &amp; Initiatives</button>
+            <button class="polaris-tab-btn"        id="ptab-assignments" onclick="showPolarisTab('assignments');renderPolarisAssignments()">📎 Assignments</button>
+            <button class="polaris-tab-btn"        id="ptab-lessons"     onclick="showPolarisTab('lessons');renderPolarisLessons()">📋 Lesson Plans</button>
+            <button class="polaris-tab-btn"        id="ptab-guides"      onclick="showPolarisTab('guides');renderPolarisGuides()">📚 Resource Guides</button>
+          </div>
+
+          <!-- ── ROSTER & INITIATIVES ── -->
+          <div id="prg-sub-roster">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+              <div class="card">
+                <div class="ch"><div class="ct">PRG Member Roster</div><button class="btn btn-p btn-sm" onclick="addPRGMember()">+ Add Member</button></div>
+                <table><thead><tr><th>Name</th><th>Focus Area</th><th>Status</th><th>Joined</th><th></th></tr></thead>
+                <tbody id="prg-roster-table"></tbody></table>
+              </div>
+              <div class="card">
+                <div class="ch"><div class="ct">Active Initiatives</div><button class="btn btn-p btn-sm" onclick="addPRGInitiative()">+ Add Initiative</button></div>
+                <table><thead><tr><th>Initiative</th><th>Lead</th><th>Target</th><th>Status</th><th></th></tr></thead>
+                <tbody id="prg-initiatives-table"></tbody></table>
+              </div>
             </div>
           </div>
+
+          <!-- ── ASSIGNMENTS ── -->
+          <div id="prg-sub-assignments" style="display:none">
+            <div class="card">
+              <div class="ch">
+                <div><div class="ct">Assignment Upload Area</div><div style="font-size:10px;color:var(--t3);margin-top:2px">Track assignments, attach files, manage due dates</div></div>
+                <button class="btn btn-p btn-sm" onclick="addPolarisAssignment()">+ Add Assignment</button>
+              </div>
+              <div style="display:flex;gap:8px;padding:8px 16px 0;flex-wrap:wrap">
+                <select id="pa-filter-status" onchange="renderPolarisAssignments()" style="font-size:10px;padding:3px 8px;background:var(--s2);border:1px solid var(--bd);border-radius:4px;color:var(--t1)">
+                  <option value="">All Statuses</option>
+                  <option>Not Started</option><option>In Progress</option><option>Submitted</option><option>Graded</option>
+                </select>
+                <select id="pa-filter-cat" onchange="renderPolarisAssignments()" style="font-size:10px;padding:3px 8px;background:var(--s2);border:1px solid var(--bd);border-radius:4px;color:var(--t1)">
+                  <option value="">All Categories</option>
+                  <option>Report</option><option>Project</option><option>Presentation</option><option>Research</option><option>Other</option>
+                </select>
+              </div>
+              <table style="margin-top:8px">
+                <thead><tr><th>Assignment</th><th>Category</th><th>Due Date</th><th>Assigned To</th><th>Status</th><th>File</th><th></th></tr></thead>
+                <tbody id="polaris-assignments-table"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- ── LESSON PLANS ── -->
+          <div id="prg-sub-lessons" style="display:none">
+            <div class="card">
+              <div class="ch">
+                <div><div class="ct">Lesson Plan Library</div><div style="font-size:10px;color:var(--t3);margin-top:2px">Create structured lesson plans for PRG sessions</div></div>
+                <button class="btn btn-p btn-sm" onclick="addPolarisLesson()">+ New Lesson Plan</button>
+              </div>
+              <div id="polaris-lessons-list" style="padding:0 16px 16px"></div>
+            </div>
+          </div>
+
+          <!-- ── RESOURCE GUIDES ── -->
+          <div id="prg-sub-guides" style="display:none">
+            <div class="card">
+              <div class="ch">
+                <div><div class="ct">Resource Guides</div><div style="font-size:10px;color:var(--t3);margin-top:2px">Step-by-step references — click any guide to expand</div></div>
+                <button class="btn btn-p btn-sm" onclick="addPolarisGuide()">+ Add Guide</button>
+              </div>
+              <div style="padding:8px 16px 0">
+                <input id="pg-search" type="text" placeholder="Search guides..." oninput="renderPolarisGuides()" style="width:100%;box-sizing:border-box;font-size:11px;padding:5px 10px;background:var(--s2);border:1px solid var(--bd);border-radius:5px;color:var(--t1)">
+              </div>
+              <div id="polaris-guides-list" style="padding:10px 16px 16px"></div>
+            </div>
+          </div>
+
         </div>
 
         <!-- ONBOARDING PIPELINE TAB -->
@@ -1410,6 +1555,15 @@ textarea{resize:vertical;min-height:120px;}
             <tbody id="dev-goals-table"></tbody></table>
           </div>
         </div>
+
+        <!-- COMPETITION HISTORY TAB -->
+        <div class="sub" id="portal-strategy-comphistory">
+          <div class="card">
+            <div class="ch"><div class="ct">Competition Results History</div><button class="btn btn-p btn-sm" onclick="logCompResult()">+ Log Result</button></div>
+            <table><thead><tr><th>Member</th><th>Event</th><th>Conference</th><th>Placement / Award</th><th>Date</th><th>Notes</th><th></th></tr></thead>
+            <tbody id="portal-comp-log-table"></tbody></table>
+          </div>
+        </div>
       </div>
 
       <!-- MARKETING PORTAL -->
@@ -1421,6 +1575,8 @@ textarea{resize:vertical;min-height:120px;}
           <div class="tab" onclick="showTab('portal-marketing','campaigns');renderCampaigns()">Campaigns</div>
           <div class="tab" onclick="showTab('portal-marketing','analytics');renderAnalytics()">Analytics</div>
           <div class="tab" onclick="showTab('portal-marketing','outreach');renderOutreach()">Outreach Log</div>
+          <div class="tab" onclick="showTab('portal-marketing','commslog');renderCommsLog()">Comms Log</div>
+          <div class="tab" onclick="showTab('portal-marketing','graphicrequests');renderGraphicRequests()">Graphic Requests</div>
         </div>
         <div class="sub active" id="portal-marketing-overview">
           <div class="sg" id="portal-marketing-stats"></div>
@@ -1571,6 +1727,24 @@ textarea{resize:vertical;min-height:120px;}
             <tbody id="outreach-table"></tbody></table>
           </div>
         </div>
+
+        <!-- COMMS LOG TAB -->
+        <div class="sub" id="portal-marketing-commslog">
+          <div class="card">
+            <div class="ch"><div class="ct">Email &amp; Communications Log</div><button class="btn btn-p btn-sm" onclick="addCommsEntry()">+ Log Communication</button></div>
+            <table><thead><tr><th>Subject / Campaign</th><th>Type</th><th>Sent To</th><th>Date</th><th>Open Rate</th><th>Notes</th><th></th></tr></thead>
+            <tbody id="comms-log-table"></tbody></table>
+          </div>
+        </div>
+
+        <!-- GRAPHIC REQUESTS TAB -->
+        <div class="sub" id="portal-marketing-graphicrequests">
+          <div class="card">
+            <div class="ch"><div class="ct">Graphic Request Tracker</div><button class="btn btn-p btn-sm" onclick="addGraphicRequest()">+ New Request</button></div>
+            <table><thead><tr><th>Project</th><th>Requested By</th><th>Type</th><th>Due Date</th><th>Designer</th><th>Status</th><th>Link</th><th></th></tr></thead>
+            <tbody id="graphic-requests-table"></tbody></table>
+          </div>
+        </div>
       </div>
 
       <!-- CLUB AFFAIRS PORTAL -->
@@ -1583,6 +1757,7 @@ textarea{resize:vertical;min-height:120px;}
           <div class="tab" onclick="showTab('portal-clubaffairs','compliance');renderCompliance()">Compliance / HR</div>
           <div class="tab" onclick="showTab('portal-clubaffairs','roombookings');renderRoomBookings()">Room Bookings</div>
           <div class="tab" onclick="showTab('portal-clubaffairs','iccbluepanda');renderICCBluePanda()">ICC & Blue Panda</div>
+          <div class="tab" onclick="showTab('portal-clubaffairs','points');renderMemberPoints()">Points Tracker</div>
         </div>
         <div class="sub active" id="portal-clubaffairs-overview">
           <div class="sg" id="portal-clubaffairs-stats"></div>
@@ -1650,6 +1825,15 @@ textarea{resize:vertical;min-height:120px;}
             </div>
           </div>
         </div>
+
+        <!-- MEMBER POINTS TRACKER TAB -->
+        <div class="sub" id="portal-clubaffairs-points">
+          <div class="card">
+            <div class="ch"><div class="ct">Member Points &amp; Engagement Tracker</div><button class="btn btn-p btn-sm" onclick="addMemberPointsEntry()">+ Add / Update Member</button></div>
+            <table><thead><tr><th>Member</th><th>Points</th><th>Events Attended</th><th>Last Active</th><th>Tier</th><th>Notes</th><th></th></tr></thead>
+            <tbody id="member-points-table"></tbody></table>
+          </div>
+        </div>
       </div>
 
       <!-- PRESIDENT'S HUB -->
@@ -1659,6 +1843,8 @@ textarea{resize:vertical;min-height:120px;}
           <div class="tab" onclick="showTab('portal-president','conferences');renderConfDues()">Conference Tracker</div>
           <div class="tab" onclick="showTab('portal-president','agendas');renderPresAgendas()">Meeting Agendas</div>
           <div class="tab" onclick="showTab('portal-president','delegation');renderDelegation()">Board Delegation</div>
+          <div class="tab" onclick="showTab('portal-president','officercheckins');renderOfficerCheckins()">Officer Check-Ins</div>
+          <div class="tab" onclick="showTab('portal-president','decisions');renderDecisionLog()">Decision Log</div>
         </div>
         <div class="sub active" id="portal-president-overview">
           <div class="sg" id="portal-president-stats"></div>
@@ -1701,6 +1887,24 @@ textarea{resize:vertical;min-height:120px;}
             <div class="ch"><div class="ct">Cross-Functional Deliverables</div><button class="btn btn-p btn-sm" onclick="addDelegation()">+ Assign Deliverable</button></div>
             <table><thead><tr><th>Deliverable</th><th>Assigned To</th><th>Portal</th><th>Due Date</th><th>Priority</th><th>Status</th><th></th></tr></thead>
             <tbody id="delegation-table"></tbody></table>
+          </div>
+        </div>
+
+        <!-- OFFICER CHECK-INS TAB -->
+        <div class="sub" id="portal-president-officercheckins">
+          <div class="card">
+            <div class="ch"><div class="ct">Officer Check-In Log</div><button class="btn btn-p btn-sm" onclick="addOfficerCheckin()">+ Log Check-In</button></div>
+            <table><thead><tr><th>Officer</th><th>Role</th><th>Date</th><th>Type</th><th>Attendance</th><th>Notes</th><th></th></tr></thead>
+            <tbody id="officer-checkins-table"></tbody></table>
+          </div>
+        </div>
+
+        <!-- DECISION LOG TAB -->
+        <div class="sub" id="portal-president-decisions">
+          <div class="card">
+            <div class="ch"><div class="ct">Board Decision Log</div><button class="btn btn-p btn-sm" onclick="addDecision()">+ Log Decision</button></div>
+            <table><thead><tr><th>Decision</th><th>Made By</th><th>Date</th><th>Rationale</th><th>Impact</th><th>Status</th><th></th></tr></thead>
+            <tbody id="decision-log-table"></tbody></table>
           </div>
         </div>
       </div>
@@ -1992,11 +2196,9 @@ textarea{resize:vertical;min-height:120px;}
   </div>
 </div>
 
-<div class="sb-overlay" id="im-overlay" onclick="closeMobSidebar('m-sidebar','im-overlay')"></div>
 <!-- MAIN -->
 <div class="main">
   <div class="topbar">
-    <button class="mob-menu-btn" onclick="toggleMobSidebar('m-sidebar','im-overlay')" aria-label="Menu"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 4h14M2 9h14M2 14h14"/></svg></button>
     <div><span class="tb-title" id="m-page-title">Home</span><span class="tb-sub" id="m-page-sub">Spring 2026 &middot; De Anza PBL</span></div>
     <div class="tb-right"><button class="btn btn-g btn-sm" onclick="switchToLanding()" style="font-size:10px">⟵ Switch Portal</button>
       <span id="tb-member-name" style="font-size:11px;color:var(--t3)"></span>
@@ -2522,6 +2724,348 @@ textarea{resize:vertical;min-height:120px;}
     </div>
     <div class="fg"><div class="fl">Status</div><select id="del-status"><option>Pending</option><option>In Progress</option><option>Done</option></select></div>
     <div class="mf"><button class="btn btn-g" onclick="closeModals()">Cancel</button><button class="btn btn-p" onclick="submitDelegation()">Assign</button></div>
+  </div>
+</div>
+
+<!-- CONF PAYMENT BULK ADD MODAL -->
+<div class="overlay" id="cpl-bulk-modal">
+  <div class="modal" style="max-width:560px">
+    <div class="mt">Mass Add Members</div>
+    <!-- Conference selector lives in the modal — no reliance on _cplActiveConf -->
+    <div class="fg">
+      <div class="fl">Conference to add to</div>
+      <select id="bulk-conf-idx" style="font-size:12px;padding:6px 8px;background:var(--s2);border:1px solid var(--bd);border-radius:5px;color:var(--t1);width:100%"></select>
+    </div>
+    <div id="bulk-no-conf-msg" style="display:none;font-size:11px;color:var(--cr);padding:4px 0 6px">No conferences yet — create one first with "+ New Conference".</div>
+    <div class="fg" style="margin-top:4px">
+      <div class="fl">Names <span style="color:var(--t4);font-weight:400">(one per line — paste a whole column from a spreadsheet)</span></div>
+      <textarea id="bulk-names" rows="9" placeholder="Jane Smith&#10;John Doe&#10;Alice Lee&#10;..." style="font-family:inherit;font-size:12px;line-height:1.7"></textarea>
+    </div>
+    <div style="font-size:11px;font-weight:700;color:var(--t2);margin:10px 0 6px;padding-top:8px;border-top:1px solid var(--bd)">Default values for all added members</div>
+    <div class="fr">
+      <div class="fg"><div class="fl">Gender</div>
+        <select id="bulk-gender"><option value="">— unset —</option><option>Male</option><option>Female</option><option>N/A</option></select>
+      </div>
+      <div class="fg"><div class="fl">Payment Method</div>
+        <select id="bulk-method"><option>Online</option><option>Cash</option><option>Check</option><option>N/A</option></select>
+      </div>
+    </div>
+    <div class="fr">
+      <div class="fg"><div class="fl">Deposit</div>
+        <select id="bulk-deposit"><option>Not Yet</option><option>Paid</option><option>N/A</option></select>
+      </div>
+      <div class="fg"><div class="fl">Fee</div>
+        <select id="bulk-fee1"><option>Not Yet</option><option>Paid</option><option>N/A</option></select>
+      </div>
+      <div class="fg"><div class="fl">Final</div>
+        <select id="bulk-fee2"><option>Not Yet</option><option>Paid</option><option>N/A</option></select>
+      </div>
+    </div>
+    <div class="fr">
+      <div class="fg"><div class="fl">Refund Status</div>
+        <select id="bulk-refund"><option>Pending</option><option>Refunded</option><option>Not Yet</option><option>N/A</option></select>
+      </div>
+      <div class="fg"><div class="fl">Total Received ($)</div>
+        <input id="bulk-total" type="number" min="0" value="0">
+      </div>
+    </div>
+    <div class="fg"><div class="fl">Notes <span style="color:var(--t4);font-weight:400">(applied to all)</span></div>
+      <input id="bulk-notes" type="text" placeholder="Optional note for all added members">
+    </div>
+    <div id="bulk-preview-count" style="font-size:11px;color:var(--grn);margin-top:6px;font-weight:600"></div>
+    <div class="mf"><button class="btn btn-g" onclick="closeModals()">Cancel</button><button class="btn btn-p" onclick="submitBulkConfPayMembers()">Add All Members</button></div>
+  </div>
+</div>
+
+<!-- CONF PAYMENT MEMBER MODAL -->
+<div class="overlay" id="cpl-member-modal">
+  <div class="modal"><div class="mt" id="cpl-member-modal-title">Add Payment Member</div>
+    <input type="hidden" id="cpl-edit-index" value="-1">
+    <div class="fr">
+      <div class="fg"><div class="fl">Full Name</div><input id="cpl-name" type="text" placeholder="Member full name"></div>
+      <div class="fg"><div class="fl">Gender</div><select id="cpl-gender"><option>Male</option><option>Female</option></select></div>
+    </div>
+    <div class="fr">
+      <div class="fg"><div class="fl">$250 Deposit</div><select id="cpl-deposit"><option>Paid</option><option>Cash</option><option>Not Yet</option><option>N/A</option></select></div>
+      <div class="fg"><div class="fl">$15 Fee</div><select id="cpl-fee1"><option>Paid</option><option>Cash</option><option>Not Yet</option><option>N/A</option></select></div>
+      <div class="fg"><div class="fl">$235 Final</div><select id="cpl-fee2"><option>Paid</option><option>Cash</option><option>Not Yet</option><option>N/A</option></select></div>
+    </div>
+    <div class="fr">
+      <div class="fg"><div class="fl">Payment Method</div><select id="cpl-method"><option>Online</option><option>Zelle</option><option>Cash</option><option>Mixed</option></select></div>
+      <div class="fg"><div class="fl">Total Received ($)</div><input id="cpl-total" type="number" min="0" step="0.01" placeholder="500.00"></div>
+    </div>
+    <div class="fr">
+      <div class="fg"><div class="fl">Refund Status</div><select id="cpl-refund"><option>Refunded</option><option>Pending</option><option>Not Yet</option><option>N/A</option></select></div>
+      <div class="fg"><div class="fl">Notes</div><input id="cpl-notes" type="text" placeholder="Cash, Zelle, special instructions..."></div>
+    </div>
+    <div class="mf"><button class="btn btn-g" onclick="closeModals()">Cancel</button><button class="btn btn-p" onclick="submitConfPayMember()">Save</button></div>
+  </div>
+</div>
+
+<!-- NEW CONFERENCE MODAL -->
+<div class="overlay" id="cpl-conf-modal">
+  <div class="modal"><div class="mt">New Conference</div>
+    <div class="fg"><div class="fl">Conference Name</div><input id="cpl-conf-name" type="text" placeholder="e.g. State Conference 2026"></div>
+    <div class="fr">
+      <div class="fg"><div class="fl">Deposit Amount ($)</div><input id="cpl-conf-deposit" type="number" value="250" min="0"></div>
+      <div class="fg"><div class="fl">Additional Fee 1 ($)</div><input id="cpl-conf-fee1" type="number" value="15" min="0"></div>
+      <div class="fg"><div class="fl">Final Payment ($)</div><input id="cpl-conf-fee2" type="number" value="235" min="0"></div>
+    </div>
+    <div class="fg"><div class="fl">Refund Per Person ($)</div><input id="cpl-conf-refund" type="number" value="0" min="0" step="0.01" placeholder="e.g. 85.73"></div>
+    <div class="mf"><button class="btn btn-g" onclick="closeModals()">Cancel</button><button class="btn btn-p" onclick="submitConfPayConf()">Create</button></div>
+  </div>
+</div>
+
+<!-- OFFICER CHECK-IN MODAL -->
+<div class="overlay" id="officer-checkin-modal">
+  <div class="modal"><div class="mt">Log Officer Check-In</div>
+    <div class="fr">
+      <div class="fg"><div class="fl">Officer Name</div><select id="oc-officer"><option>Nisa Pradhan</option><option>Carine Chan</option><option>George Huang</option><option>Anna Huynh</option><option>Addy Hu</option><option>Dianne Johnson</option><option>Arya Somu</option><option>Iker Jimenez</option><option>Nhi Tran</option><option>Jordan Nguyen</option><option>Christina Tran</option></select></div>
+      <div class="fg"><div class="fl">Role / Portal</div><select id="oc-role"><option>President</option><option>VP Finance</option><option>VP Operations</option><option>VP Strategy</option><option>VP Marketing</option><option>VP Club Affairs</option><option>Secretary</option></select></div>
+    </div>
+    <div class="fr">
+      <div class="fg"><div class="fl">Date</div><input id="oc-date" type="date"></div>
+      <div class="fg"><div class="fl">Check-In Type</div><select id="oc-type"><option>1-on-1</option><option>Board Meeting</option><option>Email</option><option>Informal</option></select></div>
+    </div>
+    <div class="fg"><div class="fl">Attendance / Status</div><select id="oc-attendance"><option>Present</option><option>Late</option><option>Absent - Excused</option><option>Absent - Unexcused</option></select></div>
+    <div class="fg"><div class="fl">Notes</div><textarea id="oc-notes" rows="3" placeholder="Discussion points, action items, concerns..."></textarea></div>
+    <div class="mf"><button class="btn btn-g" onclick="closeModals()">Cancel</button><button class="btn btn-p" onclick="submitOfficerCheckin()">Log Check-In</button></div>
+  </div>
+</div>
+
+<!-- DECISION LOG MODAL -->
+<div class="overlay" id="decision-log-modal">
+  <div class="modal"><div class="mt">Log Board Decision</div>
+    <div class="fg"><div class="fl">Decision</div><input id="dec-decision" type="text" placeholder="What was decided?"></div>
+    <div class="fr">
+      <div class="fg"><div class="fl">Made By</div><select id="dec-by"><option>Full Board</option><option>President</option><option>Executive Board</option><option>VP Finance</option><option>VP Operations</option><option>VP Strategy</option><option>VP Marketing</option><option>VP Club Affairs</option></select></div>
+      <div class="fg"><div class="fl">Date</div><input id="dec-date" type="date"></div>
+    </div>
+    <div class="fg"><div class="fl">Rationale</div><textarea id="dec-rationale" rows="2" placeholder="Why was this decision made?"></textarea></div>
+    <div class="fr">
+      <div class="fg"><div class="fl">Impact</div><select id="dec-impact"><option>Low</option><option>Medium</option><option>High</option></select></div>
+      <div class="fg"><div class="fl">Status</div><select id="dec-status"><option>Active</option><option>Under Review</option><option>Reversed</option><option>Completed</option></select></div>
+    </div>
+    <div class="mf"><button class="btn btn-g" onclick="closeModals()">Cancel</button><button class="btn btn-p" onclick="submitDecision()">Log Decision</button></div>
+  </div>
+</div>
+
+<!-- MEMBER POINTS MODAL -->
+<div class="overlay" id="member-points-modal">
+  <div class="modal"><div class="mt">Add / Update Member Points</div>
+    <div class="fr">
+      <div class="fg"><div class="fl">Member Name</div><input id="mp-name" type="text" placeholder="Full name"></div>
+      <div class="fg"><div class="fl">Points</div><input id="mp-points" type="number" min="0" placeholder="e.g. 150"></div>
+    </div>
+    <div class="fr">
+      <div class="fg"><div class="fl">Events Attended</div><input id="mp-events" type="number" min="0" placeholder="0"></div>
+      <div class="fg"><div class="fl">Last Active</div><input id="mp-lastactive" type="date"></div>
+    </div>
+    <div class="fg"><div class="fl">Tier</div><select id="mp-tier"><option>Bronze</option><option>Silver</option><option>Gold</option><option>Platinum</option></select></div>
+    <div class="fg"><div class="fl">Notes</div><textarea id="mp-notes" rows="2" placeholder="Any engagement notes..."></textarea></div>
+    <div class="mf"><button class="btn btn-g" onclick="closeModals()">Cancel</button><button class="btn btn-p" onclick="submitMemberPoints()">Save</button></div>
+  </div>
+</div>
+
+<!-- EVENT CHECKLIST MODAL -->
+<div class="overlay" id="event-checklist-modal">
+  <div class="modal"><div class="mt">Add Event Checklist</div>
+    <div class="fr">
+      <div class="fg"><div class="fl">Event Name</div><input id="ec-event" type="text" placeholder="Event name"></div>
+      <div class="fg"><div class="fl">Date</div><input id="ec-date" type="date"></div>
+    </div>
+    <div class="fg"><div class="fl">Pre-Event Items (comma-separated)</div><textarea id="ec-pre" rows="2" placeholder="e.g. Confirm venue, Send reminders, Print materials"></textarea></div>
+    <div class="fg"><div class="fl">Post-Event Items (comma-separated)</div><textarea id="ec-post" rows="2" placeholder="e.g. Send thank-yous, Upload photos, File ICC form"></textarea></div>
+    <div class="fr">
+      <div class="fg"><div class="fl">Owner</div><input id="ec-owner" type="text" placeholder="Responsible officer"></div>
+      <div class="fg"><div class="fl">Status</div><select id="ec-status"><option>Pre-Event</option><option>In Progress</option><option>Post-Event</option><option>Completed</option></select></div>
+    </div>
+    <div class="mf"><button class="btn btn-g" onclick="closeModals()">Cancel</button><button class="btn btn-p" onclick="submitEventChecklist()">Save</button></div>
+  </div>
+</div>
+
+<!-- VENDOR MODAL -->
+<div class="overlay" id="vendor-modal">
+  <div class="modal"><div class="mt">Add Vendor / Contact</div>
+    <div class="fr">
+      <div class="fg"><div class="fl">Vendor / Organization</div><input id="vnd-name" type="text" placeholder="Company or contact name"></div>
+      <div class="fg"><div class="fl">Category</div><select id="vnd-category"><option>Catering</option><option>Venue</option><option>AV / Tech</option><option>Printing</option><option>Transportation</option><option>Photography</option><option>Decor</option><option>Other</option></select></div>
+    </div>
+    <div class="fr">
+      <div class="fg"><div class="fl">Contact Name</div><input id="vnd-contact" type="text" placeholder="Primary contact"></div>
+      <div class="fg"><div class="fl">Email / Phone</div><input id="vnd-reach" type="text" placeholder="email@example.com or 555-1234"></div>
+    </div>
+    <div class="fr">
+      <div class="fg"><div class="fl">Last Used</div><input id="vnd-lastused" type="date"></div>
+      <div class="fg"><div class="fl">Rating</div><select id="vnd-rating"><option>⭐⭐⭐⭐⭐</option><option>⭐⭐⭐⭐</option><option>⭐⭐⭐</option><option>⭐⭐</option><option>⭐</option></select></div>
+    </div>
+    <div class="fg"><div class="fl">Notes</div><textarea id="vnd-notes" rows="2" placeholder="Pricing, reliability, special instructions..."></textarea></div>
+    <div class="mf"><button class="btn btn-g" onclick="closeModals()">Cancel</button><button class="btn btn-p" onclick="submitVendor()">Save</button></div>
+  </div>
+</div>
+
+<!-- COMMS LOG MODAL -->
+<div class="overlay" id="comms-log-modal">
+  <div class="modal"><div class="mt">Log Communication</div>
+    <div class="fg"><div class="fl">Subject / Campaign Name</div><input id="comms-subject" type="text" placeholder="e.g. Fall Recruitment Email #1"></div>
+    <div class="fr">
+      <div class="fg"><div class="fl">Type</div><select id="comms-type"><option>Email</option><option>Text / SMS</option><option>Instagram DM</option><option>Newsletter</option><option>Announcement</option><option>Other</option></select></div>
+      <div class="fg"><div class="fl">Sent To</div><input id="comms-sentto" type="text" placeholder="e.g. All Members, Prospects"></div>
+    </div>
+    <div class="fr">
+      <div class="fg"><div class="fl">Date Sent</div><input id="comms-date" type="date"></div>
+      <div class="fg"><div class="fl">Open / Click Rate</div><input id="comms-openrate" type="text" placeholder="e.g. 62%"></div>
+    </div>
+    <div class="fg"><div class="fl">Notes</div><textarea id="comms-notes" rows="2" placeholder="Response, follow-ups, performance notes..."></textarea></div>
+    <div class="mf"><button class="btn btn-g" onclick="closeModals()">Cancel</button><button class="btn btn-p" onclick="submitCommsLog()">Log</button></div>
+  </div>
+</div>
+
+<!-- GRAPHIC REQUEST MODAL -->
+<div class="overlay" id="graphic-request-modal">
+  <div class="modal"><div class="mt">New Graphic Request</div>
+    <div class="fr">
+      <div class="fg"><div class="fl">Project Name</div><input id="gr-project" type="text" placeholder="e.g. Spring Flyer"></div>
+      <div class="fg"><div class="fl">Requested By</div><input id="gr-requestedby" type="text" placeholder="Officer or committee"></div>
+    </div>
+    <div class="fr">
+      <div class="fg"><div class="fl">Type</div><select id="gr-type"><option>Flyer</option><option>Social Post</option><option>Banner</option><option>Presentation</option><option>Logo</option><option>Other</option></select></div>
+      <div class="fg"><div class="fl">Due Date</div><input id="gr-due" type="date"></div>
+    </div>
+    <div class="fr">
+      <div class="fg"><div class="fl">Designer</div><input id="gr-designer" type="text" placeholder="Assigned designer"></div>
+      <div class="fg"><div class="fl">Status</div><select id="gr-status"><option>Requested</option><option>In Progress</option><option>Review</option><option>Approved</option><option>Delivered</option></select></div>
+    </div>
+    <div class="fg"><div class="fl">Drive Link</div><input id="gr-link" type="text" placeholder="https://drive.google.com/..."></div>
+    <div class="mf"><button class="btn btn-g" onclick="closeModals()">Cancel</button><button class="btn btn-p" onclick="submitGraphicRequest()">Save Request</button></div>
+  </div>
+</div>
+
+<!-- COMPETITION HISTORY MODAL -->
+<div class="overlay" id="comp-history-modal">
+  <div class="modal"><div class="mt">Log Competition Result</div>
+    <div class="fr">
+      <div class="fg"><div class="fl">Member Name</div><input id="ch-member" type="text" placeholder="Full name"></div>
+      <div class="fg"><div class="fl">Competitive Event</div><input id="ch-event" type="text" placeholder="e.g. Business Plan, Management"></div>
+    </div>
+    <div class="fr">
+      <div class="fg"><div class="fl">Conference</div><input id="ch-conf" type="text" placeholder="e.g. Fall, State, Nationals"></div>
+      <div class="fg"><div class="fl">Date</div><input id="ch-date" type="date"></div>
+    </div>
+    <div class="fg"><div class="fl">Placement / Award</div><input id="ch-placement" type="text" placeholder="e.g. 1st Place, Top 10, No Award"></div>
+    <div class="fg"><div class="fl">Notes</div><textarea id="ch-notes" rows="2" placeholder="Feedback, highlights, areas to improve..."></textarea></div>
+    <div class="mf"><button class="btn btn-g" onclick="closeModals()">Cancel</button><button class="btn btn-p" onclick="submitCompResult()">Save Result</button></div>
+  </div>
+</div>
+
+<!-- ═══ POLARIS MODALS ════════════════════════════════════════════════════════ -->
+
+<!-- Add Assignment -->
+<div class="overlay" id="polaris-assignment-modal">
+  <div class="modal"><div class="mt">Add Assignment</div>
+    <div class="fr">
+      <div class="fg"><div class="fl">Assignment Title</div><input id="pa-title" type="text" placeholder="e.g. Business Report Draft 1"></div>
+      <div class="fg"><div class="fl">Category</div>
+        <select id="pa-category"><option>Report</option><option>Project</option><option>Presentation</option><option>Research</option><option>Other</option></select>
+      </div>
+    </div>
+    <div class="fr">
+      <div class="fg"><div class="fl">Due Date</div><input id="pa-due" type="date"></div>
+      <div class="fg"><div class="fl">Assigned To</div><input id="pa-assignedto" type="text" placeholder="Member name or 'All'"></div>
+    </div>
+    <div class="fr">
+      <div class="fg"><div class="fl">Status</div>
+        <select id="pa-status"><option>Not Started</option><option>In Progress</option><option>Submitted</option><option>Graded</option></select>
+      </div>
+      <div class="fg"><div class="fl">Grade / Score <span style="color:var(--t4);font-weight:400">(optional)</span></div><input id="pa-grade" type="text" placeholder="e.g. A, 92/100"></div>
+    </div>
+    <div class="fg"><div class="fl">Instructions / Notes</div><textarea id="pa-notes" rows="2" placeholder="Brief description or instructions..."></textarea></div>
+    <div class="fg">
+      <div class="fl">Attach File <span style="color:var(--t4);font-weight:400">(stored locally in browser, &lt;2 MB)</span></div>
+      <input id="pa-file" type="file" accept=".pdf,.doc,.docx,.pptx,.xlsx,.png,.jpg,.txt" style="font-size:11px;color:var(--t1)">
+    </div>
+    <div class="mf"><button class="btn btn-g" onclick="closeModals()">Cancel</button><button class="btn btn-p" onclick="submitPolarisAssignment()">Save Assignment</button></div>
+  </div>
+</div>
+
+<!-- Create Lesson Plan -->
+<div class="overlay" id="polaris-lesson-modal">
+  <div class="modal" style="max-width:620px"><div class="mt">Create Lesson Plan</div>
+    <div class="fr">
+      <div class="fg"><div class="fl">Lesson Title</div><input id="pl-title" type="text" placeholder="e.g. How to Structure a Business Report"></div>
+      <div class="fg"><div class="fl">Date</div><input id="pl-date" type="date"></div>
+    </div>
+    <div class="fr">
+      <div class="fg"><div class="fl">Duration (min)</div><input id="pl-duration" type="number" placeholder="60"></div>
+      <div class="fg"><div class="fl">Topic Area</div>
+        <select id="pl-topic"><option>Writing</option><option>Research</option><option>Presentation</option><option>Business Skills</option><option>Competition Prep</option><option>Other</option></select>
+      </div>
+    </div>
+    <div class="fg"><div class="fl">Learning Objective</div><textarea id="pl-objective" rows="2" placeholder="By the end of this session, members will be able to..."></textarea></div>
+    <div class="fg"><div class="fl">Materials Needed</div><textarea id="pl-materials" rows="2" placeholder="Whiteboard, handouts, laptop, etc."></textarea></div>
+    <div class="fg"><div class="fl">Session Agenda <span style="color:var(--t4);font-weight:400">(step by step)</span></div><textarea id="pl-agenda" rows="5" placeholder="1. Introduction (5 min)&#10;2. Main instruction (30 min)&#10;3. Group activity (20 min)&#10;4. Q&amp;A and wrap-up (5 min)"></textarea></div>
+    <div class="fg"><div class="fl">Assessment / How to Measure Success</div><textarea id="pl-assessment" rows="2" placeholder="Quiz, observation, assignment submission..."></textarea></div>
+    <div class="fg"><div class="fl">Notes</div><textarea id="pl-notes-lesson" rows="2" placeholder="Anything else to note..."></textarea></div>
+    <div class="mf"><button class="btn btn-g" onclick="closeModals()">Cancel</button><button class="btn btn-p" onclick="submitPolarisLesson()">Save Lesson Plan</button></div>
+  </div>
+</div>
+
+<!-- Lesson Plan Preview -->
+<div class="overlay" id="polaris-lesson-preview-modal">
+  <div class="modal" style="max-width:620px">
+    <div class="mt" id="plp-title">Lesson Plan</div>
+    <div id="plp-body" style="padding-bottom:8px"></div>
+    <div class="mf"><button class="btn btn-g" onclick="closeModals()">Close</button><button class="btn btn-p" onclick="printLessonPlan()">⎙ Print</button></div>
+  </div>
+</div>
+
+<!-- Add Resource Guide -->
+<div class="overlay" id="polaris-guide-modal">
+  <div class="modal"><div class="mt">Add Resource Guide</div>
+    <div class="fr">
+      <div class="fg"><div class="fl">Guide Title</div><input id="pg-title" type="text" placeholder="e.g. How to Write an Executive Summary"></div>
+      <div class="fg"><div class="fl">Category</div>
+        <select id="pg-category"><option>Writing</option><option>Presentation</option><option>Research</option><option>Strategy</option><option>Other</option></select>
+      </div>
+    </div>
+    <div class="fg"><div class="fl">Content <span style="color:var(--t4);font-weight:400">(use blank lines to separate sections)</span></div><textarea id="pg-content" rows="10" placeholder="OVERVIEW&#10;...&#10;&#10;STEPS&#10;1. ...&#10;2. ...&#10;&#10;TIPS&#10;• ..."></textarea></div>
+    <div class="mf"><button class="btn btn-g" onclick="closeModals()">Cancel</button><button class="btn btn-p" onclick="submitPolarisGuide()">Save Guide</button></div>
+  </div>
+</div>
+
+<!-- ═══ STATEMENT OF ACTIVITIES PRINT PREVIEW ═══════════════════════════════ -->
+<div id="stmt-preview-overlay" style="display:none;position:fixed;inset:0;z-index:9999;background:#666;overflow-y:auto;padding:56px 0 40px">
+  <div style="max-width:700px;margin:0 auto;background:#fff;padding:52px 60px;box-shadow:0 6px 40px rgba(0,0,0,.45);border-radius:3px;font-family:'Times New Roman',Times,serif;color:#111">
+    <div style="text-align:center;margin-bottom:32px">
+      <div id="prev-chapter" style="font-size:18px;font-weight:700;letter-spacing:.01em"></div>
+      <div style="font-size:14px;font-weight:600;margin-top:5px">Statement of Activities</div>
+      <div id="prev-period" style="font-size:12px;color:#555;margin-top:3px"></div>
+    </div>
+    <div id="prev-body"></div>
+  </div>
+  <!-- button bar — hidden during print -->
+  <div id="stmt-preview-bar" style="position:fixed;top:0;left:0;right:0;background:rgba(30,30,30,.9);padding:9px 20px;display:flex;align-items:center;gap:10px;z-index:10000;backdrop-filter:blur(4px)">
+    <button onclick="closeStmtPreview()" style="background:#444;color:#fff;border:none;border-radius:5px;padding:6px 14px;font-size:12px;cursor:pointer;font-family:inherit">✕ Close</button>
+    <button onclick="printStatementPopup()" style="background:#c0392b;color:#fff;border:none;border-radius:5px;padding:6px 16px;font-size:12px;font-weight:700;cursor:pointer;font-family:inherit">⎙ Print / Save PDF</button>
+    <span style="color:#bbb;font-size:11px;margin-left:4px">In print dialog → "Save as PDF", set margins to Narrow for best results.</span>
+  </div>
+</div>
+
+<!-- ═══ ADD STATEMENT LINE ITEM MODAL ════════════════════════════════════════ -->
+<div class="overlay" id="stmt-line-modal">
+  <div class="modal"><div class="mt">Add Line Item</div>
+    <div class="fr">
+      <div class="fg"><div class="fl">Section</div>
+        <select id="stmt-line-section">
+          <option value="revenue">Revenue</option>
+          <option value="expense">Expense</option>
+        </select>
+      </div>
+      <div class="fg"><div class="fl">Amount ($)</div><input id="stmt-line-amount" type="number" min="0" step="0.01" placeholder="0.00"></div>
+    </div>
+    <div class="fg"><div class="fl">Group <span style="color:var(--t4);font-weight:400">(optional — e.g. "State Conference Expense")</span></div><input id="stmt-line-group" type="text" placeholder="Leave blank for ungrouped item"></div>
+    <div class="fg"><div class="fl">Item Name</div><input id="stmt-line-name" type="text" placeholder="e.g. Hotel &amp; Registration"></div>
+    <div class="mf"><button class="btn btn-g" onclick="closeModals()">Cancel</button><button class="btn btn-p" onclick="submitStmtLine()">Add Item</button></div>
   </div>
 </div>
 
@@ -3199,34 +3743,50 @@ let compHistory=[
 // BUDGET
 let transactions={
   income:[
-    {id:1,desc:'Bay Area Credit Union Sponsorship',cat:'Sponsorship',date:'Apr 10',amount:1000},
-    {id:2,desc:'Tech District Co. Sponsorship',cat:'Sponsorship',date:'Apr 15',amount:800},
-    {id:3,desc:'Member Dues - Spring 2026',cat:'Dues',date:'Apr 1',amount:470},
-    {id:4,desc:'DAIS 2026 Registration Fees',cat:'Event',date:'May 1',amount:365},
-    {id:5,desc:'Fidelity Investments Sponsorship',cat:'Sponsorship',date:'May 3',amount:500},
-    {id:6,desc:'Local Boba Shop In-Kind Credit',cat:'Sponsorship',date:'Apr 28',amount:150},
-    {id:7,desc:'NLC Member Payments - Batch 1',cat:'Dues',date:'Apr 18',amount:3500},
-    {id:8,desc:'NLC Member Payments - Batch 2',cat:'Dues',date:'Apr 25',amount:2760},
-    {id:9,desc:'DAIS Raffle Ticket Sales',cat:'Event',date:'May 8',amount:180},
-    {id:10,desc:'De Anza Foundation Mini-Grant',cat:'Grant',date:'Mar 22',amount:250},
+    // ── CONFERENCE MEMBER PAYMENTS ──
+    {id:1,desc:'Fall Conference Member Payments',cat:'Conference',date:'Oct 2024',amount:6200},
+    {id:2,desc:'State Conference Member Payments',cat:'Conference',date:'Feb 2025',amount:25814},
+    {id:3,desc:'National Conference Member Payments',cat:'Conference',date:'May 2025',amount:17176},
+    // ── SPONSORSHIPS ──
+    {id:4,desc:'Key Point Credit Union (Fall)',cat:'Sponsorship',date:'Sep 2024',amount:2000},
+    {id:5,desc:'Moss Adams Sponsorship',cat:'Sponsorship',date:'Nov 2024',amount:3000},
+    {id:6,desc:'Star One Credit Union Sponsorship',cat:'Sponsorship',date:'Oct 2024',amount:500},
+    {id:7,desc:'Key Point Credit Union (Spring)',cat:'Sponsorship',date:'Mar 2025',amount:1500},
+    // ── OTHER INCOME ──
+    {id:8,desc:'Donations',cat:'Donation',date:'2024-2025',amount:2000},
+    {id:9,desc:'ICC Award — Most Decorated (Club Day)',cat:'ICC Award',date:'May 2025',amount:100},
+    {id:10,desc:'ICC Award — Club of the Year',cat:'ICC Award',date:'May 2025',amount:300},
+    {id:11,desc:'ICC Award — Most Popular',cat:'ICC Award',date:'May 2025',amount:150},
+    {id:12,desc:'ICC Award — Perfect Attendance',cat:'ICC Award',date:'May 2025',amount:100},
+    {id:13,desc:'Merch Sales',cat:'Merchandise',date:'2024-2025',amount:1190},
+    {id:14,desc:'Club Budget Request (De Anza)',cat:'Grant',date:'Sep 2024',amount:444},
   ],
   expense:[
-    {id:11,desc:'SBLC Travel - Hotel (2 nights)',cat:'Travel',date:'Mar 1',amount:620},
-    {id:12,desc:'SBLC Registration Fees',cat:'Competition',date:'Feb 15',amount:380},
-    {id:13,desc:'Bootcamp Materials & Printing',cat:'Education',date:'Mar 10',amount:95},
-    {id:14,desc:'Spring Meeting Refreshments',cat:'Events',date:'Apr 20',amount:80},
-    {id:15,desc:'NLC Registration - FBLA National',cat:'Competition',date:'Apr 5',amount:2920},
-    {id:16,desc:'NLC Hotel Block - 4 rooms x 3 nights',cat:'Travel',date:'Apr 12',amount:1440},
-    {id:17,desc:'NLC Flights - 8 members',cat:'Travel',date:'Apr 18',amount:2160},
-    {id:18,desc:'DAIS Catering Deposit',cat:'Events',date:'May 2',amount:400},
-    {id:19,desc:'DAIS Award Plaques & Certificates',cat:'Events',date:'May 6',amount:135},
-    {id:20,desc:'DAIS Marketing — Flyers & Banners',cat:'Marketing',date:'Apr 30',amount:88},
-    {id:21,desc:'Chapter T-Shirts (47 members)',cat:'Merchandise',date:'Mar 28',amount:423},
-    {id:22,desc:'Bootcamp Session 3 Snacks',cat:'Education',date:'Apr 16',amount:45},
-    {id:23,desc:'Office Supplies & Name Tags',cat:'Admin',date:'Apr 8',amount:32},
-    {id:24,desc:'Consulting Demo Night Refreshments',cat:'Events',date:'May 5',amount:60},
+    // ── FALL CONFERENCE ──
+    {id:15,desc:'Fall Conference Expense',cat:'Conference',date:'Oct 2024',amount:6200},
+    // ── STATE CONFERENCE ──
+    {id:16,desc:'State Conference — Hotel & Registration',cat:'Conference',date:'Feb 2025',amount:14665},
+    {id:17,desc:'State Conference — Transportation',cat:'Travel',date:'Feb 2025',amount:7408},
+    {id:18,desc:'State Conference — Reimbursements',cat:'Reimbursement',date:'Feb 2025',amount:4427},
+    {id:19,desc:'State Conference — Food',cat:'Food',date:'Feb 2025',amount:2314},
+    // ── NATIONAL CONFERENCE ──
+    {id:20,desc:'Nationals — Hotel & Registration',cat:'Conference',date:'Jun 2025',amount:14343},
+    {id:21,desc:'Nationals — Financial Aid Refund',cat:'Reimbursement',date:'Jun 2025',amount:2900},
+    {id:22,desc:'Nationals — Scholarship Refund',cat:'Reimbursement',date:'Jun 2025',amount:2145},
+    {id:23,desc:'Nationals — Aquarium Excursion',cat:'Events',date:'Jun 2025',amount:821},
+    {id:24,desc:'Nationals — PayPal Fees',cat:'Admin',date:'Jun 2025',amount:465},
+    // ── DE ANZA BUSINESS CONFERENCE ──
+    {id:25,desc:'DABC — Custodial Fees',cat:'Events',date:'Apr 2025',amount:444},
+    {id:26,desc:'DABC — Food',cat:'Food',date:'Apr 2025',amount:180},
+    {id:27,desc:'DABC — Supplies',cat:'Admin',date:'Apr 2025',amount:48},
+    // ── OTHER EXPENSES ──
+    {id:28,desc:'Merch Expense',cat:'Merchandise',date:'2024-2025',amount:678},
+    {id:29,desc:'Banquet Expense',cat:'Events',date:'May 2025',amount:374},
+    {id:30,desc:'Advisor Gift',cat:'Admin',date:'Jun 2025',amount:187},
+    {id:31,desc:'Beach Social Expense',cat:'Events',date:'May 2025',amount:18},
+    {id:32,desc:'Business Olympics Expense',cat:'Competition',date:'2024-2025',amount:92},
   ]
-};let nTr=25;
+};let nTr=33;
 
 // MINUTES
 let meetingMinutes=[
@@ -4619,9 +5179,117 @@ function addMemberCheckIn(){
 }
 
 // ─── ROLE-BASED PORTAL DATA ──────────────────────────────────────────────────
-let _roiEntries=JSON.parse(localStorage.getItem('pbl_roi')||'[]');
+let _statementData=JSON.parse(localStorage.getItem('pbl_statementdata')||JSON.stringify({
+  chapterName:'De Anza Phi Beta Lambda',
+  period:'For Year ended 6/29/25',
+  netAssetsStart:225,
+  revenue:[
+    {group:'Conference Payments',name:'Fall Conference Member Payments',amount:6200},
+    {group:'Conference Payments',name:'State Conference Member Payments',amount:25814},
+    {group:'Conference Payments',name:'National Conference Member Payments',amount:17176},
+    {group:'Sponsorship',name:'Key Point (Fall)',amount:2000},
+    {group:'Sponsorship',name:'Moss Adams',amount:3000},
+    {group:'Sponsorship',name:'Star One',amount:500},
+    {group:'Sponsorship',name:'Key Point (Spring)',amount:1500},
+    {group:'',name:'Donations',amount:2000},
+    {group:'ICC Awards',name:"Spring '25 Club Day Most Decorated",amount:100},
+    {group:'ICC Awards',name:'Club of the Year',amount:300},
+    {group:'ICC Awards',name:'Most Popular',amount:150},
+    {group:'ICC Awards',name:'Perfect Attendance',amount:100},
+    {group:'',name:'Merch Sales',amount:1190},
+    {group:'',name:'Club Budget Request',amount:444}
+  ],
+  expense:[
+    {group:'',name:'Fall Conference Expense',amount:6200},
+    {group:'State Conference Expense',name:'Hotel & Registration',amount:14665},
+    {group:'State Conference Expense',name:'Transportation',amount:7408},
+    {group:'State Conference Expense',name:'Reimbursements',amount:4427},
+    {group:'State Conference Expense',name:'Food',amount:2314},
+    {group:'Nationals Expense',name:'Hotel & Registration',amount:14343},
+    {group:'Nationals Expense',name:'Financial Aid Refund',amount:2900},
+    {group:'Nationals Expense',name:'Scholarship Refund',amount:2145},
+    {group:'Nationals Expense',name:'Aquarium Expense',amount:821},
+    {group:'Nationals Expense',name:'PayPal Fees',amount:465},
+    {group:'De Anza Business Conference',name:'Custodial Fees',amount:444},
+    {group:'De Anza Business Conference',name:'Food',amount:180},
+    {group:'De Anza Business Conference',name:'Supplies',amount:48},
+    {group:'',name:'Merch Expense',amount:678},
+    {group:'',name:'Banquet Expense',amount:374},
+    {group:'',name:'Advisor Gift',amount:187},
+    {group:'',name:'Beach Social Expense',amount:18},
+    {group:'',name:'Business Olympics Expense',amount:92}
+  ]
+}));
+let _confPayLedger=JSON.parse(localStorage.getItem('pbl_confpayledger')||JSON.stringify([
+  {id:'sblc2025',name:'SBLC 2025 (State Conference)',depositAmt:250,fee1Amt:15,fee2Amt:235,refundPerPerson:85.73,members:[
+    {name:'Arthur Poon',gender:'Male',deposit:'Paid',fee1:'Paid',fee2:'Paid',method:'Online',totalReceived:500,refund:'Refunded',notes:'$15 cash'},
+    {name:'Arya Somu',gender:'Male',deposit:'Paid',fee1:'Paid',fee2:'Paid',method:'Online',totalReceived:500,refund:'Refunded',notes:''},
+    {name:'Sylvie Nghiem',gender:'Female',deposit:'Paid',fee1:'Paid',fee2:'Paid',method:'Online',totalReceived:500,refund:'Refunded',notes:''},
+    {name:'Nhi Tran',gender:'Female',deposit:'Paid',fee1:'Paid',fee2:'Paid',method:'Online',totalReceived:500,refund:'Refunded',notes:''},
+    {name:'Nisa Pradhan',gender:'Female',deposit:'Paid',fee1:'Paid',fee2:'Paid',method:'Online',totalReceived:500,refund:'Refunded',notes:''},
+    {name:'Allyson Huynh',gender:'Female',deposit:'Paid',fee1:'Paid',fee2:'Paid',method:'Cash',totalReceived:500,refund:'Refunded',notes:'Cash Deposit, $15 cash'},
+    {name:'Carine Chan',gender:'Female',deposit:'Paid',fee1:'Paid',fee2:'Paid',method:'Cash',totalReceived:500,refund:'Refunded',notes:'Cash Deposit, $15 cash'},
+    {name:'Vincent Shao',gender:'Male',deposit:'Paid',fee1:'Paid',fee2:'Paid',method:'Online',totalReceived:500,refund:'Refunded',notes:''},
+    {name:'Leo Huang',gender:'Male',deposit:'Paid',fee1:'Paid',fee2:'Paid',method:'Online',totalReceived:500,refund:'Refunded',notes:''},
+    {name:'Floria Pan',gender:'Female',deposit:'Paid',fee1:'Paid',fee2:'Paid',method:'Online',totalReceived:500,refund:'Refunded',notes:''},
+    {name:'Allissa Lida',gender:'Female',deposit:'Paid',fee1:'Paid',fee2:'Paid',method:'Online',totalReceived:500,refund:'Refunded',notes:''},
+    {name:'Anqi Lin',gender:'Female',deposit:'Paid',fee1:'Paid',fee2:'Paid',method:'Online',totalReceived:500,refund:'Refunded',notes:''},
+    {name:'Alan Tran',gender:'Male',deposit:'Paid',fee1:'Paid',fee2:'Paid',method:'Online',totalReceived:500,refund:'Refunded',notes:''},
+    {name:'George Huang',gender:'Male',deposit:'Paid',fee1:'Paid',fee2:'Paid',method:'Cash',totalReceived:500,refund:'Refunded',notes:'Cash Deposit, $15 cash'},
+    {name:'Katelyn Nguyen',gender:'Female',deposit:'Paid',fee1:'Paid',fee2:'Paid',method:'Online',totalReceived:500,refund:'Refunded',notes:''},
+    {name:'Kaung (Kelvin) Htet Shein',gender:'Male',deposit:'Paid',fee1:'Paid',fee2:'Paid',method:'Online',totalReceived:500,refund:'Refunded',notes:''},
+    {name:'Jared Salazar',gender:'Male',deposit:'Paid',fee1:'Paid',fee2:'Cash',method:'Mixed',totalReceived:500,refund:'Refunded',notes:'$100 cash, $150 Zelle'},
+    {name:'Jordan Nguyen',gender:'Male',deposit:'Paid',fee1:'Paid',fee2:'Paid',method:'Mixed',totalReceived:500,refund:'Refunded',notes:'$150 cash, $100 Zelle'},
+    {name:'Minh Le',gender:'Male',deposit:'Paid',fee1:'Paid',fee2:'Cash',method:'Cash',totalReceived:500,refund:'Refunded',notes:'Cash Deposit, $15 cash'},
+    {name:'Rachel Tran',gender:'Female',deposit:'Paid',fee1:'Paid',fee2:'Paid',method:'Online',totalReceived:500,refund:'Refunded',notes:''},
+    {name:'Yusef Ahmed',gender:'Male',deposit:'Paid',fee1:'Paid',fee2:'Paid',method:'Online',totalReceived:500,refund:'Refunded',notes:''},
+    {name:'Addy Hu',gender:'Male',deposit:'Paid',fee1:'Paid',fee2:'Paid',method:'Online',totalReceived:500,refund:'Refunded',notes:''},
+    {name:'Elizabeth Wong',gender:'Female',deposit:'Paid',fee1:'Paid',fee2:'Paid',method:'Online',totalReceived:500,refund:'Refunded',notes:''},
+    {name:'Jasmine Perlas',gender:'Female',deposit:'Paid',fee1:'Paid',fee2:'Paid',method:'Online',totalReceived:500,refund:'Refunded',notes:''},
+    {name:'Thu Tran',gender:'Female',deposit:'Paid',fee1:'Paid',fee2:'Paid',method:'Online',totalReceived:500,refund:'Refunded',notes:''},
+    {name:'Christopher Wu',gender:'Male',deposit:'Paid',fee1:'Paid',fee2:'Paid',method:'Online',totalReceived:500,refund:'Refunded',notes:''},
+    {name:'Hanspreet Singh',gender:'Male',deposit:'Paid',fee1:'Paid',fee2:'Paid',method:'Online',totalReceived:500,refund:'Refunded',notes:''},
+    {name:'Tram Lieng',gender:'Female',deposit:'Paid',fee1:'Paid',fee2:'Paid',method:'Online',totalReceived:500,refund:'Refunded',notes:''},
+    {name:'Teresa Hsu',gender:'Female',deposit:'Paid',fee1:'Paid',fee2:'Paid',method:'Online',totalReceived:500,refund:'Refunded',notes:''},
+    {name:'Taranjit Kaur',gender:'Female',deposit:'Paid',fee1:'Paid',fee2:'Paid',method:'Cash',totalReceived:500,refund:'Refunded',notes:'Cash Deposit, $15 cash'},
+    {name:'Jocelyn Ramirez',gender:'Female',deposit:'Paid',fee1:'Paid',fee2:'Paid',method:'Online',totalReceived:500,refund:'Refunded',notes:''},
+    {name:'Christina Tran',gender:'Female',deposit:'Paid',fee1:'Paid',fee2:'Paid',method:'Cash',totalReceived:500,refund:'Refunded',notes:'Cash Deposit'},
+    {name:'Zinneerah Ahmed',gender:'Female',deposit:'Paid',fee1:'Paid',fee2:'Paid',method:'Online',totalReceived:500,refund:'Refunded',notes:''},
+    {name:'Anna Huynh',gender:'Female',deposit:'Paid',fee1:'Paid',fee2:'Paid',method:'Cash',totalReceived:500,refund:'Refunded',notes:'$265 cash + $235 cash, cash refund requested'},
+    {name:'Philemon Wong',gender:'Male',deposit:'Paid',fee1:'Paid',fee2:'Not Yet',method:'Online',totalReceived:265,refund:'Pending',notes:'Final $235 not yet received'},
+    {name:'Vinh Nguyen',gender:'Male',deposit:'Paid',fee1:'Paid',fee2:'Paid',method:'Cash',totalReceived:500,refund:'Refunded',notes:'$265 cash'},
+    {name:'VJ Lukka',gender:'Male',deposit:'Paid',fee1:'Paid',fee2:'Paid',method:'Online',totalReceived:500,refund:'Refunded',notes:''},
+    {name:'Iker Amox Jimenez',gender:'Male',deposit:'Paid',fee1:'Paid',fee2:'Paid',method:'Online',totalReceived:500,refund:'Refunded',notes:'Paid $265 in final deposit — must refund extra'},
+    {name:'Jun Kim',gender:'Male',deposit:'Paid',fee1:'Paid',fee2:'Paid',method:'Online',totalReceived:500,refund:'Refunded',notes:''},
+    {name:'Cyrus Nakar',gender:'Male',deposit:'Paid',fee1:'Paid',fee2:'Paid',method:'Online',totalReceived:500,refund:'Refunded',notes:''},
+    {name:'Sterling Williams',gender:'Male',deposit:'Paid',fee1:'Paid',fee2:'Paid',method:'Online',totalReceived:500,refund:'Refunded',notes:''},
+    {name:'Jacob Chen',gender:'Male',deposit:'Paid',fee1:'Paid',fee2:'Paid',method:'Cash',totalReceived:500,refund:'Refunded',notes:'Cash Deposit'},
+    {name:'Lucas Ávila',gender:'Male',deposit:'Paid',fee1:'Paid',fee2:'Paid',method:'Online',totalReceived:500,refund:'Refunded',notes:''},
+    {name:'Rushil Vaswani',gender:'Male',deposit:'Paid',fee1:'Paid',fee2:'Paid',method:'Cash',totalReceived:500,refund:'Refunded',notes:'Cash Deposit, $15 cash'},
+    {name:'Chi (Fun) Hsun Lee',gender:'Male',deposit:'Paid',fee1:'Paid',fee2:'Paid',method:'Online',totalReceived:500,refund:'Refunded',notes:''},
+    {name:'Suyash Jevaria',gender:'Male',deposit:'Paid',fee1:'Paid',fee2:'Paid',method:'Online',totalReceived:500,refund:'Refunded',notes:''},
+    {name:'Yu (Bella) Jing Chu',gender:'Female',deposit:'Paid',fee1:'Paid',fee2:'Paid',method:'Online',totalReceived:500,refund:'Refunded',notes:''},
+    {name:'Zhile (Leo) Cui',gender:'Male',deposit:'Paid',fee1:'Paid',fee2:'Paid',method:'Online',totalReceived:500,refund:'Refunded',notes:'Deposited $500 directly'},
+    {name:'Bochen Tong',gender:'Male',deposit:'Paid',fee1:'Paid',fee2:'Paid',method:'Online',totalReceived:500,refund:'Refunded',notes:'Public Member'},
+    {name:'Dianne Johnson',gender:'Female',deposit:'Paid',fee1:'Paid',fee2:'Paid',method:'Mixed',totalReceived:500,refund:'Refunded',notes:'$260 cash, $5 Zelle'},
+    {name:'Javin Ku',gender:'Male',deposit:'N/A',fee1:'N/A',fee2:'N/A',method:'Online',totalReceived:245,refund:'Refunded',notes:'Trio Room'},
+    {name:'Zain Darwish',gender:'Male',deposit:'N/A',fee1:'N/A',fee2:'N/A',method:'Online',totalReceived:245,refund:'Refunded',notes:'Trio Room'},
+    {name:'Van Loc Nguyen',gender:'Male',deposit:'N/A',fee1:'N/A',fee2:'N/A',method:'Online',totalReceived:120,refund:'Not Yet',notes:'Trio Room — no comp registration'},
+    {name:'Alan Dang',gender:'Male',deposit:'N/A',fee1:'N/A',fee2:'N/A',method:'Online',totalReceived:439.44,refund:'Refunded',notes:'Trio Room + Bus Cost'},
+  ]}
+]));
+let _cplActiveConf=0;
+let _roiEntries=JSON.parse(localStorage.getItem('pbl_roi')||JSON.stringify([
+  {name:'Fall Conference 2024',rev:6200,exp:6200,att:62,date:'10/2024'},
+  {name:'State Conference 2025',rev:25814,exp:28814,att:28,date:'2/2025'},
+  {name:'National Conference 2025',rev:17176,exp:20674,att:18,date:'6/2025'},
+  {name:'De Anza Business Conference (DABC)',rev:444,exp:672,att:25,date:'4/2025'},
+  {name:'Merch Sales (Net)',rev:1190,exp:678,att:0,date:'2024-25'},
+]));
 let _iccForms=JSON.parse(localStorage.getItem('pbl_iccforms')||'[]');
-let _finReports=JSON.parse(localStorage.getItem('pbl_finreports')||'[]');
+let _finReports=JSON.parse(localStorage.getItem('pbl_finreports')||JSON.stringify([
+  {quarter:'Full Year 2024–2025',summary:'Total Revenue: $60,474 | Total Expenses: $57,708 | Net Surplus: $2,766\n\nRevenue breakdown: Fall Conf. Payments $6,200 · State Conf. Payments $25,814 · National Conf. Payments $17,176 · Sponsorships $7,000 (Key Point x2, Moss Adams, Star One) · Donations $2,000 · ICC Awards $650 · Merch Sales $1,190 · Club Budget $444\n\nExpense breakdown: Fall Conf. $6,200 · State Conf. $28,814 (Hotel/Reg, Transport, Reimb, Food) · Nationals $20,674 (Hotel/Reg, Aid Refunds, Aquarium, PayPal Fees) · DABC $672 · Merch $678 · Banquet $374 · Advisor Gift $187 · Beach Social $18 · Business Olympics $92\n\nNet Assets Beginning of Year: $225 → End of Year: $2,991',created:'6/29/2025'}
+]));
 let _confLogistics=JSON.parse(localStorage.getItem('pbl_conflogistics')||'[]');
 let _kpiEntries=JSON.parse(localStorage.getItem('pbl_kpis')||'[]');
 let _iccExcursions=JSON.parse(localStorage.getItem('pbl_iccexcursions')||'[]');
@@ -4640,6 +5308,24 @@ let _bluePandaRegs=JSON.parse(localStorage.getItem('pbl_bluepanda')||'[]');
 let _confEvents=JSON.parse(localStorage.getItem('pbl_confevents')||'[{"name":"Fall Conference","date":"Oct 2026","dues":150,"paid":[],"unpaid":[]},{"name":"State Conference","date":"Feb 2027","dues":200,"paid":[],"unpaid":[]},{"name":"National Conference","date":"Jun 2027","dues":350,"paid":[],"unpaid":[]}]');
 let _presAgendas=JSON.parse(localStorage.getItem('pbl_agendas')||'[]');
 let _delegations=JSON.parse(localStorage.getItem('pbl_delegation')||'[]');
+let _officerCheckins=JSON.parse(localStorage.getItem('pbl_officercheckins')||'[]');
+let _decisionLog=JSON.parse(localStorage.getItem('pbl_decisionlog')||'[]');
+let _memberPoints=JSON.parse(localStorage.getItem('pbl_memberpoints')||'[]');
+let _eventChecklists=JSON.parse(localStorage.getItem('pbl_eventchecklists')||'[]');
+let _vendors=JSON.parse(localStorage.getItem('pbl_vendors')||'[]');
+let _commsLog=JSON.parse(localStorage.getItem('pbl_commslog')||'[]');
+let _graphicRequests=JSON.parse(localStorage.getItem('pbl_graphicrequests')||'[]');
+let _compResults=JSON.parse(localStorage.getItem('pbl_compresults')||'[]');
+let _polarisAssignments=JSON.parse(localStorage.getItem('pbl_polarisassignments')||'[]');
+let _polarisLessons=JSON.parse(localStorage.getItem('pbl_polarislessons')||'[]');
+let _polarisGuides=JSON.parse(localStorage.getItem('pbl_polarisguides')||JSON.stringify([
+  {title:'How to Write a Report',category:'Writing',icon:'📝',pinned:true,open:false,content:`STRUCTURE\n1. Title Page — club name, report title, author, date\n2. Executive Summary — 1–2 paragraphs: what, why, key findings, recommendation (write this LAST)\n3. Introduction — background, purpose, scope of the report\n4. Body — clear sections with headings; each paragraph = one idea + evidence + analysis\n5. Conclusion — summarize findings and restate the recommendation\n6. References — cite all sources (see APA/MLA guide)\n7. Appendix — charts, raw data, supporting documents\n\nTIPS\n• Use headers and subheaders to make the report scannable\n• Aim for concise language — cut filler like "it is important to note that"\n• Number pages and include a table of contents for longer reports\n• Proofread for grammar, consistency, and professional tone\n\nCOMMON MISTAKES\n• Opening with "In this report I will..." — state the purpose directly instead\n• No clear thesis or recommendation anywhere in the report\n• Mixing citation styles without consistency\n• Forgetting an executive summary (judges read it first)`},
+  {title:'How to Make a Project Display / Model',category:'Presentation',icon:'🏗️',pinned:true,open:false,content:`PLANNING\n1. Define the purpose — what does your display or model communicate?\n2. Sketch a layout before building — plan sections, visuals, and flow\n3. Gather materials — display board, markers, printed visuals, labels\n\nTRI-FOLD BOARD LAYOUT\nLeft Panel:   Background, Research Question, Hypothesis\nCenter Panel: Procedure/Method, Data, Charts\nRight Panel:  Results, Conclusion, References\n\nPHYSICAL MODEL TIPS\n• Label every component clearly\n• Include a legend or scale notation\n• Test structural integrity before presentation day\n• Provide a 1-page written summary to accompany the model\n\nVISUAL DESIGN RULES\n• 2–3 colors max — use a consistent palette\n• Font hierarchy: Title 24pt+, Headings 16–18pt, Body 11–12pt\n• Leave whitespace — don't crowd every inch with text\n• Print images at high resolution (300 DPI)\n• Use real data charts, not clip art\n\nDAY-OF CHECKLIST\n□ Model is stable and easy to transport\n□ All labels are legible from arm's length\n□ Supporting 1-pager printed\n□ You can explain every component without looking at the board`},
+  {title:'How to Cite Sources — APA & MLA',category:'Writing',icon:'📚',pinned:true,open:false,content:`APA 7th EDITION\n\nBook:\n  Author, A. (Year). Title in sentence case. Publisher.\n\nJournal Article:\n  Author, A., & Author, B. (Year). Article title. Journal Name, Volume(Issue), pp–pp. https://doi.org/...\n\nWebsite:\n  Author, A. (Year, Month Day). Page title. Site Name. URL\n\nIn-text: (Author, Year)  |  Direct quote: (Author, Year, p. #)\n\n─────────────────────────────────\nMLA 9th EDITION\n\nBook:\n  Author Last, First. Title of Book. Publisher, Year.\n\nWebsite:\n  Author Last, First. "Page Title." Site Name, Day Mon. Year, URL.\n\nIn-text: (Author Page#)  e.g. (Smith 14)\n\n─────────────────────────────────\nGENERAL RULES\n• Alphabetize your reference list by author's last name\n• Hanging indent on every entry (first line flush, rest indented)\n• Use ONE citation style throughout — don't mix APA and MLA\n• When in doubt, over-cite rather than risk plagiarism\n• Free tools: Zotero, Cite This For Me, Purdue OWL (verify output)`},
+  {title:'Business Presentation Tips',category:'Presentation',icon:'🎤',pinned:true,open:false,content:`STRUCTURE — the PREP Formula\n  Point   — state your main point upfront\n  Reason  — explain why it matters\n  Example — support with data, story, or demo\n  Point   — restate and issue a call to action\n\nSLIDE DESIGN RULES\n• 1 idea per slide\n• Max 6 bullets; max 6 words per bullet (the "6×6 rule")\n• High contrast — dark text on light BG or vice versa\n• Images and charts beat text walls\n• Consistent fonts: 1 heading + 1 body font, that's it\n\nDELIVERY TIPS\n• Eye contact — sweep the room; never read the screen\n• Speak slower than feels natural — nerves speed you up\n• Pause after key points — silence is powerful\n• Memorize your opening line; opening nerves are the worst\n• Practice out loud, not just in your head\n\nQ&A HANDLING\n• "Great question" is filler — just answer\n• If you don't know: "I don't have that data on hand; I'll follow up"\n• Restate hostile questions neutrally before answering\n\nPBL COMPETITION-SPECIFIC\n• Know the judge rubric and structure your talk to match it\n• Time yourself — going over costs points\n• Business casual dress minimum\n• Bring printed handouts if the event rules allow`},
+  {title:'Business Plan Structure',category:'Strategy',icon:'📋',pinned:true,open:false,content:`1. EXECUTIVE SUMMARY  (write last, present first)\n   Business concept, mission, product/service overview\n   Target market and competitive advantage\n   Financial highlights and funding request\n\n2. COMPANY DESCRIPTION\n   Business name, location, legal structure\n   History/origin, vision, and mission statement\n   Short-term and long-term goals\n\n3. MARKET ANALYSIS\n   Industry overview and trends (cite real data)\n   Target customer profile (demographics, behavior)\n   Competitive analysis — direct and indirect competitors\n   Market size and estimated market share\n\n4. PRODUCTS & SERVICES\n   Description of offerings\n   Unique value proposition\n   Pricing strategy and rationale\n\n5. MARKETING & SALES STRATEGY\n   Channels — social media, partnerships, events\n   Customer acquisition and retention plan\n\n6. OPERATIONS PLAN\n   Location, facilities, key equipment\n   Staffing and management structure\n   Key processes and workflows\n\n7. FINANCIAL PROJECTIONS\n   Startup costs breakdown\n   Revenue forecast — Year 1–3\n   Break-even analysis\n   Cash flow statement\n\nTIPS\n• Judges read the executive summary first and last — make it strong\n• Use real numbers and cite your market research sources\n• Avoid vague buzzwords — be specific and direct\n• Proofread financial tables for consistency`},
+]));
+
 
 // EXEC PORTALS
 const PORTALS_CFG={
@@ -4648,14 +5334,15 @@ const PORTALS_CFG={
     stats:()=>{
       const inc=transactions.income.reduce((s,t)=>s+t.amount,0);
       const exp=transactions.expense.reduce((s,t)=>s+t.amount,0);
-      return[{l:'Total Income',v:'$'+inc.toLocaleString(),s:'Spring 2026'},{l:'Total Expenses',v:'$'+exp.toLocaleString(),s:'Spring 2026'},{l:'Balance',v:'$'+(inc-exp).toLocaleString(),s:'Running total'},{l:'ICC Forms',v:_iccForms.length,s:'Logged this year'}];
+      return[{l:'Total Income',v:'$'+inc.toLocaleString(),s:'FY 2024–2025'},{l:'Total Expenses',v:'$'+exp.toLocaleString(),s:'FY 2024–2025'},{l:'Net Surplus',v:'$'+(inc-exp).toLocaleString(),s:'End balance $2,991'},{l:'ICC Forms',v:_iccForms.length,s:'Logged this year'}];
     },
     links:[
+      {action:"showTab('portal-finance','vpdash');renderVPDash()",label:'VP Dashboard',desc:'Outstanding payments & checklist'},
+      {action:"showTab('portal-finance','confpayments');renderConfPayLedger()",label:'Conf. Payments',desc:'Phased member payment tracker'},
       {action:"showTab('portal-finance','budget');initFinBudget()",label:'Budget Ledger',desc:'Full income & expense log'},
       {action:"showTab('portal-finance','roi');renderROITable()",label:'ROI Analysis',desc:'Event profitability & cost-per-member'},
       {action:"showTab('portal-finance','iccforms');renderICCForms()",label:'ICC Forms',desc:'Reimbursements, deposits & invoices'},
       {action:"showTab('portal-finance','finreports');renderFinReports()",label:'Financial Reports',desc:'Quarterly summaries & exports'},
-      {action:"showTab('portal-finance','reimbursements')",label:'Reimbursements',desc:'Member reimbursement tracker'},
     ]
   },
   'portal-operations':{
@@ -4671,6 +5358,8 @@ const PORTALS_CFG={
       {action:"showTab('portal-operations','kpis');renderKPIs()",label:'KPI Dashboard',desc:'Budget efficiency & attendance rates'},
       {action:"showTab('portal-operations','iccexcursions');renderICCExcursions()",label:'ICC Excursions',desc:'Field trips & ICC documentation'},
       {action:"showTab('portal-operations','venues')",label:'Venues',desc:'Room & venue tracker'},
+      {action:"showTab('portal-operations','eventchecklist');renderEventChecklists()",label:'Event Checklist',desc:'Pre & post event task lists'},
+      {action:"showTab('portal-operations','vendors');renderVendors()",label:'Vendors',desc:'Vendor & contact directory'},
     ]
   },
   'portal-strategy':{
@@ -4685,6 +5374,7 @@ const PORTALS_CFG={
       {action:"showTab('portal-strategy','prg');renderPRG()",label:'Polaris PRG',desc:'Research group roster & initiatives'},
       {action:"showTab('portal-strategy','onboarding');renderOnboarding()",label:'Onboarding',desc:'New member pipeline & stages'},
       {action:"showTab('portal-strategy','devgoals');renderDevGoals()",label:'Dev Goals',desc:'Personal leadership development'},
+      {action:"showTab('portal-strategy','comphistory');renderCompHistory()",label:'Comp History',desc:'Competition placements & results'},
     ]
   },
   'portal-marketing':{
@@ -4700,6 +5390,8 @@ const PORTALS_CFG={
       {action:"showTab('portal-marketing','analytics');renderAnalytics()",label:'Analytics',desc:'Platform metrics & engagement data'},
       {action:"showTab('portal-marketing','outreach');renderOutreach()",label:'Outreach Log',desc:'Club-to-club & community reach'},
       {action:"showPage('templates')",label:'Templates',desc:'Proposals, flyers & resources'},
+      {action:"showTab('portal-marketing','commslog');renderCommsLog()",label:'Comms Log',desc:'Email & communications tracker'},
+      {action:"showTab('portal-marketing','graphicrequests');renderGraphicRequests()",label:'Graphic Requests',desc:'Design request tracker'},
     ]
   },
   'portal-clubaffairs':{
@@ -4715,6 +5407,7 @@ const PORTALS_CFG={
       {action:"showTab('portal-clubaffairs','compliance');renderCompliance()",label:'HR & Compliance',desc:'Conduct log & policy tracking'},
       {action:"showTab('portal-clubaffairs','roombookings');renderRoomBookings()",label:'Room Bookings',desc:'Facility requests & confirmations'},
       {action:"showTab('portal-clubaffairs','iccbluepanda');renderICCBluePanda()",label:'ICC / Blue Panda',desc:'Chapter minutes & competition reg.'},
+      {action:"showTab('portal-clubaffairs','points');renderMemberPoints()",label:'Points Tracker',desc:'Member engagement & points log'},
     ]
   },
   'portal-president':{
@@ -4727,6 +5420,8 @@ const PORTALS_CFG={
       {action:"showTab('portal-president','conferences');renderConfDues()",label:'Conf. Dues',desc:'Track payment status per conference'},
       {action:"showTab('portal-president','agendas');renderPresAgendas()",label:'Meeting Agendas',desc:'Parliamentary-order agenda builder'},
       {action:"showTab('portal-president','delegation');renderDelegation()",label:'Board Delegation',desc:'Cross-functional deliverables tracker'},
+      {action:"showTab('portal-president','officercheckins');renderOfficerCheckins()",label:'Officer Check-Ins',desc:'Officer attendance & 1-on-1 log'},
+      {action:"showTab('portal-president','decisions');renderDecisionLog()",label:'Decision Log',desc:'Board decisions & rationale'},
     ]
   }
 };
@@ -5014,12 +5709,12 @@ const META={
   events:['Events','Upcoming, past & run of show'],
   templates:['Templates','Proposals, resources & timelines'],
   sponsors:['Sponsors','Pipeline, contacts & email history'],
-  'portal-president':['President\'s Hub','Conference tracking \u00b7 Agendas \u00b7 Board delegation'],
-  'portal-finance':['VP of Finance','George Huang \u00b7 Finance portal'],
-  'portal-operations':['VP of Operations','Addy Hu \u00b7 Operations portal'],
-  'portal-strategy':['VP of Strategy and Development','Arya Somu \u00b7 Strategy portal'],
-  'portal-marketing':['VP of Marketing','Nhi Tran \u00b7 Marketing portal'],
-  'portal-clubaffairs':['VP of Club Affairs','Christina Tran \u00b7 Club Affairs portal'],
+  'portal-president':['President\'s Hub',''],
+  'portal-finance':['VP of Finance',''],
+  'portal-operations':['VP of Operations',''],
+  'portal-strategy':['VP of Strategy & Development',''],
+  'portal-marketing':['VP of Marketing',''],
+  'portal-clubaffairs':['VP of Club Affairs',''],
   homework:['Homework','Review & grade member submissions'],
 };
 function showPage(id){
@@ -7805,20 +8500,842 @@ function submitDelegation(){
 }
 function deleteDelegation(i){_delegations.splice(i,1);saveRoleData('delegation',_delegations);renderDelegation();}
 
-function toggleMobSidebar(sbId,ovId){
-  document.getElementById(sbId).classList.toggle('mob-open');
-  document.getElementById(ovId).classList.toggle('open');
-}
-function closeMobSidebar(sbId,ovId){
-  document.getElementById(sbId).classList.remove('mob-open');
-  document.getElementById(ovId).classList.remove('open');
-}
-document.addEventListener('click',function(e){
-  if(e.target.closest('.ni')&&window.innerWidth<=768){
-    document.querySelectorAll('.sb').forEach(function(sb){sb.classList.remove('mob-open');});
-    document.querySelectorAll('.sb-overlay').forEach(function(o){o.classList.remove('open');});
+// ── VP DASHBOARD ─────────────────────────────────────────────────────────────
+function renderVPDash(){
+  // gather all outstanding + refund-pending members across all conferences
+  let outstanding=[];let refundPending=[];
+  _confPayLedger.forEach(conf=>{
+    (conf.members||[]).forEach(m=>{
+      const fullyPaid=m.deposit!=='Not Yet'&&m.fee1!=='Not Yet'&&m.fee2!=='Not Yet';
+      if(!fullyPaid)outstanding.push({...m,conf:conf.name});
+      if(m.refund==='Pending'||m.refund==='Not Yet')refundPending.push({...m,conf:conf.name});
+    });
+  });
+  const totalMembers=_confPayLedger.reduce((s,c)=>s+(c.members||[]).length,0);
+  const totalCollected=_confPayLedger.reduce((s,c)=>(c.members||[]).reduce((s2,m)=>s2+(m.totalReceived||0),s),0);
+  // Stats
+  const sl=document.getElementById('vp-dash-stats');
+  if(sl)sl.innerHTML=[
+    {l:'Conferences',v:_confPayLedger.length,s:'Tracked'},
+    {l:'Total Collected',v:'$'+totalCollected.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2}),s:'All conferences'},
+    {l:'Outstanding',v:outstanding.length,s:'Members w/ unpaid phases'},
+    {l:'Refunds Pending',v:refundPending.length,s:'Awaiting refund'}
+  ].map(s=>`<div class="sc"><div class="sl">${s.l}</div><div class="sv">${s.v}</div><div class="sm">${s.s}</div></div>`).join('');
+  // Outstanding badge
+  const ob=document.getElementById('vp-outstanding-badge');
+  if(ob){ob.style.display=outstanding.length?'':'none';ob.textContent=outstanding.length;}
+  const rb=document.getElementById('vp-refunds-badge');
+  if(rb){rb.style.display=refundPending.length?'':'none';rb.textContent=refundPending.length;}
+  // Outstanding list
+  const ol=document.getElementById('vp-outstanding-list');
+  if(ol){
+    if(!outstanding.length){ol.innerHTML='<div style="font-size:11px;color:var(--t4);padding:10px 16px">All members fully paid ✓</div>';}
+    else{ol.innerHTML='<div style="padding:0 16px 10px">'+outstanding.map(m=>{
+      const missing=[];
+      if(m.deposit==='Not Yet')missing.push('$250 Deposit');
+      if(m.fee1==='Not Yet')missing.push('$15 Fee');
+      if(m.fee2==='Not Yet')missing.push('$235 Final');
+      return`<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--bd)">
+        <div><div style="font-size:11px;font-weight:600;color:var(--t1)">${m.name}</div><div style="font-size:10px;color:var(--t3)">${m.conf}</div></div>
+        <div style="text-align:right"><span class="badge br">${missing.join(' + ')}</span></div>
+      </div>`;
+    }).join('')+'</div>';}
   }
-});
+  // Refunds pending list
+  const rl=document.getElementById('vp-refunds-list');
+  if(rl){
+    if(!refundPending.length){rl.innerHTML='<div style="font-size:11px;color:var(--t4);padding:10px 16px">No pending refunds ✓</div>';}
+    else{rl.innerHTML='<div style="padding:0 16px 10px">'+refundPending.map(m=>`
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--bd)">
+        <div><div style="font-size:11px;font-weight:600;color:var(--t1)">${m.name}</div><div style="font-size:10px;color:var(--t3)">${m.conf}</div></div>
+        <span class="badge bo">${m.refund}</span>
+      </div>`).join('')+'</div>';}
+  }
+  // Checklist
+  const cl=document.getElementById('vp-checklist-items');
+  if(cl){
+    const items=[
+      {done:outstanding.length===0,text:'All conference payments collected'},
+      {done:refundPending.length===0,text:'All refunds issued'},
+      {done:_iccForms.length>0,text:'ICC forms submitted for all reimbursements'},
+      {done:_finReports.length>0,text:'Financial report filed'},
+      {done:transactions.income.length>3,text:'Budget ledger up to date'},
+      {done:_roiEntries.length>0,text:'ROI analysis completed for each event'},
+    ];
+    cl.innerHTML=items.map(item=>`
+      <div style="display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--bd)">
+        <div style="width:18px;height:18px;border-radius:4px;background:${item.done?'var(--grn)':'var(--s3)'};display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <span style="font-size:11px;color:${item.done?'#fff':'var(--t4)'}">${item.done?'✓':''}</span>
+        </div>
+        <span style="font-size:11px;color:${item.done?'var(--t2)':'var(--t1)'}${item.done?';text-decoration:line-through':''}">${item.text}</span>
+      </div>`).join('');
+  }
+}
+
+// ── CONF. PAYMENT LEDGER ──────────────────────────────────────────────────────
+function renderConfPayLedger(){
+  const conf=_confPayLedger[_cplActiveConf];
+  // populate select
+  const sel=document.getElementById('cpl-conf-select');
+  if(sel){sel.innerHTML=_confPayLedger.map((c,i)=>`<option value="${i}"${i===_cplActiveConf?' selected':''}>${c.name}</option>`).join('');}
+  if(!conf)return;
+  document.getElementById('cpl-conf-subtitle')&&(document.getElementById('cpl-conf-subtitle').textContent=
+    `$${conf.depositAmt} deposit + $${conf.fee1Amt} fee + $${conf.fee2Amt} final = $${conf.depositAmt+conf.fee1Amt+conf.fee2Amt} total · Refund: $${conf.refundPerPerson}/person`);
+  const members=conf.members||[];
+  // filter
+  const filter=(document.getElementById('cpl-filter')||{}).value||'';
+  const filtered=members.filter(m=>{
+    if(!filter)return true;
+    if(filter==='outstanding')return m.deposit==='Not Yet'||m.fee1==='Not Yet'||m.fee2==='Not Yet';
+    if(filter==='refund-pending')return m.refund==='Pending'||m.refund==='Not Yet';
+    return m.gender===filter;
+  });
+  // stats
+  const totalRcvd=members.reduce((s,m)=>s+(m.totalReceived||0),0);
+  const totalDue=(conf.depositAmt+conf.fee1Amt+conf.fee2Amt)*members.filter(m=>m.deposit!=='N/A').length+
+    members.filter(m=>m.deposit==='N/A').reduce((s,m)=>s+(m.totalReceived||0),0);
+  const outstanding=members.filter(m=>m.deposit==='Not Yet'||m.fee1==='Not Yet'||m.fee2==='Not Yet').length;
+  const males=members.filter(m=>m.gender==='Male').length;
+  const females=members.filter(m=>m.gender==='Female').length;
+  const refundTotal=(conf.refundPerPerson||0)*members.filter(m=>m.refund==='Refunded').length;
+  const sl=document.getElementById('cpl-stats');
+  if(sl)sl.innerHTML=[
+    {l:'Members',v:members.length,s:`${males}M / ${females}F`},
+    {l:'Total Received',v:'$'+totalRcvd.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g,','),s:'All phases'},
+    {l:'Outstanding',v:outstanding,s:'Not fully paid'},
+    {l:'Refunds Issued',v:'$'+refundTotal.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g,','),s:`@ $${conf.refundPerPerson}/person`},
+  ].map(s=>`<div class="sc"><div class="sl">${s.l}</div><div class="sv">${s.v}</div><div class="sm">${s.s}</div></div>`).join('');
+  // table
+  const t=document.getElementById('cpl-table');if(!t)return;
+  const mc={Paid:'bg',Cash:'bo',['Not Yet']:'br','N/A':'bo'};
+  const rc={Refunded:'bg',Pending:'bo',['Not Yet']:'br','N/A':'bo'};
+  t.innerHTML=filtered.map((m,i)=>{
+    const realIdx=members.indexOf(m);
+    return`<tr>
+      <td style="font-weight:600;min-width:140px">${m.name}</td>
+      <td><span class="badge ${m.gender==='Male'?'bo':'br'}">${m.gender==='Male'?'M':'F'}</span></td>
+      <td style="text-align:center"><span class="badge ${mc[m.deposit]||'bo'}">${m.deposit}</span></td>
+      <td style="text-align:center"><span class="badge ${mc[m.fee1]||'bo'}">${m.fee1}</span></td>
+      <td style="text-align:center"><span class="badge ${mc[m.fee2]||'bo'}">${m.fee2}</span></td>
+      <td style="font-size:10px">${m.method||'—'}</td>
+      <td style="font-weight:600;color:var(--grn)">$${(m.totalReceived||0).toFixed(2)}</td>
+      <td><span class="badge ${rc[m.refund]||'bo'}">${m.refund}</span></td>
+      <td style="font-size:10px;color:var(--t3);max-width:160px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${m.notes||'—'}</td>
+      <td style="display:flex;gap:4px">
+        <button class="btn btn-g btn-sm" onclick="editConfPayMember(${realIdx})">Edit</button>
+        <button class="btn btn-g btn-sm" style="color:var(--cr)" onclick="deleteConfPayMember(${realIdx})">✕</button>
+      </td>
+    </tr>`;
+  }).join('');
+}
+function switchConfPayConf(val){_cplActiveConf=parseInt(val)||0;renderConfPayLedger();}
+function openCplBulkModal(){
+  // Populate the in-modal conference dropdown
+  const sel=document.getElementById('bulk-conf-idx');
+  const msg=document.getElementById('bulk-no-conf-msg');
+  sel.innerHTML=_confPayLedger.map((c,i)=>`<option value="${i}">${c.name}</option>`).join('');
+  // Pre-select the currently active conference
+  sel.value=String(_cplActiveConf);
+  const hasConf=_confPayLedger.length>0;
+  if(msg)msg.style.display=hasConf?'none':'';
+  // Reset all fields
+  document.getElementById('bulk-names').value='';
+  document.getElementById('bulk-gender').value='';
+  document.getElementById('bulk-method').value='Online';
+  document.getElementById('bulk-deposit').value='Not Yet';
+  document.getElementById('bulk-fee1').value='Not Yet';
+  document.getElementById('bulk-fee2').value='Not Yet';
+  document.getElementById('bulk-refund').value='Pending';
+  document.getElementById('bulk-total').value='0';
+  document.getElementById('bulk-notes').value='';
+  document.getElementById('bulk-preview-count').textContent='';
+  // Live count as user types
+  const ta=document.getElementById('bulk-names');
+  ta.oninput=()=>{
+    const n=ta.value.split('\n').map(s=>s.trim()).filter(Boolean).length;
+    document.getElementById('bulk-preview-count').textContent=n?`Ready to add ${n} member${n>1?'s':''}.`:'';
+  };
+  openModal('cpl-bulk-modal');
+}
+function submitBulkConfPayMembers(){
+  const idx=parseInt(document.getElementById('bulk-conf-idx').value);
+  const conf=_confPayLedger[isNaN(idx)?_cplActiveConf:idx];
+  if(!conf){alert('No conference found. Please create one first.');return;}
+  if(!conf.members)conf.members=[];
+  const rawNames=document.getElementById('bulk-names').value;
+  const names=rawNames.split('\n').map(s=>s.trim()).filter(Boolean);
+  if(!names.length){alert('Please enter at least one name.');return;}
+  const gender=document.getElementById('bulk-gender').value;
+  const method=document.getElementById('bulk-method').value;
+  const deposit=document.getElementById('bulk-deposit').value;
+  const fee1=document.getElementById('bulk-fee1').value;
+  const fee2=document.getElementById('bulk-fee2').value;
+  const refund=document.getElementById('bulk-refund').value;
+  const total=parseFloat(document.getElementById('bulk-total').value)||0;
+  const notes=document.getElementById('bulk-notes').value.trim();
+  names.forEach(name=>{
+    conf.members.push({name,gender,deposit,fee1,fee2,method,totalReceived:total,refund,notes});
+  });
+  _cplActiveConf=isNaN(idx)?_cplActiveConf:idx;
+  saveRoleData('confpayledger',_confPayLedger);renderConfPayLedger();closeModals();
+}
+
+function addConfPayMember(){
+  document.getElementById('cpl-member-modal-title').textContent='Add Payment Member';
+  document.getElementById('cpl-edit-index').value='-1';
+  ['cpl-name','cpl-notes'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('cpl-total').value='';
+  document.getElementById('cpl-deposit').value='Paid';
+  document.getElementById('cpl-fee1').value='Paid';
+  document.getElementById('cpl-fee2').value='Paid';
+  document.getElementById('cpl-method').value='Online';
+  document.getElementById('cpl-refund').value='Refunded';
+  openModal('cpl-member-modal');
+}
+function editConfPayMember(idx){
+  const conf=_confPayLedger[_cplActiveConf];if(!conf)return;
+  const m=conf.members[idx];if(!m)return;
+  document.getElementById('cpl-member-modal-title').textContent='Edit Payment Member';
+  document.getElementById('cpl-edit-index').value=idx;
+  document.getElementById('cpl-name').value=m.name||'';
+  document.getElementById('cpl-gender').value=m.gender||'Male';
+  document.getElementById('cpl-deposit').value=m.deposit||'Paid';
+  document.getElementById('cpl-fee1').value=m.fee1||'Paid';
+  document.getElementById('cpl-fee2').value=m.fee2||'Paid';
+  document.getElementById('cpl-method').value=m.method||'Online';
+  document.getElementById('cpl-total').value=m.totalReceived||'';
+  document.getElementById('cpl-refund').value=m.refund||'Pending';
+  document.getElementById('cpl-notes').value=m.notes||'';
+  openModal('cpl-member-modal');
+}
+function submitConfPayMember(){
+  const name=document.getElementById('cpl-name').value.trim();if(!name)return;
+  const conf=_confPayLedger[_cplActiveConf];if(!conf)return;
+  const entry={
+    name,
+    gender:document.getElementById('cpl-gender').value,
+    deposit:document.getElementById('cpl-deposit').value,
+    fee1:document.getElementById('cpl-fee1').value,
+    fee2:document.getElementById('cpl-fee2').value,
+    method:document.getElementById('cpl-method').value,
+    totalReceived:parseFloat(document.getElementById('cpl-total').value)||0,
+    refund:document.getElementById('cpl-refund').value,
+    notes:document.getElementById('cpl-notes').value.trim()
+  };
+  const editIdx=parseInt(document.getElementById('cpl-edit-index').value);
+  if(editIdx>=0){conf.members[editIdx]=entry;}else{conf.members.push(entry);}
+  saveRoleData('confpayledger',_confPayLedger);renderConfPayLedger();closeModals();
+}
+function deleteConfPayMember(idx){
+  const conf=_confPayLedger[_cplActiveConf];if(!conf)return;
+  conf.members.splice(idx,1);saveRoleData('confpayledger',_confPayLedger);renderConfPayLedger();
+}
+function newConfPayConf(){openModal('cpl-conf-modal');}
+function submitConfPayConf(){
+  const name=document.getElementById('cpl-conf-name').value.trim();if(!name)return;
+  const depositAmt=parseFloat(document.getElementById('cpl-conf-deposit').value)||250;
+  const fee1Amt=parseFloat(document.getElementById('cpl-conf-fee1').value)||15;
+  const fee2Amt=parseFloat(document.getElementById('cpl-conf-fee2').value)||235;
+  const refundPerPerson=parseFloat(document.getElementById('cpl-conf-refund').value)||0;
+  const id='conf'+Date.now();
+  _confPayLedger.push({id,name,depositAmt,fee1Amt,fee2Amt,refundPerPerson,members:[]});
+  _cplActiveConf=_confPayLedger.length-1;
+  saveRoleData('confpayledger',_confPayLedger);renderConfPayLedger();closeModals();
+  document.getElementById('cpl-conf-name').value='';
+}
+function exportConfPayCSV(){
+  const conf=_confPayLedger[_cplActiveConf];if(!conf)return;
+  const rows=[['Name','Gender','$'+conf.depositAmt+' Deposit','$'+conf.fee1Amt+' Fee','$'+conf.fee2Amt+' Final','Method','Total Received','Refund','Notes']];
+  (conf.members||[]).forEach(m=>rows.push([m.name,m.gender,m.deposit,m.fee1,m.fee2,m.method,m.totalReceived,m.refund,m.notes||'']));
+  const csv=rows.map(r=>r.map(c=>`"${String(c).replace(/"/g,'""')}"`).join(',')).join('\n');
+  const a=document.createElement('a');a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(csv);
+  a.download=(conf.name||'payments').replace(/[^a-z0-9]/gi,'_')+'.csv';a.click();
+}
+
+// ── OFFICER CHECK-INS ────────────────────────────────────────────────────────
+function addOfficerCheckin(){openModal('officer-checkin-modal');document.getElementById('oc-date').value=new Date().toISOString().slice(0,10);}
+function renderOfficerCheckins(){
+  const t=document.getElementById('officer-checkins-table');if(!t)return;
+  if(!_officerCheckins.length){t.innerHTML='<tr><td colspan="7" style="font-size:11px;color:var(--t4);padding:12px">No check-ins logged yet.</td></tr>';return;}
+  const ac={Present:'bg',Late:'bo',['Absent - Excused']:'bo',['Absent - Unexcused']:'br'};
+  t.innerHTML=_officerCheckins.map((c,i)=>`<tr>
+    <td>${c.officer}</td><td>${c.role}</td><td>${c.date||'—'}</td><td>${c.type}</td>
+    <td><span class="badge ${ac[c.attendance]||'bo'}">${c.attendance}</span></td>
+    <td style="max-width:200px;font-size:10px;color:var(--t3)">${c.notes||'—'}</td>
+    <td><button class="btn btn-g btn-sm" style="color:var(--cr)" onclick="deleteOfficerCheckin(${i})">✕</button></td>
+  </tr>`).join('');
+}
+function submitOfficerCheckin(){
+  const officer=document.getElementById('oc-officer').value;
+  const role=document.getElementById('oc-role').value;
+  const date=document.getElementById('oc-date').value;
+  const type=document.getElementById('oc-type').value;
+  const attendance=document.getElementById('oc-attendance').value;
+  const notes=document.getElementById('oc-notes').value.trim();
+  _officerCheckins.push({officer,role,date,type,attendance,notes});
+  saveRoleData('officercheckins',_officerCheckins);renderOfficerCheckins();closeModals();
+  document.getElementById('oc-notes').value='';
+}
+function deleteOfficerCheckin(i){_officerCheckins.splice(i,1);saveRoleData('officercheckins',_officerCheckins);renderOfficerCheckins();}
+
+// ── DECISION LOG ─────────────────────────────────────────────────────────────
+function addDecision(){openModal('decision-log-modal');document.getElementById('dec-date').value=new Date().toISOString().slice(0,10);}
+function renderDecisionLog(){
+  const t=document.getElementById('decision-log-table');if(!t)return;
+  if(!_decisionLog.length){t.innerHTML='<tr><td colspan="7" style="font-size:11px;color:var(--t4);padding:12px">No decisions logged yet.</td></tr>';return;}
+  const ic={High:'br',Medium:'bo',Low:'bg'};
+  const sc={Active:'bg',['Under Review']:'bo',Reversed:'br',Completed:'bg'};
+  t.innerHTML=_decisionLog.map((d,i)=>`<tr>
+    <td style="font-weight:600">${d.decision}</td><td>${d.by}</td><td>${d.date||'—'}</td>
+    <td style="max-width:160px;font-size:10px;color:var(--t3)">${d.rationale||'—'}</td>
+    <td><span class="badge ${ic[d.impact]||'bo'}">${d.impact}</span></td>
+    <td><span class="badge ${sc[d.status]||'bo'}">${d.status}</span></td>
+    <td><button class="btn btn-g btn-sm" style="color:var(--cr)" onclick="deleteDecision(${i})">✕</button></td>
+  </tr>`).join('');
+}
+function submitDecision(){
+  const decision=document.getElementById('dec-decision').value.trim();if(!decision)return;
+  const by=document.getElementById('dec-by').value;
+  const date=document.getElementById('dec-date').value;
+  const rationale=document.getElementById('dec-rationale').value.trim();
+  const impact=document.getElementById('dec-impact').value;
+  const status=document.getElementById('dec-status').value;
+  _decisionLog.push({decision,by,date,rationale,impact,status});
+  saveRoleData('decisionlog',_decisionLog);renderDecisionLog();closeModals();
+  document.getElementById('dec-decision').value='';document.getElementById('dec-rationale').value='';
+}
+function deleteDecision(i){_decisionLog.splice(i,1);saveRoleData('decisionlog',_decisionLog);renderDecisionLog();}
+
+// ── MEMBER POINTS ─────────────────────────────────────────────────────────────
+function addMemberPointsEntry(){openModal('member-points-modal');document.getElementById('mp-lastactive').value=new Date().toISOString().slice(0,10);}
+function renderMemberPoints(){
+  const t=document.getElementById('member-points-table');if(!t)return;
+  if(!_memberPoints.length){t.innerHTML='<tr><td colspan="7" style="font-size:11px;color:var(--t4);padding:12px">No members tracked yet.</td></tr>';return;}
+  const tc={Bronze:'bo',Silver:'bo',Gold:'bo',Platinum:'bg'};
+  const sorted=[..._memberPoints].sort((a,b)=>b.points-a.points);
+  t.innerHTML=sorted.map((m,i)=>`<tr>
+    <td><span style="font-size:10px;color:var(--t4);margin-right:6px">#${i+1}</span><b>${m.name}</b></td>
+    <td style="font-weight:700;color:var(--grn)">${m.points}</td>
+    <td>${m.events||0}</td><td>${m.lastactive||'—'}</td>
+    <td><span class="badge ${tc[m.tier]||'bo'}">${m.tier}</span></td>
+    <td style="font-size:10px;color:var(--t3)">${m.notes||'—'}</td>
+    <td><button class="btn btn-g btn-sm" style="color:var(--cr)" onclick="deleteMemberPoints('${m.name}')">✕</button></td>
+  </tr>`).join('');
+}
+function submitMemberPoints(){
+  const name=document.getElementById('mp-name').value.trim();if(!name)return;
+  const points=parseInt(document.getElementById('mp-points').value)||0;
+  const events=parseInt(document.getElementById('mp-events').value)||0;
+  const lastactive=document.getElementById('mp-lastactive').value;
+  const tier=document.getElementById('mp-tier').value;
+  const notes=document.getElementById('mp-notes').value.trim();
+  const existing=_memberPoints.findIndex(m=>m.name.toLowerCase()===name.toLowerCase());
+  if(existing>=0){_memberPoints[existing]={name,points,events,lastactive,tier,notes};}
+  else{_memberPoints.push({name,points,events,lastactive,tier,notes});}
+  saveRoleData('memberpoints',_memberPoints);renderMemberPoints();closeModals();
+  document.getElementById('mp-name').value='';document.getElementById('mp-points').value='';document.getElementById('mp-events').value='';document.getElementById('mp-notes').value='';
+}
+function deleteMemberPoints(name){const i=_memberPoints.findIndex(m=>m.name===name);if(i>=0){_memberPoints.splice(i,1);saveRoleData('memberpoints',_memberPoints);renderMemberPoints();}}
+
+// ── EVENT CHECKLISTS ──────────────────────────────────────────────────────────
+function addEventChecklist(){openModal('event-checklist-modal');document.getElementById('ec-date').value=new Date().toISOString().slice(0,10);}
+function renderEventChecklists(){
+  const t=document.getElementById('event-checklist-table');if(!t)return;
+  if(!_eventChecklists.length){t.innerHTML='<tr><td colspan="7" style="font-size:11px;color:var(--t4);padding:12px">No event checklists yet.</td></tr>';return;}
+  const sc={['Pre-Event']:'bo',['In Progress']:'bo',['Post-Event']:'bo',Completed:'bg'};
+  t.innerHTML=_eventChecklists.map((e,i)=>`<tr>
+    <td style="font-weight:600">${e.event}</td><td>${e.date||'—'}</td>
+    <td style="font-size:10px;color:var(--t3);max-width:140px">${e.pre||'—'}</td>
+    <td style="font-size:10px;color:var(--t3);max-width:140px">${e.post||'—'}</td>
+    <td>${e.owner||'—'}</td>
+    <td><span class="badge ${sc[e.status]||'bo'}">${e.status}</span></td>
+    <td><button class="btn btn-g btn-sm" style="color:var(--cr)" onclick="deleteEventChecklist(${i})">✕</button></td>
+  </tr>`).join('');
+}
+function submitEventChecklist(){
+  const event=document.getElementById('ec-event').value.trim();if(!event)return;
+  const date=document.getElementById('ec-date').value;
+  const pre=document.getElementById('ec-pre').value.trim();
+  const post=document.getElementById('ec-post').value.trim();
+  const owner=document.getElementById('ec-owner').value.trim();
+  const status=document.getElementById('ec-status').value;
+  _eventChecklists.push({event,date,pre,post,owner,status});
+  saveRoleData('eventchecklists',_eventChecklists);renderEventChecklists();closeModals();
+  ['ec-event','ec-pre','ec-post','ec-owner'].forEach(id=>document.getElementById(id).value='');
+}
+function deleteEventChecklist(i){_eventChecklists.splice(i,1);saveRoleData('eventchecklists',_eventChecklists);renderEventChecklists();}
+
+// ── VENDOR DIRECTORY ──────────────────────────────────────────────────────────
+function addVendorEntry(){openModal('vendor-modal');}
+function renderVendors(){
+  const t=document.getElementById('vendors-directory-table');if(!t)return;
+  if(!_vendors.length){t.innerHTML='<tr><td colspan="8" style="font-size:11px;color:var(--t4);padding:12px">No vendors added yet.</td></tr>';return;}
+  t.innerHTML=_vendors.map((v,i)=>`<tr>
+    <td style="font-weight:600">${v.name}</td>
+    <td><span class="badge bo">${v.category}</span></td>
+    <td>${v.contact||'—'}</td>
+    <td style="font-size:10px;color:var(--t3)">${v.reach||'—'}</td>
+    <td>${v.lastused||'—'}</td>
+    <td>${v.rating||'—'}</td>
+    <td style="font-size:10px;color:var(--t3);max-width:140px">${v.notes||'—'}</td>
+    <td><button class="btn btn-g btn-sm" style="color:var(--cr)" onclick="deleteVendor(${i})">✕</button></td>
+  </tr>`).join('');
+}
+function submitVendor(){
+  const name=document.getElementById('vnd-name').value.trim();if(!name)return;
+  const category=document.getElementById('vnd-category').value;
+  const contact=document.getElementById('vnd-contact').value.trim();
+  const reach=document.getElementById('vnd-reach').value.trim();
+  const lastused=document.getElementById('vnd-lastused').value;
+  const rating=document.getElementById('vnd-rating').value;
+  const notes=document.getElementById('vnd-notes').value.trim();
+  _vendors.push({name,category,contact,reach,lastused,rating,notes});
+  saveRoleData('vendors',_vendors);renderVendors();closeModals();
+  ['vnd-name','vnd-contact','vnd-reach','vnd-notes'].forEach(id=>document.getElementById(id).value='');
+}
+function deleteVendor(i){_vendors.splice(i,1);saveRoleData('vendors',_vendors);renderVendors();}
+
+// ── COMMS LOG ─────────────────────────────────────────────────────────────────
+function addCommsEntry(){openModal('comms-log-modal');document.getElementById('comms-date').value=new Date().toISOString().slice(0,10);}
+function renderCommsLog(){
+  const t=document.getElementById('comms-log-table');if(!t)return;
+  if(!_commsLog.length){t.innerHTML='<tr><td colspan="7" style="font-size:11px;color:var(--t4);padding:12px">No communications logged yet.</td></tr>';return;}
+  t.innerHTML=_commsLog.map((c,i)=>`<tr>
+    <td style="font-weight:600">${c.subject}</td>
+    <td><span class="badge bo">${c.type}</span></td>
+    <td>${c.sentto||'—'}</td>
+    <td>${c.date||'—'}</td>
+    <td style="font-weight:600;color:var(--grn)">${c.openrate||'—'}</td>
+    <td style="font-size:10px;color:var(--t3);max-width:160px">${c.notes||'—'}</td>
+    <td><button class="btn btn-g btn-sm" style="color:var(--cr)" onclick="deleteCommsLog(${i})">✕</button></td>
+  </tr>`).join('');
+}
+function submitCommsLog(){
+  const subject=document.getElementById('comms-subject').value.trim();if(!subject)return;
+  const type=document.getElementById('comms-type').value;
+  const sentto=document.getElementById('comms-sentto').value.trim();
+  const date=document.getElementById('comms-date').value;
+  const openrate=document.getElementById('comms-openrate').value.trim();
+  const notes=document.getElementById('comms-notes').value.trim();
+  _commsLog.push({subject,type,sentto,date,openrate,notes});
+  saveRoleData('commslog',_commsLog);renderCommsLog();closeModals();
+  ['comms-subject','comms-sentto','comms-openrate','comms-notes'].forEach(id=>document.getElementById(id).value='');
+}
+function deleteCommsLog(i){_commsLog.splice(i,1);saveRoleData('commslog',_commsLog);renderCommsLog();}
+
+// ── GRAPHIC REQUESTS ──────────────────────────────────────────────────────────
+function addGraphicRequest(){openModal('graphic-request-modal');document.getElementById('gr-due').value='';}
+function renderGraphicRequests(){
+  const t=document.getElementById('graphic-requests-table');if(!t)return;
+  if(!_graphicRequests.length){t.innerHTML='<tr><td colspan="8" style="font-size:11px;color:var(--t4);padding:12px">No graphic requests yet.</td></tr>';return;}
+  const sc={Requested:'bo',['In Progress']:'bo',Review:'bo',Approved:'bg',Delivered:'bg'};
+  t.innerHTML=_graphicRequests.map((r,i)=>`<tr>
+    <td style="font-weight:600">${r.project}</td>
+    <td>${r.requestedby||'—'}</td>
+    <td><span class="badge bo">${r.type}</span></td>
+    <td>${r.due||'—'}</td>
+    <td>${r.designer||'—'}</td>
+    <td><span class="badge ${sc[r.status]||'bo'}">${r.status}</span></td>
+    <td>${r.link?`<a href="${r.link}" target="_blank" style="color:var(--blu);font-size:10px">Open ↗</a>`:'—'}</td>
+    <td><button class="btn btn-g btn-sm" style="color:var(--cr)" onclick="deleteGraphicRequest(${i})">✕</button></td>
+  </tr>`).join('');
+}
+function submitGraphicRequest(){
+  const project=document.getElementById('gr-project').value.trim();if(!project)return;
+  const requestedby=document.getElementById('gr-requestedby').value.trim();
+  const type=document.getElementById('gr-type').value;
+  const due=document.getElementById('gr-due').value;
+  const designer=document.getElementById('gr-designer').value.trim();
+  const status=document.getElementById('gr-status').value;
+  const link=document.getElementById('gr-link').value.trim();
+  _graphicRequests.push({project,requestedby,type,due,designer,status,link});
+  saveRoleData('graphicrequests',_graphicRequests);renderGraphicRequests();closeModals();
+  ['gr-project','gr-requestedby','gr-designer','gr-link'].forEach(id=>document.getElementById(id).value='');
+}
+function deleteGraphicRequest(i){_graphicRequests.splice(i,1);saveRoleData('graphicrequests',_graphicRequests);renderGraphicRequests();}
+
+// ── COMPETITION HISTORY ───────────────────────────────────────────────────────
+function logCompResult(){openModal('comp-history-modal');document.getElementById('ch-date').value=new Date().toISOString().slice(0,10);}
+function renderCompHistory(){
+  const t=document.getElementById('portal-comp-log-table');if(!t)return;
+  if(!_compResults.length){t.innerHTML='<tr><td colspan="7" style="font-size:11px;color:var(--t4);padding:12px">No competition results logged yet.</td></tr>';return;}
+  const medal=(p)=>{const l=p.toLowerCase();return l.includes('1st')||l.includes('first')?'🥇':l.includes('2nd')||l.includes('second')?'🥈':l.includes('3rd')||l.includes('third')?'🥉':'';};
+  t.innerHTML=_compResults.map((r,i)=>`<tr>
+    <td style="font-weight:600">${r.member}</td>
+    <td>${r.event}</td>
+    <td>${r.conf||'—'}</td>
+    <td style="font-weight:600">${medal(r.placement||'')} ${r.placement||'—'}</td>
+    <td>${r.date||'—'}</td>
+    <td style="font-size:10px;color:var(--t3);max-width:160px">${r.notes||'—'}</td>
+    <td><button class="btn btn-g btn-sm" style="color:var(--cr)" onclick="deleteCompResult(${i})">✕</button></td>
+  </tr>`).join('');
+}
+function submitCompResult(){
+  const member=document.getElementById('ch-member').value.trim();if(!member)return;
+  const event=document.getElementById('ch-event').value.trim();
+  const conf=document.getElementById('ch-conf').value.trim();
+  const date=document.getElementById('ch-date').value;
+  const placement=document.getElementById('ch-placement').value.trim();
+  const notes=document.getElementById('ch-notes').value.trim();
+  _compResults.push({member,event,conf,date,placement,notes});
+  saveRoleData('compresults',_compResults);renderCompHistory();closeModals();
+  ['ch-member','ch-event','ch-conf','ch-placement','ch-notes'].forEach(id=>document.getElementById(id).value='');
+}
+function deleteCompResult(i){_compResults.splice(i,1);saveRoleData('compresults',_compResults);renderCompHistory();}
+
+// ── POLARIS INTERNAL SUB-NAV ─────────────────────────────────────────────────
+function showPolarisTab(name){
+  ['roster','assignments','lessons','guides'].forEach(n=>{
+    const el=document.getElementById('prg-sub-'+n);if(el)el.style.display=n===name?'':'none';
+    const btn=document.getElementById('ptab-'+n);if(btn)btn.classList.toggle('active',n===name);
+  });
+}
+
+// ── POLARIS: ASSIGNMENTS ──────────────────────────────────────────────────────
+function addPolarisAssignment(){
+  ['pa-title','pa-assignedto','pa-grade','pa-notes'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('pa-due').value='';
+  document.getElementById('pa-category').value='Report';
+  document.getElementById('pa-status').value='Not Started';
+  openModal('polaris-assignment-modal');
+}
+function submitPolarisAssignment(){
+  const title=document.getElementById('pa-title').value.trim();if(!title)return;
+  const fileInput=document.getElementById('pa-file');
+  const file=fileInput.files[0];
+  const entry={
+    title,
+    category:document.getElementById('pa-category').value,
+    due:document.getElementById('pa-due').value,
+    assignedto:document.getElementById('pa-assignedto').value.trim(),
+    status:document.getElementById('pa-status').value,
+    grade:document.getElementById('pa-grade').value.trim(),
+    notes:document.getElementById('pa-notes').value.trim(),
+    fileName:'',fileData:''
+  };
+  function _save(){_polarisAssignments.push(entry);saveRoleData('polarisassignments',_polarisAssignments);renderPolarisAssignments();closeModals();fileInput.value='';}
+  if(file){
+    const r=new FileReader();
+    r.onload=e=>{
+      if(e.target.result.length<2000000){entry.fileName=file.name;entry.fileData=e.target.result;}
+      else entry.fileName=file.name+' (file too large to store locally)';
+      _save();
+    };
+    r.readAsDataURL(file);
+  } else _save();
+}
+function renderPolarisAssignments(){
+  const t=document.getElementById('polaris-assignments-table');if(!t)return;
+  const sf=(document.getElementById('pa-filter-status')||{}).value||'';
+  const cf=(document.getElementById('pa-filter-cat')||{}).value||'';
+  const sc={'Not Started':'bo','In Progress':'bo','Submitted':'bg','Graded':'bg'};
+  const items=_polarisAssignments.filter(a=>(!sf||a.status===sf)&&(!cf||a.category===cf));
+  if(!items.length){t.innerHTML='<tr><td colspan="7" style="font-size:11px;color:var(--t4);padding:12px">No assignments yet. Click "+ Add Assignment" to get started.</td></tr>';return;}
+  t.innerHTML=items.map(a=>{
+    const realIdx=_polarisAssignments.indexOf(a);
+    return`<tr>
+      <td>
+        <div style="font-weight:600;font-size:11px">${a.title}</div>
+        ${a.notes?`<div style="font-size:10px;color:var(--t3)">${a.notes}</div>`:''}
+        ${a.grade?`<div style="font-size:10px;color:var(--grn);font-weight:600">Grade: ${a.grade}</div>`:''}
+      </td>
+      <td><span class="badge bo">${a.category}</span></td>
+      <td style="font-size:11px">${a.due||'—'}</td>
+      <td style="font-size:11px">${a.assignedto||'—'}</td>
+      <td><span class="badge ${sc[a.status]||'bo'}">${a.status}</span></td>
+      <td>${a.fileData?`<a href="${a.fileData}" download="${a.fileName}" style="color:var(--blu);font-size:10px">⬇ ${a.fileName}</a>`:a.fileName?`<span style="font-size:10px;color:var(--t3)">${a.fileName}</span>`:'—'}</td>
+      <td><button class="btn btn-g btn-sm" style="color:var(--cr)" onclick="deletePolarisAssignment(${realIdx})">✕</button></td>
+    </tr>`;
+  }).join('');
+}
+function deletePolarisAssignment(i){_polarisAssignments.splice(i,1);saveRoleData('polarisassignments',_polarisAssignments);renderPolarisAssignments();}
+
+// ── POLARIS: LESSON PLANS ─────────────────────────────────────────────────────
+function addPolarisLesson(){
+  ['pl-title','pl-objective','pl-materials','pl-agenda','pl-assessment','pl-notes-lesson'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('pl-date').value=new Date().toISOString().slice(0,10);
+  document.getElementById('pl-duration').value='60';
+  document.getElementById('pl-topic').value='Writing';
+  openModal('polaris-lesson-modal');
+}
+function submitPolarisLesson(){
+  const title=document.getElementById('pl-title').value.trim();if(!title)return;
+  _polarisLessons.push({
+    title,
+    date:document.getElementById('pl-date').value,
+    duration:document.getElementById('pl-duration').value,
+    topic:document.getElementById('pl-topic').value,
+    objective:document.getElementById('pl-objective').value.trim(),
+    materials:document.getElementById('pl-materials').value.trim(),
+    agenda:document.getElementById('pl-agenda').value.trim(),
+    assessment:document.getElementById('pl-assessment').value.trim(),
+    notes:document.getElementById('pl-notes-lesson').value.trim(),
+  });
+  saveRoleData('polarislessons',_polarisLessons);renderPolarisLessons();closeModals();
+}
+function renderPolarisLessons(){
+  const el=document.getElementById('polaris-lessons-list');if(!el)return;
+  if(!_polarisLessons.length){el.innerHTML='<div style="padding:24px;text-align:center;color:var(--t4);font-size:11px">No lesson plans yet. Click "+ New Lesson Plan" to create one.</div>';return;}
+  el.innerHTML=_polarisLessons.map((l,i)=>`
+    <div style="border:1px solid var(--bd);border-radius:8px;padding:12px 14px;margin-bottom:10px;background:var(--s1)">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px">
+        <div>
+          <div style="font-size:12px;font-weight:700;color:var(--t1)">${l.title}</div>
+          <div style="font-size:10px;color:var(--t3);margin-top:3px">${l.date||'No date'} &nbsp;·&nbsp; ${l.duration||'?'} min &nbsp;·&nbsp; <span class="badge bo" style="font-size:9px">${l.topic}</span></div>
+        </div>
+        <div style="display:flex;gap:6px;flex-shrink:0">
+          <button class="btn btn-p btn-sm" onclick="previewLessonPlan(${i})">Preview</button>
+          <button class="btn btn-g btn-sm" style="color:var(--cr)" onclick="deletePolarisLesson(${i})">✕</button>
+        </div>
+      </div>
+      ${l.objective?`<div style="font-size:11px;color:var(--t2);margin-top:8px;padding-top:8px;border-top:1px solid var(--bd)"><span style="font-weight:600">Objective:</span> ${l.objective}</div>`:''}
+    </div>`).join('');
+}
+function previewLessonPlan(i){
+  const l=_polarisLessons[i];
+  document.getElementById('plp-title').textContent=l.title;
+  const fmt=s=>s?(s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/\n/g,'<br>')):'—';
+  const sec=(h,b)=>b&&b!=='—'?`<div style="margin-bottom:14px"><div style="font-size:10px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px">${h}</div><div style="font-size:12px;color:var(--t1);line-height:1.7">${b}</div></div>`:'';
+  document.getElementById('plp-body').innerHTML=`
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:10px 0 14px;border-bottom:1px solid var(--bd);margin-bottom:14px">
+      <div><div style="font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:.06em">Date</div><div style="font-size:12px;font-weight:600">${l.date||'—'}</div></div>
+      <div><div style="font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:.06em">Duration</div><div style="font-size:12px;font-weight:600">${l.duration||'?'} min</div></div>
+      <div><div style="font-size:9px;color:var(--t3);text-transform:uppercase;letter-spacing:.06em">Topic</div><div style="font-size:12px;font-weight:600">${l.topic}</div></div>
+    </div>
+    ${sec('Learning Objective',fmt(l.objective))}
+    ${sec('Materials Needed',fmt(l.materials))}
+    ${sec('Session Agenda',fmt(l.agenda))}
+    ${sec('Assessment',fmt(l.assessment))}
+    ${sec('Notes',fmt(l.notes))}
+  `;
+  openModal('polaris-lesson-preview-modal');
+}
+function printLessonPlan(){
+  const body=document.getElementById('plp-body').innerHTML;
+  const title=document.getElementById('plp-title').textContent;
+  const w=window.open('','_blank');
+  w.document.write(`<!DOCTYPE html><html><head><title>${title}</title><style>body{font-family:'Segoe UI',sans-serif;padding:36px 48px;color:#111;max-width:640px;margin:0 auto}h1{font-size:18px;font-weight:700;margin-bottom:20px;border-bottom:2px solid #111;padding-bottom:8px}@media print{body{padding:20px}}</style></head><body><h1>${title}</h1>${body}</body></html>`);
+  w.document.close();w.focus();setTimeout(()=>w.print(),350);
+}
+function deletePolarisLesson(i){_polarisLessons.splice(i,1);saveRoleData('polarislessons',_polarisLessons);renderPolarisLessons();}
+
+// ── POLARIS: RESOURCE GUIDES ──────────────────────────────────────────────────
+function addPolarisGuide(){
+  ['pg-title','pg-content'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('pg-category').value='Writing';
+  openModal('polaris-guide-modal');
+}
+function submitPolarisGuide(){
+  const title=document.getElementById('pg-title').value.trim();if(!title)return;
+  _polarisGuides.push({title,category:document.getElementById('pg-category').value,content:document.getElementById('pg-content').value.trim(),icon:'📄',pinned:false,open:false});
+  saveRoleData('polarisguides',_polarisGuides);renderPolarisGuides();closeModals();
+}
+function renderPolarisGuides(){
+  const el=document.getElementById('polaris-guides-list');if(!el)return;
+  const q=((document.getElementById('pg-search')||{}).value||'').toLowerCase();
+  const catOrder=['Writing','Presentation','Research','Strategy','Other'];
+  const items=_polarisGuides.filter((g,i)=>{g._i=i;return!q||(g.title+g.content).toLowerCase().includes(q);});
+  if(!items.length){el.innerHTML='<div style="padding:16px;text-align:center;color:var(--t4);font-size:11px">No guides found.</div>';return;}
+  const grouped={};
+  items.forEach(g=>{const c=g.category||'Other';if(!grouped[c])grouped[c]=[];grouped[c].push(g);});
+  const sortedCats=catOrder.filter(c=>grouped[c]).concat(Object.keys(grouped).filter(c=>!catOrder.includes(c)));
+  el.innerHTML=sortedCats.map(cat=>
+    `<div style="margin-bottom:14px">
+      <div style="font-size:10px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:7px;padding-bottom:5px;border-bottom:1px solid var(--bd)">${cat}</div>
+      ${grouped[cat].map(g=>`
+        <div style="border:1px solid var(--bd);border-radius:7px;margin-bottom:7px;overflow:hidden">
+          <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 13px;cursor:pointer;background:var(--s1);user-select:none" onclick="togglePolarisGuide(${g._i})">
+            <div style="display:flex;align-items:center;gap:9px">
+              <span style="font-size:17px">${g.icon||'📄'}</span>
+              <span style="font-size:12px;font-weight:600;color:var(--t1)">${g.title}</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:6px">
+              ${!g.pinned?`<button class="btn btn-g btn-sm" style="color:var(--cr);font-size:9px" onclick="event.stopPropagation();deletePolarisGuide(${g._i})">✕</button>`:'<span style="font-size:9px;color:var(--t4);padding:0 4px">built-in</span>'}
+              <span style="font-size:12px;color:var(--t3);min-width:12px;text-align:center">${g.open?'▲':'▼'}</span>
+            </div>
+          </div>
+          ${g.open?`<div style="padding:13px 16px 15px;border-top:1px solid var(--bd);background:var(--s2);font-size:12px;color:var(--t1);line-height:1.75;white-space:pre-wrap;font-family:inherit">${g.content}</div>`:''}
+        </div>`).join('')}
+    </div>`).join('');
+}
+function togglePolarisGuide(i){if(_polarisGuides[i])_polarisGuides[i].open=!_polarisGuides[i].open;renderPolarisGuides();}
+function deletePolarisGuide(i){if(!_polarisGuides[i]||_polarisGuides[i].pinned)return;_polarisGuides.splice(i,1);saveRoleData('polarisguides',_polarisGuides);renderPolarisGuides();}
+
+// ── STATEMENT OF ACTIVITIES BUILDER ──────────────────────────────────────────
+
+function renderStatementBuilder(){
+  const ci=document.getElementById('stmt-chapter');
+  const pi=document.getElementById('stmt-period');
+  const ni=document.getElementById('stmt-net-start');
+  if(ci&&_statementData.chapterName)ci.value=_statementData.chapterName;
+  if(pi&&_statementData.period)pi.value=_statementData.period;
+  if(ni)ni.value=_statementData.netAssetsStart??225;
+  _renderStmtSection('revenue');
+  _renderStmtSection('expense');
+  renderStmtSummary();
+}
+
+function _renderStmtSection(section){
+  const listId=section==='revenue'?'stmt-revenue-list':'stmt-expense-list';
+  const totalId=section==='revenue'?'stmt-total-revenue':'stmt-total-expense';
+  const container=document.getElementById(listId);if(!container)return;
+  const clr=section==='revenue'?'var(--grn)':'var(--cr)';
+  const items=(_statementData[section]||[]);
+  if(!items.length){
+    container.innerHTML='<div style="font-size:11px;color:var(--t4);padding:10px 0">No items yet.</div>';
+    const te=document.getElementById(totalId);if(te)te.textContent='$0';return;
+  }
+  // Bucket into groups and ungrouped
+  const groupMap={};const ungrouped=[];
+  items.forEach((item,idx)=>{
+    const g=(item.group||'').trim();
+    if(g){if(!groupMap[g])groupMap[g]=[];groupMap[g].push({...item,_idx:idx});}
+    else ungrouped.push({...item,_idx:idx});
+  });
+  let html='';let grand=0;
+  const fmtAmt=n=>'$'+Number(n||0).toLocaleString();
+  const delBtn=(sec,idx)=>`<button onclick="deleteStmtLine('${sec}',${idx})" title="Remove" style="background:none;border:none;color:var(--t4);cursor:pointer;font-size:10px;padding:0 2px;line-height:1;margin-left:4px">✕</button>`;
+  // Groups first
+  Object.entries(groupMap).forEach(([gName,gItems])=>{
+    const gTotal=gItems.reduce((s,i)=>s+Number(i.amount||0),0);grand+=gTotal;
+    html+=`<div style="margin-bottom:8px">
+      <div style="font-size:10px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.04em;padding:3px 0 2px;border-bottom:1px solid var(--bd);margin-bottom:3px">${gName}</div>`;
+    gItems.forEach(item=>{html+=`<div style="display:flex;justify-content:space-between;align-items:center;padding:2px 0 2px 10px"><span style="font-size:11px;color:var(--t1)">${item.name}</span><span style="display:flex;align-items:center"><span style="font-size:11px">${fmtAmt(item.amount)}</span>${delBtn(section,item._idx)}</span></div>`;});
+    html+=`<div style="display:flex;justify-content:space-between;padding:2px 0 2px 6px;border-top:1px dashed var(--bd);margin-top:2px"><span style="font-size:10px;font-weight:700;color:var(--t2)">Total ${gName}</span><span style="font-size:10px;font-weight:700;color:${clr}">${fmtAmt(gTotal)}</span></div></div>`;
+  });
+  // Ungrouped
+  ungrouped.forEach(item=>{grand+=Number(item.amount||0);html+=`<div style="display:flex;justify-content:space-between;align-items:center;padding:2px 0"><span style="font-size:11px;color:var(--t1)">${item.name}</span><span style="display:flex;align-items:center"><span style="font-size:11px">${fmtAmt(item.amount)}</span>${delBtn(section,item._idx)}</span></div>`;});
+  container.innerHTML=html;
+  const te=document.getElementById(totalId);if(te)te.textContent='$'+grand.toLocaleString();
+}
+
+function renderStmtSummary(){
+  const ni=document.getElementById('stmt-net-start');
+  const netStart=Number(ni?ni.value:(_statementData.netAssetsStart||0));
+  const totalRev=(_statementData.revenue||[]).reduce((s,i)=>s+Number(i.amount||0),0);
+  const totalExp=(_statementData.expense||[]).reduce((s,i)=>s+Number(i.amount||0),0);
+  const change=totalRev-totalExp;const netEnd=netStart+change;
+  const fmt=n=>(n<0?'-$':'$')+Math.abs(n).toLocaleString();
+  const s=id=>document.getElementById(id);
+  if(s('stmt-change-net'))s('stmt-change-net').textContent=fmt(change);
+  if(s('stmt-net-begin'))s('stmt-net-begin').textContent='$'+netStart.toLocaleString();
+  if(s('stmt-net-end'))s('stmt-net-end').textContent='$'+netEnd.toLocaleString();
+}
+
+function saveStmtMeta(){
+  const v=id=>(document.getElementById(id)||{}).value;
+  _statementData.chapterName=v('stmt-chapter')||_statementData.chapterName;
+  _statementData.period=v('stmt-period')||_statementData.period;
+  _statementData.netAssetsStart=Number(v('stmt-net-start')||_statementData.netAssetsStart||0);
+  localStorage.setItem('pbl_statementdata',JSON.stringify(_statementData));
+}
+
+function addStmtLine(section){
+  document.getElementById('stmt-line-section').value=section||'revenue';
+  ['stmt-line-group','stmt-line-name','stmt-line-amount'].forEach(id=>document.getElementById(id).value='');
+  openModal('stmt-line-modal');
+}
+
+function submitStmtLine(){
+  const section=document.getElementById('stmt-line-section').value;
+  const group=document.getElementById('stmt-line-group').value.trim();
+  const name=document.getElementById('stmt-line-name').value.trim();
+  const amount=parseFloat(document.getElementById('stmt-line-amount').value)||0;
+  if(!name)return;
+  if(!_statementData[section])_statementData[section]=[];
+  _statementData[section].push({group,name,amount});
+  localStorage.setItem('pbl_statementdata',JSON.stringify(_statementData));
+  _renderStmtSection(section);renderStmtSummary();closeModals();
+}
+
+function deleteStmtLine(section,idx){
+  _statementData[section].splice(idx,1);
+  localStorage.setItem('pbl_statementdata',JSON.stringify(_statementData));
+  _renderStmtSection(section);renderStmtSummary();
+}
+
+function previewStatement(){
+  saveStmtMeta();
+  const chName=_statementData.chapterName||'De Anza Phi Beta Lambda';
+  const period=_statementData.period||'';
+  const netStart=Number(_statementData.netAssetsStart||0);
+  const revItems=_statementData.revenue||[];
+  const expItems=_statementData.expense||[];
+  const fmt=n=>'$'+Number(n||0).toLocaleString(undefined,{minimumFractionDigits:0,maximumFractionDigits:0});
+  const fmtS=n=>(n<0?'-$':'$')+Math.abs(n).toLocaleString();
+
+  function buildRows(items){
+    const gMap={};const ung=[];
+    items.forEach(item=>{const g=(item.group||'').trim();if(g){if(!gMap[g])gMap[g]=[];gMap[g].push(item);}else ung.push(item);});
+    let r='';
+    Object.entries(gMap).forEach(([gName,gItems])=>{
+      const gTot=gItems.reduce((s,i)=>s+Number(i.amount||0),0);
+      r+=`<tr><td colspan="2" style="padding-top:12px;padding-bottom:3px;font-style:italic;font-size:12px;border-bottom:1px solid #bbb">${gName}:</td></tr>`;
+      gItems.forEach(item=>{r+=`<tr><td style="padding-left:28px;padding-top:2px;font-size:12px">${item.name}</td><td style="text-align:right;font-size:12px;white-space:nowrap">${fmt(item.amount)}</td></tr>`;});
+      r+=`<tr><td style="padding-left:10px;padding-top:3px;padding-bottom:6px;font-size:11.5px;font-weight:700">Total ${gName}</td><td style="text-align:right;font-size:11.5px;font-weight:700;border-top:1px solid #777;padding-top:2px;white-space:nowrap">${fmt(gTot)}</td></tr>`;
+    });
+    ung.forEach(item=>{r+=`<tr><td style="font-size:12px;padding-top:3px">${item.name}</td><td style="text-align:right;font-size:12px;white-space:nowrap">${fmt(item.amount)}</td></tr>`;});
+    return r;
+  }
+
+  const totalRev=revItems.reduce((s,i)=>s+Number(i.amount||0),0);
+  const totalExp=expItems.reduce((s,i)=>s+Number(i.amount||0),0);
+  const change=totalRev-totalExp;
+  const netEnd=netStart+change;
+
+  document.getElementById('prev-chapter').textContent=chName;
+  document.getElementById('prev-period').textContent=period;
+  document.getElementById('prev-body').innerHTML=`
+<table style="width:100%;border-collapse:collapse;font-family:'Times New Roman',Times,serif;line-height:1.7">
+  <tr><td colspan="2" style="font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;padding-bottom:4px;border-bottom:2px solid #111">Revenue:</td></tr>
+  ${buildRows(revItems)}
+  <tr><td style="font-size:13px;font-weight:700;padding-top:6px;border-top:2px solid #111">Total Revenue</td><td style="text-align:right;font-size:13px;font-weight:700;border-top:2px solid #111;white-space:nowrap">${fmt(totalRev)}</td></tr>
+  <tr><td colspan="2" style="height:22px"></td></tr>
+  <tr><td colspan="2" style="font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;padding-bottom:4px;border-bottom:2px solid #111">Expenses:</td></tr>
+  ${buildRows(expItems)}
+  <tr><td style="font-size:13px;font-weight:700;padding-top:6px;border-top:2px solid #111">Total Expenses</td><td style="text-align:right;font-size:13px;font-weight:700;border-top:2px solid #111;white-space:nowrap">${fmt(totalExp)}</td></tr>
+  <tr><td colspan="2" style="height:18px"></td></tr>
+  <tr style="border-top:3px double #111"><td style="font-size:12px;font-weight:700;padding-top:7px">Change in Net Assets</td><td style="text-align:right;font-size:12px;font-weight:700;padding-top:7px;white-space:nowrap">${fmtS(change)}</td></tr>
+  <tr><td style="font-size:12px;padding-top:2px">Net Assets, Beginning of Year</td><td style="text-align:right;font-size:12px;padding-top:2px;white-space:nowrap">${fmt(netStart)}</td></tr>
+  <tr style="border-top:2px solid #111;border-bottom:3px double #111"><td style="font-size:13px;font-weight:700;padding:4px 0">Net Assets, End of Year</td><td style="text-align:right;font-size:13px;font-weight:700;padding:4px 0;white-space:nowrap">${fmt(netEnd)}</td></tr>
+</table>`;
+
+  document.body.classList.add('stmt-printing');
+  document.getElementById('stmt-preview-overlay').style.display='block';
+  window.scrollTo(0,0);
+}
+
+function closeStmtPreview(){
+  document.getElementById('stmt-preview-overlay').style.display='none';
+  document.body.classList.remove('stmt-printing');
+}
+
+function printStatementPopup(){
+  const chName=document.getElementById('prev-chapter').textContent;
+  const period=document.getElementById('prev-period').textContent;
+  const bodyHtml=document.getElementById('prev-body').innerHTML;
+  const w=window.open('','_blank','width=800,height=900');
+  w.document.write(`<!DOCTYPE html><html><head><title>${chName} — Statement of Activities</title><style>
+    *{box-sizing:border-box;margin:0;padding:0;}
+    body{font-family:'Times New Roman',Times,serif;color:#111;padding:48px 60px;max-width:700px;margin:0 auto;}
+    h1{font-size:18px;font-weight:700;text-align:center;margin-bottom:6px;}
+    .sub{font-size:14px;font-weight:600;text-align:center;margin-bottom:4px;}
+    .period{font-size:12px;color:#555;text-align:center;margin-bottom:32px;}
+    table{width:100%;border-collapse:collapse;line-height:1.75;}
+    @media print{
+      body{padding:32px 48px;}
+      @page{margin:0.6in;}
+    }
+  </style></head><body>
+    <h1>${chName}</h1>
+    <div class="sub">Statement of Activities</div>
+    <div class="period">${period}</div>
+    ${bodyHtml}
+  </body></html>`);
+  w.document.close();
+  w.focus();
+  setTimeout(()=>w.print(),350);
+}
 
 </script>
 </body>
