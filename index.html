@@ -3,14 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PBL Hub</title>
-<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<title>PBL Hub — De Anza</title>
 <link rel="stylesheet" href="css/styles.css">
 
 <!-- ── FIREBASE ──────────────────────────────────────────────────────────── -->
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-storage-compat.js"></script>
 <script src="js/firebase-config.js"></script>
 </head>
 <body>
@@ -166,11 +166,6 @@
       </div>
     </div>
   </div>
-  <div class="sb-drive">
-    <div class="drive-btn" id="drive-btn" onclick="toggleDrive()">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12l-10 10L2 12l3-3 7 7 7-7z"/><path d="M22 6l-10 10L2 6l3-3 7 7 7-7z"/></svg>Google Drive
-    </div>
-  </div>
 </div>
 
 <div class="sb-overlay" id="ebod-overlay" onclick="closeMobSidebar('sidebar','ebod-overlay')"></div>
@@ -185,7 +180,6 @@
     <div class="tb-right"><button class="btn btn-g btn-sm" onclick="switchToLanding()" style="font-size:10px">⟵ Switch Portal</button>
       <span id="save-indicator">Saved</span>
       <button onclick="resetAllData()" title="Reset all data to defaults" style="background:none;border:none;color:var(--t4);cursor:pointer;font-size:10px;font-family:'IBM Plex Sans',sans-serif;padding:3px 6px;border-radius:3px;" onmouseover="this.style.color='var(--t3)'" onmouseout="this.style.color='var(--t4)'">&#8635; Reset</button>
-      <button class="btn btn-g" onclick="toggleDrive()">Drive</button>
       <button class="btn btn-p" onclick="openModal('add-modal')">+ Add</button>
     </div>
   </div>
