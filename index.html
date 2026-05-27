@@ -6,8 +6,6 @@
 <title>PBL Hub — De Anza</title>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap');
-
-@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap');
 :root{
   --cr:#8B1A1A;--cr2:#A52020;--cr3:#6B1414;
   --gold:#B07818;--gold2:#C48A1A;
@@ -339,65 +337,96 @@ textarea{resize:vertical;min-height:120px;}
 .sb-overlay.open{display:block;}
 
 @media(max-width:768px){
+  /* Hamburger & sidebar slide-over */
   .mob-menu-btn{display:flex;}
   .sb{position:fixed;left:-240px;top:0;bottom:0;z-index:299;width:220px!important;min-width:220px!important;transition:left .22s ease;box-shadow:4px 0 20px rgba(0,0,0,.18);}
   .sb.mob-open{left:0;}
-  .app{flex-direction:row;}
+  /* Main area fills full width */
   .main{width:100%;}
+  /* Topbar */
   .topbar{padding:0 10px;height:48px;gap:8px;}
+  .topbar .btn{padding:4px 10px;font-size:10px;}
   .tb-sub{display:none;}
   .gs-wrap{max-width:160px;min-width:80px;}
   .tb-right{gap:4px;}
   #save-indicator{display:none;}
+  /* Nav touch targets */
+  .ni{padding:10px 8px;}
+  /* Content */
   .content{padding:14px;-webkit-overflow-scrolling:touch;}
   .sb-nav{-webkit-overflow-scrolling:touch;}
+  /* Stats grid: 2 columns */
   .sg{grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:14px;}
-  .g2,.g3{grid-template-columns:1fr;gap:10px;}
+  /* Dashboard grids collapse to 1 column; zero out card margin so only gap spacing applies */
+  .g2,.g3{grid-template-columns:1fr;gap:12px;}
+  .g2 .card,.g3 .card{margin-bottom:0;}
+  /* Tables: horizontal scroll within cards; min-width keeps columns readable */
   .card{overflow-x:auto;}
-  table{min-width:460px;}
+  .card table{min-width:460px;}
+  /* Modal: full-width, internal scroll for wide tables */
+  .modal{width:calc(100vw - 24px);max-width:calc(100vw - 24px);padding:18px;overflow-x:auto;}
+  /* Form rows */
   .fr{grid-template-columns:1fr;}
-  .modal{width:calc(100vw - 24px);max-width:calc(100vw - 24px);padding:18px;}
+  /* Detail panel full-width */
   .detail-panel{width:100%;left:0;}
+  /* Drive panel full-width below topbar */
   .dp{width:100%;min-width:unset;position:fixed;top:48px;right:0;bottom:0;z-index:200;}
+  /* Budget balance card */
   .pbl-balance-card{flex-direction:column;gap:8px;align-items:flex-start;}
+  /* Calendar */
   .cal-cell{min-height:60px;}
-  .tabs{overflow-x:auto;-webkit-overflow-scrolling:touch;flex-wrap:nowrap;}
+  /* Tabs: horizontal scroll without wrapping */
+  .tabs{overflow-x:auto;-webkit-overflow-scrolling:touch;flex-wrap:nowrap;padding-bottom:1px;}
   .tab{white-space:nowrap;flex-shrink:0;}
   .bud-acct-tabs{flex-wrap:wrap;}
+  /* Landing: scrollable on small phones, top-aligned */
+  #landing{overflow-y:auto;justify-content:flex-start;padding:28px 0 32px;}
   .land-cards{flex-direction:column;align-items:center;gap:14px;padding:0 16px;box-sizing:border-box;width:100%;}
   .land-card{width:100%;max-width:340px;}
-  .land-form{width:calc(100vw - 32px);max-width:540px;box-sizing:border-box;}
+  .land-form{width:calc(100vw - 32px);max-width:540px;box-sizing:border-box;margin-top:16px;}
+  /* Next event hero */
   .next-hero{flex-direction:column;gap:12px;padding:16px;}
 }
 
 @media(max-width:480px){
   html,body{font-size:12px;}
+  /* Stats: single column */
   .sg{grid-template-columns:1fr;}
+  /* Topbar */
   .topbar{padding:0 8px;height:46px;}
   .tb-title{font-size:13px;}
   .gs-wrap{display:none;}
+  /* Drive panel: align with 46px topbar */
+  .dp{top:46px;}
+  /* Content & cards */
   .content{padding:10px;}
   .card{padding:12px;margin-bottom:10px;}
   .sc{padding:12px;}
   .sv{font-size:22px;}
   .btn{padding:5px 10px;font-size:10px;}
   .modal{padding:14px;}
+  /* Landing */
   .land-header{margin-bottom:24px;}
   .land-phi{width:46px;height:46px;}
   .land-title{font-size:18px;}
   .land-card{padding:16px 14px;}
   .land-card-title{font-size:14px;}
+  /* Calendar */
   .cal-dow{font-size:8px;padding:4px 1px;letter-spacing:.2px;}
   .cal-cell{min-height:42px;padding:3px;}
   .cal-dn{font-size:9px;}
   .cal-badge{font-size:7px;padding:1px 3px;}
   .cal-month{font-size:14px;}
+  /* Profile */
   .prof-header{flex-direction:column;text-align:center;gap:10px;}
   .prof-av{margin:0 auto;}
+  /* Exec grid: 2 columns */
   .exec-grid{grid-template-columns:repeat(2,1fr);}
+  /* Next hero */
   .next-hero{padding:12px;}
   .nh-dy{font-size:24px;}
   .nh-name{font-size:14px;}
+  /* Detail panel */
   .dph{padding:12px 14px;}
   .dpb{padding:12px;}
 }
