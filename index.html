@@ -331,6 +331,76 @@ textarea{resize:vertical;min-height:120px;}
 .imp-tab{flex:1;padding:6px 10px;font-size:11px;font-weight:600;border-radius:5px;cursor:pointer;background:transparent;border:none;color:var(--t3);font-family:'IBM Plex Sans',sans-serif;transition:background .15s,color .15s;}
 .imp-tab.active{background:var(--bg);color:var(--t1);box-shadow:0 1px 3px rgba(0,0,0,.08);}
 .imp-tab:hover:not(.active){background:var(--s3);color:var(--t2);}
+
+/* ─── MOBILE RESPONSIVENESS ─────────────────────────────────── */
+.mob-menu-btn{display:none;background:none;border:none;cursor:pointer;padding:6px 8px;color:var(--t2);flex-shrink:0;align-items:center;justify-content:center;border-radius:4px;}
+.mob-menu-btn:hover{background:var(--s3);}
+.sb-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:298;}
+.sb-overlay.open{display:block;}
+
+@media(max-width:768px){
+  .mob-menu-btn{display:flex;}
+  .sb{position:fixed;left:-240px;top:0;bottom:0;z-index:299;width:220px!important;min-width:220px!important;transition:left .22s ease;box-shadow:4px 0 20px rgba(0,0,0,.18);}
+  .sb.mob-open{left:0;}
+  .app{flex-direction:row;}
+  .main{width:100%;}
+  .topbar{padding:0 10px;height:48px;gap:8px;}
+  .tb-sub{display:none;}
+  .gs-wrap{max-width:160px;min-width:80px;}
+  .tb-right{gap:4px;}
+  #save-indicator{display:none;}
+  .content{padding:14px;-webkit-overflow-scrolling:touch;}
+  .sb-nav{-webkit-overflow-scrolling:touch;}
+  .sg{grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:14px;}
+  .g2,.g3{grid-template-columns:1fr;gap:10px;}
+  .card{overflow-x:auto;}
+  table{min-width:460px;}
+  .fr{grid-template-columns:1fr;}
+  .modal{width:calc(100vw - 24px);max-width:calc(100vw - 24px);padding:18px;}
+  .detail-panel{width:100%;left:0;}
+  .dp{width:100%;min-width:unset;position:fixed;top:48px;right:0;bottom:0;z-index:200;}
+  .pbl-balance-card{flex-direction:column;gap:8px;align-items:flex-start;}
+  .cal-cell{min-height:60px;}
+  .tabs{overflow-x:auto;-webkit-overflow-scrolling:touch;flex-wrap:nowrap;}
+  .tab{white-space:nowrap;flex-shrink:0;}
+  .bud-acct-tabs{flex-wrap:wrap;}
+  .land-cards{flex-direction:column;align-items:center;gap:14px;padding:0 16px;box-sizing:border-box;width:100%;}
+  .land-card{width:100%;max-width:340px;}
+  .land-form{width:calc(100vw - 32px);max-width:540px;box-sizing:border-box;}
+  .next-hero{flex-direction:column;gap:12px;padding:16px;}
+}
+
+@media(max-width:480px){
+  html,body{font-size:12px;}
+  .sg{grid-template-columns:1fr;}
+  .topbar{padding:0 8px;height:46px;}
+  .tb-title{font-size:13px;}
+  .gs-wrap{display:none;}
+  .content{padding:10px;}
+  .card{padding:12px;margin-bottom:10px;}
+  .sc{padding:12px;}
+  .sv{font-size:22px;}
+  .btn{padding:5px 10px;font-size:10px;}
+  .modal{padding:14px;}
+  .land-header{margin-bottom:24px;}
+  .land-phi{width:46px;height:46px;}
+  .land-title{font-size:18px;}
+  .land-card{padding:16px 14px;}
+  .land-card-title{font-size:14px;}
+  .cal-dow{font-size:8px;padding:4px 1px;letter-spacing:.2px;}
+  .cal-cell{min-height:42px;padding:3px;}
+  .cal-dn{font-size:9px;}
+  .cal-badge{font-size:7px;padding:1px 3px;}
+  .cal-month{font-size:14px;}
+  .prof-header{flex-direction:column;text-align:center;gap:10px;}
+  .prof-av{margin:0 auto;}
+  .exec-grid{grid-template-columns:repeat(2,1fr);}
+  .next-hero{padding:12px;}
+  .nh-dy{font-size:24px;}
+  .nh-name{font-size:14px;}
+  .dph{padding:12px 14px;}
+  .dpb{padding:12px;}
+}
 </style>
 
 <!-- ── FIREBASE ──────────────────────────────────────────────────────────── -->
@@ -509,8 +579,10 @@ textarea{resize:vertical;min-height:120px;}
   </div>
 </div>
 
+<div class="sb-overlay" id="ebod-overlay" onclick="closeMobSidebar('sidebar','ebod-overlay')"></div>
 <div class="main">
   <div class="topbar">
+    <button class="mob-menu-btn" onclick="toggleMobSidebar('sidebar','ebod-overlay')" aria-label="Menu"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 4h14M2 9h14M2 14h14"/></svg></button>
     <div><span class="tb-title" id="page-title">Dashboard</span><span class="tb-sub" id="page-sub">Spring 2026 &middot; De Anza PBL</span></div>
     <div class="gs-wrap">
       <input class="gs-input" id="gs-input" type="text" placeholder="Search members, tasks, sponsors..." autocomplete="off" oninput="gsSearch(this.value)" onkeydown="if(event.key==='Escape'){this.value='';gsClose();}">
@@ -1891,9 +1963,11 @@ textarea{resize:vertical;min-height:120px;}
   </div>
 </div>
 
+<div class="sb-overlay" id="im-overlay" onclick="closeMobSidebar('m-sidebar','im-overlay')"></div>
 <!-- MAIN -->
 <div class="main">
   <div class="topbar">
+    <button class="mob-menu-btn" onclick="toggleMobSidebar('m-sidebar','im-overlay')" aria-label="Menu"><svg width="18" height="18" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 4h14M2 9h14M2 14h14"/></svg></button>
     <div><span class="tb-title" id="m-page-title">Home</span><span class="tb-sub" id="m-page-sub">Spring 2026 &middot; De Anza PBL</span></div>
     <div class="tb-right"><button class="btn btn-g btn-sm" onclick="switchToLanding()" style="font-size:10px">⟵ Switch Portal</button>
       <span id="tb-member-name" style="font-size:11px;color:var(--t3)"></span>
@@ -7701,6 +7775,21 @@ function submitDelegation(){
   document.getElementById('del-task').value='';document.getElementById('del-due').value='';
 }
 function deleteDelegation(i){_delegations.splice(i,1);saveRoleData('delegation',_delegations);renderDelegation();}
+
+function toggleMobSidebar(sbId,ovId){
+  document.getElementById(sbId).classList.toggle('mob-open');
+  document.getElementById(ovId).classList.toggle('open');
+}
+function closeMobSidebar(sbId,ovId){
+  document.getElementById(sbId).classList.remove('mob-open');
+  document.getElementById(ovId).classList.remove('open');
+}
+document.addEventListener('click',function(e){
+  if(e.target.closest('.ni')&&window.innerWidth<=768){
+    document.querySelectorAll('.sb').forEach(function(sb){sb.classList.remove('mob-open');});
+    document.querySelectorAll('.sb-overlay').forEach(function(o){o.classList.remove('open');});
+  }
+});
 
 </script>
 </body>
