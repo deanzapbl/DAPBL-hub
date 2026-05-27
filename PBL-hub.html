@@ -425,6 +425,9 @@ textarea{resize:vertical;min-height:120px;}
     </div>
     <div class="nav-group">
       <div class="ngl">Exec Portals</div>
+      <div class="ni" onclick="showPage('portal-president')">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="8,2 10,6 14,6.5 11,9.5 11.8,14 8,12 4.2,14 5,9.5 2,6.5 6,6"/></svg>President's Hub
+      </div>
       <div class="ni" onclick="showPage('portal-finance')">
         <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="4" width="12" height="9" rx="1"/><path d="M2 7h12M6 4V3M10 4V3"/></svg>Finance
       </div>
@@ -445,9 +448,6 @@ textarea{resize:vertical;min-height:120px;}
       <div class="ngl">Members</div>
       <div class="ni" onclick="showPage('attendance')">
         <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="5" r="3"/><path d="M1 14c0-3 2-5 5-5"/><path d="M11 10v4M9 12h4"/></svg>Attendance
-      </div>
-      <div class="ni" onclick="showPage('exec')">
-        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><polygon points="8,2 10,6 14,6.5 11,9.5 11.8,14 8,12 4.2,14 5,9.5 2,6.5 6,6"/></svg>Exec Team
       </div>
       <div class="ni" onclick="showPage('mentorship')">
         <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="5" cy="5" r="2.5"/><circle cx="11" cy="5" r="2.5"/><path d="M1 14c0-2.5 1.8-4 4-4"/><path d="M15 14c0-2.5-1.8-4-4-4"/><path d="M7 11h2"/></svg>Mentor / Mentee
@@ -605,13 +605,6 @@ textarea{resize:vertical;min-height:120px;}
       </div>
 
       <!-- EXEC -->
-      <div class="page" id="page-exec">
-        <div class="card">
-          <div class="ch"><div class="ct">Executive Board</div><div style="display:flex;gap:6px"><button class="btn-csv" onclick="openImportDataModal('exec')">Import CSV</button><button class="btn btn-p btn-sm" onclick="openModal('exec-modal')">+ Add Exec</button></div></div>
-          <div id="exec-list"></div>
-        </div>
-      </div>
-
       <!-- MENTORSHIP -->
       <div class="page" id="page-mentorship">
         <div class="sg">
@@ -933,6 +926,9 @@ textarea{resize:vertical;min-height:120px;}
           <div class="tab" onclick="showTab('portal-finance','reimbursements')">Reimbursements</div>
           <div class="tab" onclick="showTab('portal-finance','merch');renderMerch()">Merch Sales</div>
           <div class="tab" onclick="showTab('portal-finance','budget');initFinBudget()">Budget</div>
+          <div class="tab" onclick="showTab('portal-finance','roi');renderROITable()">ROI Analysis</div>
+          <div class="tab" onclick="showTab('portal-finance','iccforms');renderICCForms()">ICC Forms</div>
+          <div class="tab" onclick="showTab('portal-finance','finreports');renderFinReports()">Reports</div>
         </div>
         <div class="sub active" id="portal-finance-overview">
           <div class="sg" id="portal-finance-stats"></div>
@@ -1140,6 +1136,42 @@ textarea{resize:vertical;min-height:120px;}
           </div>
         </div>
 
+        <!-- ROI ANALYSIS TAB -->
+        <div class="sub" id="portal-finance-roi">
+          <div class="card" style="margin-bottom:14px">
+            <div class="ch"><div class="ct">Event ROI Calculator</div><button class="btn btn-p btn-sm" onclick="addROIEntry()">+ Add Event</button></div>
+            <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:12px 16px;background:var(--s2);border-radius:8px;margin:0 16px 14px">
+              <div><div style="font-size:10px;color:var(--t3);margin-bottom:4px">Event Name</div><input id="roi-name" type="text" placeholder="e.g. DAIS 2026" style="width:100%;box-sizing:border-box;font-size:11px;padding:5px 8px;background:var(--bg);border:1px solid var(--bd);border-radius:4px;color:var(--t1)"></div>
+              <div><div style="font-size:10px;color:var(--t3);margin-bottom:4px">Total Revenue ($)</div><input id="roi-rev" type="number" min="0" step="0.01" placeholder="0.00" oninput="calcROIPreview()" style="width:100%;box-sizing:border-box;font-size:11px;padding:5px 8px;background:var(--bg);border:1px solid var(--bd);border-radius:4px;color:var(--t1)"></div>
+              <div><div style="font-size:10px;color:var(--t3);margin-bottom:4px">Total Expenses ($)</div><input id="roi-exp" type="number" min="0" step="0.01" placeholder="0.00" oninput="calcROIPreview()" style="width:100%;box-sizing:border-box;font-size:11px;padding:5px 8px;background:var(--bg);border:1px solid var(--bd);border-radius:4px;color:var(--t1)"></div>
+              <div><div style="font-size:10px;color:var(--t3);margin-bottom:4px">Attendees</div><input id="roi-att" type="number" min="0" placeholder="0" oninput="calcROIPreview()" style="width:100%;box-sizing:border-box;font-size:11px;padding:5px 8px;background:var(--bg);border:1px solid var(--bd);border-radius:4px;color:var(--t1)"></div>
+            </div>
+            <div id="roi-preview" style="display:none;display:flex;gap:10px;padding:0 16px 14px;flex-wrap:wrap"></div>
+          </div>
+          <div class="card">
+            <div class="ch"><div class="ct">Event ROI Log</div></div>
+            <table><thead><tr><th>Event</th><th>Revenue</th><th>Expenses</th><th>Net</th><th>ROI %</th><th>Cost/Attendee</th><th>Rating</th><th></th></tr></thead>
+            <tbody id="roi-table"></tbody></table>
+          </div>
+        </div>
+
+        <!-- ICC FORMS TAB -->
+        <div class="sub" id="portal-finance-iccforms">
+          <div class="card">
+            <div class="ch"><div class="ct">ICC Financial Forms Log</div><button class="btn btn-p btn-sm" onclick="addICCForm()">+ Log Form</button></div>
+            <table><thead><tr><th>Form Type</th><th>Amount</th><th>Event / Purpose</th><th>Submitted</th><th>Status</th><th>Notes</th><th></th></tr></thead>
+            <tbody id="icc-forms-table"></tbody></table>
+          </div>
+        </div>
+
+        <!-- FINANCIAL REPORTS TAB -->
+        <div class="sub" id="portal-finance-finreports">
+          <div class="card" style="margin-bottom:14px">
+            <div class="ch"><div class="ct">Quarterly Reports</div><button class="btn btn-p btn-sm" onclick="addFinReport()">+ New Report</button></div>
+            <div id="fin-reports-list" style="padding:0 16px 16px"></div>
+          </div>
+        </div>
+
       </div>
 
       <!-- OPERATIONS PORTAL -->
@@ -1148,6 +1180,9 @@ textarea{resize:vertical;min-height:120px;}
           <div class="tab active" onclick="showTab('portal-operations','overview')">Overview</div>
           <div class="tab" onclick="showTab('portal-operations','venues')">Venue Tracker</div>
           <div class="tab" onclick="showTab('portal-operations','volunteers')">Volunteer Slots</div>
+          <div class="tab" onclick="showTab('portal-operations','conflogistics');renderConfLogistics()">Conference Logistics</div>
+          <div class="tab" onclick="showTab('portal-operations','kpis');renderKPIs()">KPI Dashboard</div>
+          <div class="tab" onclick="showTab('portal-operations','iccexcursions');renderICCExcursions()">ICC Excursions</div>
         </div>
         <div class="sub active" id="portal-operations-overview">
           <div class="sg" id="portal-operations-stats"></div>
@@ -1172,6 +1207,35 @@ textarea{resize:vertical;min-height:120px;}
             <tbody id="volslots-table"></tbody></table>
           </div>
         </div>
+
+        <!-- CONFERENCE LOGISTICS TAB -->
+        <div class="sub" id="portal-operations-conflogistics">
+          <div class="card" style="margin-bottom:14px">
+            <div class="ch"><div class="ct">Conference Logistics Tracker</div><button class="btn btn-p btn-sm" onclick="addConfLogistic()">+ Add Conference</button></div>
+            <table><thead><tr><th>Conference</th><th>Date</th><th>Hotel / Block</th><th>Catering</th><th>Transport</th><th>Reg Status</th><th>Members</th><th></th></tr></thead>
+            <tbody id="conf-logistics-table"></tbody></table>
+          </div>
+        </div>
+
+        <!-- KPI DASHBOARD TAB -->
+        <div class="sub" id="portal-operations-kpis">
+          <div class="ch" style="margin-bottom:12px"><div class="ct">Key Performance Indicators</div><button class="btn btn-p btn-sm" onclick="addKPIEntry()">+ Update KPIs</button></div>
+          <div class="sg" id="kpi-stats-row"></div>
+          <div class="card" style="margin-top:14px">
+            <div class="ch"><div class="ct">KPI History Log</div></div>
+            <table><thead><tr><th>Period</th><th>Budget Efficiency</th><th>Attendance Rate</th><th>Vendor Score</th><th>Events Run</th><th>Notes</th><th></th></tr></thead>
+            <tbody id="kpi-table"></tbody></table>
+          </div>
+        </div>
+
+        <!-- ICC EXCURSIONS TAB -->
+        <div class="sub" id="portal-operations-iccexcursions">
+          <div class="card">
+            <div class="ch"><div class="ct">ICC Excursion Documentation</div><button class="btn btn-p btn-sm" onclick="addICCExcursion()">+ Add Excursion</button></div>
+            <table><thead><tr><th>Trip / Event</th><th>Date</th><th>Destination</th><th>Members</th><th>ICC Form</th><th>Approval</th><th>Notes</th><th></th></tr></thead>
+            <tbody id="icc-excursions-table"></tbody></table>
+          </div>
+        </div>
       </div>
 
       <!-- STRATEGY PORTAL -->
@@ -1180,6 +1244,9 @@ textarea{resize:vertical;min-height:120px;}
           <div class="tab active" onclick="showTab('portal-strategy','overview')">Overview</div>
           <div class="tab" onclick="showTab('portal-strategy','compprep')">Competition Prep</div>
           <div class="tab" onclick="showTab('portal-strategy','curriculum')">Curriculum Planner</div>
+          <div class="tab" onclick="showTab('portal-strategy','prg');renderPRG()">Polaris (PRG)</div>
+          <div class="tab" onclick="showTab('portal-strategy','onboarding');renderOnboarding()">Onboarding</div>
+          <div class="tab" onclick="showTab('portal-strategy','devgoals');renderDevGoals()">Dev Goals</div>
         </div>
         <div class="sub active" id="portal-strategy-overview">
           <div class="sg" id="portal-strategy-stats"></div>
@@ -1204,6 +1271,44 @@ textarea{resize:vertical;min-height:120px;}
             <tbody id="curriculum-table"></tbody></table>
           </div>
         </div>
+
+        <!-- POLARIS PRG TAB -->
+        <div class="sub" id="portal-strategy-prg">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px">
+            <div class="card">
+              <div class="ch"><div class="ct">PRG Member Roster</div><button class="btn btn-p btn-sm" onclick="addPRGMember()">+ Add Member</button></div>
+              <table><thead><tr><th>Name</th><th>Focus Area</th><th>Status</th><th>Joined</th><th></th></tr></thead>
+              <tbody id="prg-roster-table"></tbody></table>
+            </div>
+            <div class="card">
+              <div class="ch"><div class="ct">Active Initiatives</div><button class="btn btn-p btn-sm" onclick="addPRGInitiative()">+ Add Initiative</button></div>
+              <table><thead><tr><th>Initiative</th><th>Lead</th><th>Target</th><th>Status</th><th></th></tr></thead>
+              <tbody id="prg-initiatives-table"></tbody></table>
+            </div>
+          </div>
+        </div>
+
+        <!-- ONBOARDING PIPELINE TAB -->
+        <div class="sub" id="portal-strategy-onboarding">
+          <div class="card" style="margin-bottom:14px">
+            <div class="ch"><div class="ct">PRG Onboarding Pipeline</div><button class="btn btn-p btn-sm" onclick="addOnboardee()">+ Add Prospect</button></div>
+            <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;padding:14px 16px" id="onboarding-kanban">
+              <div><div style="font-size:10px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px;padding-bottom:6px;border-bottom:2px solid var(--bd)">Interested</div><div id="ob-col-interested" style="min-height:60px"></div></div>
+              <div><div style="font-size:10px;font-weight:700;color:var(--gold);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px;padding-bottom:6px;border-bottom:2px solid var(--gold)">Invited</div><div id="ob-col-invited" style="min-height:60px"></div></div>
+              <div><div style="font-size:10px;font-weight:700;color:var(--blu);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px;padding-bottom:6px;border-bottom:2px solid var(--blu)">Onboarded</div><div id="ob-col-onboarded" style="min-height:60px"></div></div>
+              <div><div style="font-size:10px;font-weight:700;color:var(--grn);text-transform:uppercase;letter-spacing:.05em;margin-bottom:8px;padding-bottom:6px;border-bottom:2px solid var(--grn)">Active</div><div id="ob-col-active" style="min-height:60px"></div></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- DEV GOALS TAB -->
+        <div class="sub" id="portal-strategy-devgoals">
+          <div class="card">
+            <div class="ch"><div class="ct">Member Development Goals</div><button class="btn btn-p btn-sm" onclick="addDevGoal()">+ Add Goal</button></div>
+            <table><thead><tr><th>Member</th><th>Goal</th><th>Category</th><th>Target Date</th><th>Progress</th><th>Status</th><th></th></tr></thead>
+            <tbody id="dev-goals-table"></tbody></table>
+          </div>
+        </div>
       </div>
 
       <!-- MARKETING PORTAL -->
@@ -1212,6 +1317,9 @@ textarea{resize:vertical;min-height:120px;}
           <div class="tab active" onclick="showTab('portal-marketing','overview')">Overview</div>
           <div class="tab" onclick="showTab('portal-marketing','brandkit')">Brand Kit</div>
           <div class="tab" onclick="showTab('portal-marketing','content')">Content Calendar</div>
+          <div class="tab" onclick="showTab('portal-marketing','campaigns');renderCampaigns()">Campaigns</div>
+          <div class="tab" onclick="showTab('portal-marketing','analytics');renderAnalytics()">Analytics</div>
+          <div class="tab" onclick="showTab('portal-marketing','outreach');renderOutreach()">Outreach Log</div>
         </div>
         <div class="sub active" id="portal-marketing-overview">
           <div class="sg" id="portal-marketing-stats"></div>
@@ -1333,6 +1441,35 @@ textarea{resize:vertical;min-height:120px;}
             <tbody id="content-table"></tbody></table>
           </div>
         </div>
+
+        <!-- CAMPAIGNS TAB -->
+        <div class="sub" id="portal-marketing-campaigns">
+          <div class="card">
+            <div class="ch"><div class="ct">Marketing Campaigns</div><button class="btn btn-p btn-sm" onclick="addCampaign()">+ New Campaign</button></div>
+            <table><thead><tr><th>Campaign</th><th>Platform(s)</th><th>Goal</th><th>Start</th><th>End</th><th>Reach</th><th>Engagement</th><th>Status</th><th></th></tr></thead>
+            <tbody id="campaigns-table"></tbody></table>
+          </div>
+        </div>
+
+        <!-- ANALYTICS TAB -->
+        <div class="sub" id="portal-marketing-analytics">
+          <div class="ch" style="margin-bottom:12px"><div class="ct">Social Media Analytics</div><button class="btn btn-p btn-sm" onclick="addAnalyticsEntry()">+ Update Metrics</button></div>
+          <div class="sg" id="analytics-stats-row"></div>
+          <div class="card" style="margin-top:14px">
+            <div class="ch"><div class="ct">Platform Metrics Log</div></div>
+            <table><thead><tr><th>Platform</th><th>Followers</th><th>Eng. Rate</th><th>Reach (30d)</th><th>Top Post</th><th>Logged</th><th></th></tr></thead>
+            <tbody id="analytics-table"></tbody></table>
+          </div>
+        </div>
+
+        <!-- OUTREACH LOG TAB -->
+        <div class="sub" id="portal-marketing-outreach">
+          <div class="card">
+            <div class="ch"><div class="ct">In-Person Outreach Log</div><button class="btn btn-p btn-sm" onclick="addOutreach()">+ Log Initiative</button></div>
+            <table><thead><tr><th>Initiative</th><th>Date</th><th>Location</th><th>Lead</th><th>Contacts Made</th><th>Follow-up</th><th>Notes</th><th></th></tr></thead>
+            <tbody id="outreach-table"></tbody></table>
+          </div>
+        </div>
       </div>
 
       <!-- CLUB AFFAIRS PORTAL -->
@@ -1341,6 +1478,10 @@ textarea{resize:vertical;min-height:120px;}
           <div class="tab active" onclick="showTab('portal-clubaffairs','overview')">Overview</div>
           <div class="tab" onclick="showTab('portal-clubaffairs','mentors')">Mentor / Mentee</div>
           <div class="tab" onclick="showTab('portal-clubaffairs','checkins')">Member Check-ins</div>
+          <div class="tab" onclick="showTab('portal-clubaffairs','partners');renderPartners()">Partnerships</div>
+          <div class="tab" onclick="showTab('portal-clubaffairs','compliance');renderCompliance()">Compliance / HR</div>
+          <div class="tab" onclick="showTab('portal-clubaffairs','roombookings');renderRoomBookings()">Room Bookings</div>
+          <div class="tab" onclick="showTab('portal-clubaffairs','iccbluepanda');renderICCBluePanda()">ICC & Blue Panda</div>
         </div>
         <div class="sub active" id="portal-clubaffairs-overview">
           <div class="sg" id="portal-clubaffairs-stats"></div>
@@ -1364,6 +1505,101 @@ textarea{resize:vertical;min-height:120px;}
             <div class="ch"><div class="ct">Member Check-ins &amp; Notes</div><button class="btn btn-p btn-sm" onclick="addMemberCheckIn()">+ Flag Member</button></div>
             <table><thead><tr><th>Member</th><th>Type</th><th>Note</th><th>Date</th><th>Follow-up</th><th>Status</th><th></th></tr></thead>
             <tbody id="checkins-table"></tbody></table>
+          </div>
+        </div>
+
+        <!-- PARTNERSHIPS TAB -->
+        <div class="sub" id="portal-clubaffairs-partners">
+          <div class="card">
+            <div class="ch"><div class="ct">External Partnerships &amp; Alumni</div><button class="btn btn-p btn-sm" onclick="addPartner()">+ Add Partner</button></div>
+            <table><thead><tr><th>Organization / Person</th><th>Type</th><th>Contact</th><th>Relationship Since</th><th>Last Touch</th><th>Notes</th><th></th></tr></thead>
+            <tbody id="partners-table"></tbody></table>
+          </div>
+        </div>
+
+        <!-- COMPLIANCE / HR TAB -->
+        <div class="sub" id="portal-clubaffairs-compliance">
+          <div class="card">
+            <div class="ch"><div class="ct">Compliance &amp; HR Log</div><button class="btn btn-p btn-sm" onclick="addComplianceTicket()">+ Log Issue</button></div>
+            <table><thead><tr><th>Type</th><th>Member(s)</th><th>Description</th><th>Logged</th><th>Severity</th><th>Status</th><th>Resolution</th><th></th></tr></thead>
+            <tbody id="compliance-table"></tbody></table>
+          </div>
+        </div>
+
+        <!-- ROOM BOOKINGS TAB -->
+        <div class="sub" id="portal-clubaffairs-roombookings">
+          <div class="card">
+            <div class="ch"><div class="ct">Room Booking Requests</div><button class="btn btn-p btn-sm" onclick="addRoomBooking()">+ Request Room</button></div>
+            <table><thead><tr><th>Room / Location</th><th>Date</th><th>Time</th><th>Purpose</th><th>Requested By</th><th>Status</th><th></th></tr></thead>
+            <tbody id="room-bookings-table"></tbody></table>
+          </div>
+        </div>
+
+        <!-- ICC & BLUE PANDA TAB -->
+        <div class="sub" id="portal-clubaffairs-iccbluepanda">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+            <div class="card">
+              <div class="ch"><div class="ct">ICC Meeting Minutes</div><button class="btn btn-p btn-sm" onclick="addICCMinutes()">+ Add Minutes</button></div>
+              <div id="icc-minutes-list" style="padding:0 16px 14px"></div>
+            </div>
+            <div class="card">
+              <div class="ch"><div class="ct">Blue Panda Competition Registrations</div><button class="btn btn-p btn-sm" onclick="addBluePandaReg()">+ Add Registration</button></div>
+              <table><thead><tr><th>Member</th><th>Event</th><th>Conference</th><th>Registered</th><th>Status</th><th></th></tr></thead>
+              <tbody id="blue-panda-table"></tbody></table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PRESIDENT'S HUB -->
+      <div class="page" id="page-portal-president">
+        <div class="tabs">
+          <div class="tab active" onclick="showTab('portal-president','overview')">Overview</div>
+          <div class="tab" onclick="showTab('portal-president','conferences');renderConfDues()">Conference Tracker</div>
+          <div class="tab" onclick="showTab('portal-president','agendas');renderPresAgendas()">Meeting Agendas</div>
+          <div class="tab" onclick="showTab('portal-president','delegation');renderDelegation()">Board Delegation</div>
+        </div>
+        <div class="sub active" id="portal-president-overview">
+          <div class="sg" id="portal-president-stats"></div>
+          <div class="card" style="margin-bottom:14px">
+            <div class="ch"><div class="ct">My Tasks</div><button class="btn btn-p btn-sm" onclick="openTaskModal('ebod')">+ Add Task</button></div>
+            <div id="portal-president-tasks"></div>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px" id="portal-president-links"></div>
+        </div>
+
+        <!-- CONFERENCE TRACKER TAB -->
+        <div class="sub" id="portal-president-conferences">
+          <div class="card" style="margin-bottom:14px">
+            <div class="ch"><div class="ct">Conference Registration &amp; Dues Tracker</div><button class="btn btn-p btn-sm" onclick="addConfEvent()">+ Add Conference</button></div>
+            <div id="conf-dues-list" style="padding:0 16px 16px"></div>
+          </div>
+        </div>
+
+        <!-- MEETING AGENDAS TAB -->
+        <div class="sub" id="portal-president-agendas">
+          <div class="card" style="margin-bottom:14px">
+            <div class="ch">
+              <div class="ct">Meeting Agenda Builder</div>
+              <div style="display:flex;gap:6px">
+                <select id="agenda-type-select" style="font-size:10px;padding:3px 8px;background:var(--s2);border:1px solid var(--bd);border-radius:4px;color:var(--t1)">
+                  <option value="EB">Executive Board</option>
+                  <option value="BOD">Board of Directors</option>
+                  <option value="Internal">Internal Member</option>
+                </select>
+                <button class="btn btn-p btn-sm" onclick="newPresAgenda()">+ New Agenda</button>
+              </div>
+            </div>
+            <div id="pres-agendas-list" style="padding:0 16px 16px"></div>
+          </div>
+        </div>
+
+        <!-- BOARD DELEGATION TAB -->
+        <div class="sub" id="portal-president-delegation">
+          <div class="card">
+            <div class="ch"><div class="ct">Cross-Functional Deliverables</div><button class="btn btn-p btn-sm" onclick="addDelegation()">+ Assign Deliverable</button></div>
+            <table><thead><tr><th>Deliverable</th><th>Assigned To</th><th>Portal</th><th>Due Date</th><th>Priority</th><th>Status</th><th></th></tr></thead>
+            <tbody id="delegation-table"></tbody></table>
           </div>
         </div>
       </div>
@@ -1499,13 +1735,6 @@ textarea{resize:vertical;min-height:120px;}
     <div class="fr"><div class="fg"><div class="fl">First Name</div><input id="m-first" type="text"></div><div class="fg"><div class="fl">Last Name</div><input id="m-last" type="text"></div></div>
     <div class="fr"><div class="fg"><div class="fl">Role</div><select id="m-role"><option>Member</option><option>Exec</option></select></div><div class="fg"><div class="fl">Email</div><input id="m-email" type="text"></div></div>
     <div class="mf"><button class="btn btn-g" onclick="closeModals()">Cancel</button><button class="btn btn-p" onclick="addMember()">Add Member</button></div>
-  </div>
-</div>
-<div class="overlay" id="exec-modal">
-  <div class="modal"><div class="mt">Add Exec Member</div>
-    <div class="fr"><div class="fg"><div class="fl">Name</div><input id="e-name" type="text"></div><div class="fg"><div class="fl">Position</div><select id="e-pos" onchange="document.getElementById('e-cw').style.display=this.value==='Custom'?'block':'none'"><option>President</option><option>VP Events</option><option>VP Education</option><option>VP Operations</option><option>Secretary</option><option>Treasurer</option><option>Director of Marketing</option><option>Director of Design</option><option>Custom</option></select></div></div>
-    <div class="fg" id="e-cw" style="display:none"><div class="fl">Custom Title</div><input id="e-custom" type="text"></div>
-    <div class="mf"><button class="btn btn-g" onclick="closeModals()">Cancel</button><button class="btn btn-p" onclick="addExec()">Add to Exec</button></div>
   </div>
 </div>
 <div class="overlay" id="task-modal">
@@ -1884,6 +2113,313 @@ textarea{resize:vertical;min-height:120px;}
     <div style="text-align:center;font-size:10px;color:var(--t4);margin-top:14px">Your progress is saved to your account across all devices.</div>
   </div>
 </div>
+</div>
+
+<!-- ROLE MODALS: FINANCE -->
+<div class="overlay" id="iccform-modal">
+  <div class="modal"><div class="mt">Log ICC Form</div>
+    <div class="fr">
+      <div class="fg"><div class="fl">Form Type</div><select id="iccf-type"><option>Reimbursement</option><option>Deposit</option><option>Invoice</option><option>Budget Request</option><option>Excursion Form</option></select></div>
+      <div class="fg"><div class="fl">Amount ($)</div><input id="iccf-amount" type="number" step="0.01" placeholder="0.00"></div>
+    </div>
+    <div class="fg"><div class="fl">Event / Purpose</div><input id="iccf-purpose" type="text" placeholder="e.g. Fall Conference catering"></div>
+    <div class="fr">
+      <div class="fg"><div class="fl">Status</div><select id="iccf-status"><option>Pending</option><option>Approved</option><option>Denied</option></select></div>
+    </div>
+    <div class="fg"><div class="fl">Notes</div><textarea id="iccf-notes" placeholder="Any additional details…"></textarea></div>
+    <div class="mf"><button class="btn btn-g" onclick="closeModals()">Cancel</button><button class="btn btn-p" onclick="submitICCForm()">Log Form</button></div>
+  </div>
+</div>
+
+<div class="overlay" id="finreport-modal">
+  <div class="modal"><div class="mt">New Financial Report</div>
+    <div class="fg"><div class="fl">Quarter / Period</div><input id="fr-quarter" type="text" placeholder="e.g. Q1 Fall 2026"></div>
+    <div class="fg"><div class="fl">Key Summary Points</div><textarea id="fr-summary" placeholder="Highlights, variances, decisions…" style="min-height:90px"></textarea></div>
+    <div class="mf"><button class="btn btn-g" onclick="closeModals()">Cancel</button><button class="btn btn-p" onclick="submitFinReport()">Save Report</button></div>
+  </div>
+</div>
+
+<!-- ROLE MODALS: OPERATIONS -->
+<div class="overlay" id="conflogistic-modal">
+  <div class="modal"><div class="mt">Add Conference Logistics</div>
+    <div class="fr">
+      <div class="fg"><div class="fl">Conference Name</div><input id="cl-name" type="text" placeholder="e.g. State Conference 2027"></div>
+      <div class="fg"><div class="fl">Date</div><input id="cl-date" type="date"></div>
+    </div>
+    <div class="fr">
+      <div class="fg"><div class="fl">Hotel / Block</div><input id="cl-hotel" type="text" placeholder="Hotel name & room block"></div>
+      <div class="fg"><div class="fl">Catering</div><input id="cl-catering" type="text" placeholder="Meals, dietary notes"></div>
+    </div>
+    <div class="fr">
+      <div class="fg"><div class="fl">Transport</div><input id="cl-transport" type="text" placeholder="Bus, carpool, etc."></div>
+      <div class="fg"><div class="fl">Reg. Status</div><select id="cl-regstatus"><option>Not Started</option><option>In Progress</option><option>Confirmed</option></select></div>
+    </div>
+    <div class="fg"><div class="fl">Attending Members</div><input id="cl-members" type="text" placeholder="Count or names"></div>
+    <div class="mf"><button class="btn btn-g" onclick="closeModals()">Cancel</button><button class="btn btn-p" onclick="submitConfLogistic()">Add</button></div>
+  </div>
+</div>
+
+<div class="overlay" id="kpi-modal">
+  <div class="modal"><div class="mt">Log KPI Entry</div>
+    <div class="fg"><div class="fl">Period</div><input id="kpi-period" type="text" placeholder="e.g. Fall 2026"></div>
+    <div class="fr">
+      <div class="fg"><div class="fl">Budget Efficiency (%)</div><input id="kpi-budeff" type="number" step="0.1" placeholder="87"></div>
+      <div class="fg"><div class="fl">Attendance Rate (%)</div><input id="kpi-attrate" type="number" step="0.1" placeholder="74"></div>
+    </div>
+    <div class="fr">
+      <div class="fg"><div class="fl">Vendor Score (0–10)</div><input id="kpi-vendor" type="number" step="0.1" min="0" max="10" placeholder="8.5"></div>
+      <div class="fg"><div class="fl">Events Run</div><input id="kpi-events" type="number" placeholder="6"></div>
+    </div>
+    <div class="fg"><div class="fl">Notes</div><textarea id="kpi-notes" placeholder="Context, highlights…"></textarea></div>
+    <div class="mf"><button class="btn btn-g" onclick="closeModals()">Cancel</button><button class="btn btn-p" onclick="submitKPI()">Log KPI</button></div>
+  </div>
+</div>
+
+<div class="overlay" id="iccexcursion-modal">
+  <div class="modal"><div class="mt">Log ICC Excursion</div>
+    <div class="fr">
+      <div class="fg"><div class="fl">Trip / Event Name</div><input id="iccex-trip" type="text" placeholder="e.g. Silicon Valley Tour"></div>
+      <div class="fg"><div class="fl">Date</div><input id="iccex-date" type="date"></div>
+    </div>
+    <div class="fr">
+      <div class="fg"><div class="fl">Destination</div><input id="iccex-dest" type="text" placeholder="City or venue"></div>
+      <div class="fg"><div class="fl">Members Attending</div><input id="iccex-mems" type="text" placeholder="Count or names"></div>
+    </div>
+    <div class="fr">
+      <div class="fg"><div class="fl">ICC Form Status</div><select id="iccex-formstatus"><option>Pending</option><option>Submitted</option></select></div>
+      <div class="fg"><div class="fl">Approval</div><select id="iccex-approval"><option>Pending</option><option>Approved</option><option>Denied</option></select></div>
+    </div>
+    <div class="fg"><div class="fl">Notes</div><textarea id="iccex-notes" placeholder="Details, contacts, links…"></textarea></div>
+    <div class="mf"><button class="btn btn-g" onclick="closeModals()">Cancel</button><button class="btn btn-p" onclick="submitICCExcursion()">Log Excursion</button></div>
+  </div>
+</div>
+
+<!-- ROLE MODALS: STRATEGY -->
+<div class="overlay" id="prgmember-modal">
+  <div class="modal"><div class="mt">Add PRG Member</div>
+    <div class="fr">
+      <div class="fg"><div class="fl">Member Name</div><input id="prg-mname" type="text" placeholder="Full name"></div>
+      <div class="fg"><div class="fl">Status</div><select id="prg-mstatus"><option>Active</option><option>Onboarding</option><option>Inactive</option></select></div>
+    </div>
+    <div class="fg"><div class="fl">Focus Area</div><input id="prg-mfocus" type="text" placeholder="e.g. Equity Research, Fintech, Marketing"></div>
+    <div class="fg"><div class="fl">Term Joined</div><input id="prg-mjoined" type="text" placeholder="e.g. Fall 2026"></div>
+    <div class="mf"><button class="btn btn-g" onclick="closeModals()">Cancel</button><button class="btn btn-p" onclick="submitPRGMember()">Add Member</button></div>
+  </div>
+</div>
+
+<div class="overlay" id="prginitiative-modal">
+  <div class="modal"><div class="mt">Add PRG Initiative</div>
+    <div class="fg"><div class="fl">Initiative Name</div><input id="prgi-name" type="text" placeholder="e.g. Market Research Report"></div>
+    <div class="fr">
+      <div class="fg"><div class="fl">Lead</div><input id="prgi-lead" type="text" placeholder="Member name"></div>
+      <div class="fg"><div class="fl">Target Date</div><input id="prgi-target" type="date"></div>
+    </div>
+    <div class="fg"><div class="fl">Status</div><select id="prgi-status"><option>Active</option><option>Pending</option><option>Completed</option></select></div>
+    <div class="mf"><button class="btn btn-g" onclick="closeModals()">Cancel</button><button class="btn btn-p" onclick="submitPRGInitiative()">Add Initiative</button></div>
+  </div>
+</div>
+
+<div class="overlay" id="onboardee-modal">
+  <div class="modal"><div class="mt">Add Prospect / Onboardee</div>
+    <div class="fr">
+      <div class="fg"><div class="fl">Name</div><input id="ob-name" type="text" placeholder="Full name"></div>
+      <div class="fg"><div class="fl">Stage</div><select id="ob-stage"><option>Interested</option><option>Invited</option><option>Onboarded</option><option>Active</option></select></div>
+    </div>
+    <div class="fg"><div class="fl">Email</div><input id="ob-email" type="email" placeholder="member@email.com"></div>
+    <div class="fg"><div class="fl">Notes</div><textarea id="ob-notes" placeholder="Referral, interests, follow-up…"></textarea></div>
+    <div class="mf"><button class="btn btn-g" onclick="closeModals()">Cancel</button><button class="btn btn-p" onclick="submitOnboardee()">Add</button></div>
+  </div>
+</div>
+
+<div class="overlay" id="devgoal-modal">
+  <div class="modal"><div class="mt">Add Development Goal</div>
+    <div class="fr">
+      <div class="fg"><div class="fl">Member</div><input id="dg-member" type="text" placeholder="Member name"></div>
+      <div class="fg"><div class="fl">Category</div><select id="dg-cat"><option>Leadership</option><option>Competition</option><option>Networking</option><option>Technical</option></select></div>
+    </div>
+    <div class="fg"><div class="fl">Goal Description</div><input id="dg-goal" type="text" placeholder="Specific, measurable objective"></div>
+    <div class="fr">
+      <div class="fg"><div class="fl">Target Date</div><input id="dg-target" type="date"></div>
+      <div class="fg"><div class="fl">Progress (%)</div><input id="dg-progress" type="number" min="0" max="100" placeholder="0"></div>
+    </div>
+    <div class="fg"><div class="fl">Status</div><select id="dg-status"><option>Active</option><option>On Hold</option><option>Completed</option></select></div>
+    <div class="mf"><button class="btn btn-g" onclick="closeModals()">Cancel</button><button class="btn btn-p" onclick="submitDevGoal()">Add Goal</button></div>
+  </div>
+</div>
+
+<!-- ROLE MODALS: MARKETING -->
+<div class="overlay" id="campaign-modal">
+  <div class="modal"><div class="mt">New Campaign</div>
+    <div class="fr">
+      <div class="fg"><div class="fl">Campaign Name</div><input id="camp-name" type="text" placeholder="e.g. Spring Recruitment Push"></div>
+      <div class="fg"><div class="fl">Status</div><select id="camp-status"><option>Active</option><option>Draft</option><option>Completed</option></select></div>
+    </div>
+    <div class="fg"><div class="fl">Platform(s)</div><input id="camp-platforms" type="text" placeholder="Instagram, TikTok, LinkedIn…"></div>
+    <div class="fg"><div class="fl">Campaign Goal</div><input id="camp-goal" type="text" placeholder="e.g. Increase new member sign-ups by 30%"></div>
+    <div class="fr">
+      <div class="fg"><div class="fl">Start Date</div><input id="camp-start" type="date"></div>
+      <div class="fg"><div class="fl">End Date</div><input id="camp-end" type="date"></div>
+    </div>
+    <div class="fr">
+      <div class="fg"><div class="fl">Total Reach</div><input id="camp-reach" type="number" placeholder="Impressions"></div>
+      <div class="fg"><div class="fl">Engagement</div><input id="camp-eng" type="number" placeholder="Likes + Comments + Shares"></div>
+    </div>
+    <div class="mf"><button class="btn btn-g" onclick="closeModals()">Cancel</button><button class="btn btn-p" onclick="submitCampaign()">Add Campaign</button></div>
+  </div>
+</div>
+
+<div class="overlay" id="analytics-modal">
+  <div class="modal"><div class="mt">Log Analytics Snapshot</div>
+    <div class="fr">
+      <div class="fg"><div class="fl">Platform</div><select id="an-platform"><option>Instagram</option><option>TikTok</option><option>LinkedIn</option><option>YouTube</option><option>X (Twitter)</option><option>Other</option></select></div>
+      <div class="fg"><div class="fl">Followers</div><input id="an-followers" type="number" placeholder="0"></div>
+    </div>
+    <div class="fr">
+      <div class="fg"><div class="fl">Engagement Rate (%)</div><input id="an-engrate" type="number" step="0.1" placeholder="4.2"></div>
+      <div class="fg"><div class="fl">30-Day Reach</div><input id="an-reach" type="number" placeholder="0"></div>
+    </div>
+    <div class="fg"><div class="fl">Top Performing Post</div><input id="an-toppost" type="text" placeholder="Brief description or link"></div>
+    <div class="mf"><button class="btn btn-g" onclick="closeModals()">Cancel</button><button class="btn btn-p" onclick="submitAnalytics()">Log Snapshot</button></div>
+  </div>
+</div>
+
+<div class="overlay" id="outreach-modal">
+  <div class="modal"><div class="mt">Log Outreach Initiative</div>
+    <div class="fr">
+      <div class="fg"><div class="fl">Initiative Name</div><input id="or-name" type="text" placeholder="e.g. Campus Tabling — Library"></div>
+      <div class="fg"><div class="fl">Date</div><input id="or-date" type="date"></div>
+    </div>
+    <div class="fr">
+      <div class="fg"><div class="fl">Location / Area</div><input id="or-location" type="text" placeholder="Campus building or area"></div>
+      <div class="fg"><div class="fl">Lead Organizer</div><input id="or-lead" type="text" placeholder="Member name"></div>
+    </div>
+    <div class="fr">
+      <div class="fg"><div class="fl">Contacts Made</div><input id="or-contacts" type="number" placeholder="0"></div>
+      <div class="fg"><div class="fl">Follow-Up Action</div><input id="or-followup" type="text" placeholder="Email, text, invite…"></div>
+    </div>
+    <div class="fg"><div class="fl">Notes</div><textarea id="or-notes" placeholder="What worked, next steps…"></textarea></div>
+    <div class="mf"><button class="btn btn-g" onclick="closeModals()">Cancel</button><button class="btn btn-p" onclick="submitOutreach()">Log Outreach</button></div>
+  </div>
+</div>
+
+<!-- ROLE MODALS: CLUB AFFAIRS -->
+<div class="overlay" id="partner-modal">
+  <div class="modal"><div class="mt">Add External Partner</div>
+    <div class="fr">
+      <div class="fg"><div class="fl">Organization / Person</div><input id="part-name" type="text" placeholder="Name"></div>
+      <div class="fg"><div class="fl">Type</div><select id="part-type"><option>Alumni</option><option>Corporate</option><option>Club</option><option>Advisor</option><option>Other</option></select></div>
+    </div>
+    <div class="fg"><div class="fl">Contact Info</div><input id="part-contact" type="text" placeholder="Email or phone"></div>
+    <div class="fr">
+      <div class="fg"><div class="fl">Relationship Since</div><input id="part-since" type="text" placeholder="e.g. Fall 2025"></div>
+      <div class="fg"><div class="fl">Last Interaction</div><input id="part-lasttouch" type="date"></div>
+    </div>
+    <div class="fg"><div class="fl">Notes</div><textarea id="part-notes" placeholder="Partnership scope, status…"></textarea></div>
+    <div class="mf"><button class="btn btn-g" onclick="closeModals()">Cancel</button><button class="btn btn-p" onclick="submitPartner()">Add Partner</button></div>
+  </div>
+</div>
+
+<div class="overlay" id="compliance-modal">
+  <div class="modal"><div class="mt">Log Compliance / HR Ticket</div>
+    <div class="fr">
+      <div class="fg"><div class="fl">Issue Type</div><select id="comp-type"><option>Complaint</option><option>Code of Conduct</option><option>Attendance</option><option>Communication</option><option>Other</option></select></div>
+      <div class="fg"><div class="fl">Severity</div><select id="comp-severity"><option>Low</option><option>Medium</option><option>High</option></select></div>
+    </div>
+    <div class="fg"><div class="fl">Member(s) Involved</div><input id="comp-members" type="text" placeholder="Name(s)"></div>
+    <div class="fg"><div class="fl">Description</div><textarea id="comp-desc" placeholder="What happened…" style="min-height:70px"></textarea></div>
+    <div class="fr">
+      <div class="fg"><div class="fl">Status</div><select id="comp-status"><option>Open</option><option>Resolved</option></select></div>
+    </div>
+    <div class="fg"><div class="fl">Resolution Notes</div><textarea id="comp-resolution" placeholder="Steps taken, outcome…"></textarea></div>
+    <div class="mf"><button class="btn btn-g" onclick="closeModals()">Cancel</button><button class="btn btn-p" onclick="submitCompliance()">Log Ticket</button></div>
+  </div>
+</div>
+
+<div class="overlay" id="roombooking-modal">
+  <div class="modal"><div class="mt">Request Room Booking</div>
+    <div class="fr">
+      <div class="fg"><div class="fl">Room / Location</div><input id="rb-room" type="text" placeholder="e.g. S35, Forum, Library 204"></div>
+      <div class="fg"><div class="fl">Date</div><input id="rb-date" type="date"></div>
+    </div>
+    <div class="fr">
+      <div class="fg"><div class="fl">Time</div><input id="rb-time" type="text" placeholder="e.g. 2:00–4:00 PM"></div>
+      <div class="fg"><div class="fl">Status</div><select id="rb-status"><option>Pending</option><option>Confirmed</option><option>Denied</option></select></div>
+    </div>
+    <div class="fg"><div class="fl">Purpose</div><input id="rb-purpose" type="text" placeholder="Meeting, workshop, event…"></div>
+    <div class="fg"><div class="fl">Requested By</div><input id="rb-reqby" type="text" placeholder="Member name"></div>
+    <div class="mf"><button class="btn btn-g" onclick="closeModals()">Cancel</button><button class="btn btn-p" onclick="submitRoomBooking()">Submit Request</button></div>
+  </div>
+</div>
+
+<div class="overlay" id="iccminute-modal">
+  <div class="modal"><div class="mt">Log ICC Meeting Minutes</div>
+    <div class="fg"><div class="fl">Meeting Date</div><input id="iccm-date" type="date"></div>
+    <div class="fg"><div class="fl">Summary / Key Points</div><textarea id="iccm-summary" placeholder="Main topics, decisions made…" style="min-height:80px"></textarea></div>
+    <div class="fg"><div class="fl">Action Items</div><textarea id="iccm-actions" placeholder="Who does what by when…"></textarea></div>
+    <div class="mf"><button class="btn btn-g" onclick="closeModals()">Cancel</button><button class="btn btn-p" onclick="submitICCMinute()">Save Minutes</button></div>
+  </div>
+</div>
+
+<div class="overlay" id="bluepanda-modal">
+  <div class="modal"><div class="mt">Register Blue Panda Competitor</div>
+    <div class="fr">
+      <div class="fg"><div class="fl">Member Name</div><input id="bp-member" type="text" placeholder="Full name"></div>
+      <div class="fg"><div class="fl">Conference</div><select id="bp-conf"><option>Fall</option><option>State</option><option>National</option></select></div>
+    </div>
+    <div class="fg"><div class="fl">Competition Event</div><input id="bp-event" type="text" placeholder="e.g. Business Presentation, Accounting"></div>
+    <div class="fr">
+      <div class="fg"><div class="fl">Registration Date</div><input id="bp-registered" type="date"></div>
+      <div class="fg"><div class="fl">Status</div><select id="bp-status"><option>Pending</option><option>Confirmed</option><option>Waitlisted</option></select></div>
+    </div>
+    <div class="mf"><button class="btn btn-g" onclick="closeModals()">Cancel</button><button class="btn btn-p" onclick="submitBluePanda()">Register</button></div>
+  </div>
+</div>
+
+<!-- ROLE MODALS: PRESIDENT -->
+<div class="overlay" id="confpres-modal">
+  <div class="modal"><div class="mt">Add Conference</div>
+    <div class="fg"><div class="fl">Conference Name</div><input id="cp-name" type="text" placeholder="e.g. State Conference 2027"></div>
+    <div class="fr">
+      <div class="fg"><div class="fl">Date / Period</div><input id="cp-date" type="text" placeholder="e.g. Feb 2027"></div>
+      <div class="fg"><div class="fl">Dues Per Member ($)</div><input id="cp-dues" type="number" step="0.01" placeholder="0.00"></div>
+    </div>
+    <div class="mf"><button class="btn btn-g" onclick="closeModals()">Cancel</button><button class="btn btn-p" onclick="submitConfPres()">Add Conference</button></div>
+  </div>
+</div>
+
+<div class="overlay" id="duespaid-modal">
+  <div class="modal"><div class="mt">Mark Dues Paid</div>
+    <input type="hidden" id="duespaid-idx">
+    <div class="fg"><div class="fl">Member Name</div><input id="duespaid-member" type="text" placeholder="Full name of member who paid"></div>
+    <div class="mf"><button class="btn btn-g" onclick="closeModals()">Cancel</button><button class="btn btn-p" onclick="submitDuesPaid()">Mark Paid</button></div>
+  </div>
+</div>
+
+<div class="overlay" id="agendapres-modal">
+  <div class="modal"><div class="mt">New Meeting Agenda</div>
+    <div class="fr">
+      <div class="fg"><div class="fl">Meeting Type</div><select id="ap-type"><option>General Meeting</option><option>EBOD Meeting</option><option>Officer Meeting</option><option>ICC Meeting</option><option>Special Session</option></select></div>
+      <div class="fg"><div class="fl">Meeting Date</div><input id="ap-date" type="date"></div>
+    </div>
+    <div class="fg"><div class="fl">Agenda Items (one per line)</div><textarea id="ap-items" style="min-height:130px" placeholder="I. Call to Order&#10;II. Roll Call&#10;III. Officer Reports&#10;IV. Old Business&#10;V. New Business&#10;VI. Announcements&#10;VII. Adjournment"></textarea></div>
+    <div class="mf"><button class="btn btn-g" onclick="closeModals()">Cancel</button><button class="btn btn-p" onclick="submitPresAgenda()">Create Agenda</button></div>
+  </div>
+</div>
+
+<div class="overlay" id="delegation-modal">
+  <div class="modal"><div class="mt">Assign Deliverable</div>
+    <div class="fg"><div class="fl">Deliverable / Task</div><input id="del-task" type="text" placeholder="Specific deliverable description"></div>
+    <div class="fr">
+      <div class="fg"><div class="fl">Assign To</div><select id="del-assignee"><option>Nisa Pradhan</option><option>Carine Chan</option><option>George Huang</option><option>Anna Huynh</option><option>Addy Hu</option><option>Dianne Johnson</option><option>Arya Somu</option><option>Iker Jimenez</option><option>Nhi Tran</option><option>Jordan Nguyen</option><option>Christina Tran</option></select></div>
+      <div class="fg"><div class="fl">Portal</div><select id="del-portal"><option>Finance</option><option>Operations</option><option>Strategy</option><option>Marketing</option><option>Club Affairs</option></select></div>
+    </div>
+    <div class="fr">
+      <div class="fg"><div class="fl">Due Date</div><input id="del-due" type="date"></div>
+      <div class="fg"><div class="fl">Priority</div><select id="del-priority"><option>Medium</option><option>High</option><option>Low</option></select></div>
+    </div>
+    <div class="fg"><div class="fl">Status</div><select id="del-status"><option>Pending</option><option>In Progress</option><option>Done</option></select></div>
+    <div class="mf"><button class="btn btn-g" onclick="closeModals()">Cancel</button><button class="btn btn-p" onclick="submitDelegation()">Assign</button></div>
+  </div>
 </div>
 
 <script>
@@ -3979,6 +4515,29 @@ function addMemberCheckIn(){
   renderMemberCheckIns();openCheckInDetail(memberCheckIns[memberCheckIns.length-1].id);
 }
 
+// ─── ROLE-BASED PORTAL DATA ──────────────────────────────────────────────────
+let _roiEntries=JSON.parse(localStorage.getItem('pbl_roi')||'[]');
+let _iccForms=JSON.parse(localStorage.getItem('pbl_iccforms')||'[]');
+let _finReports=JSON.parse(localStorage.getItem('pbl_finreports')||'[]');
+let _confLogistics=JSON.parse(localStorage.getItem('pbl_conflogistics')||'[]');
+let _kpiEntries=JSON.parse(localStorage.getItem('pbl_kpis')||'[]');
+let _iccExcursions=JSON.parse(localStorage.getItem('pbl_iccexcursions')||'[]');
+let _prgRoster=JSON.parse(localStorage.getItem('pbl_prg_roster')||'[]');
+let _prgInitiatives=JSON.parse(localStorage.getItem('pbl_prg_initiatives')||'[]');
+let _onboardees=JSON.parse(localStorage.getItem('pbl_onboardees')||'[]');
+let _devGoals=JSON.parse(localStorage.getItem('pbl_devgoals')||'[]');
+let _campaigns=JSON.parse(localStorage.getItem('pbl_campaigns')||'[]');
+let _analyticsLog=JSON.parse(localStorage.getItem('pbl_analytics')||'[]');
+let _outreachLog=JSON.parse(localStorage.getItem('pbl_outreach')||'[]');
+let _partners=JSON.parse(localStorage.getItem('pbl_partners')||'[]');
+let _complianceLog=JSON.parse(localStorage.getItem('pbl_compliance')||'[]');
+let _roomBookings=JSON.parse(localStorage.getItem('pbl_roombookings')||'[]');
+let _iccMinutes=JSON.parse(localStorage.getItem('pbl_iccminutes')||'[]');
+let _bluePandaRegs=JSON.parse(localStorage.getItem('pbl_bluepanda')||'[]');
+let _confEvents=JSON.parse(localStorage.getItem('pbl_confevents')||'[{"name":"Fall Conference","date":"Oct 2026","dues":150,"paid":[],"unpaid":[]},{"name":"State Conference","date":"Feb 2027","dues":200,"paid":[],"unpaid":[]},{"name":"National Conference","date":"Jun 2027","dues":350,"paid":[],"unpaid":[]}]');
+let _presAgendas=JSON.parse(localStorage.getItem('pbl_agendas')||'[]');
+let _delegations=JSON.parse(localStorage.getItem('pbl_delegation')||'[]');
+
 // EXEC PORTALS
 const PORTALS_CFG={
   'portal-finance':{
@@ -3986,58 +4545,110 @@ const PORTALS_CFG={
     stats:()=>{
       const inc=transactions.income.reduce((s,t)=>s+t.amount,0);
       const exp=transactions.expense.reduce((s,t)=>s+t.amount,0);
-      return[{l:'Total Income',v:'$'+inc.toLocaleString(),s:'Spring 2026'},{l:'Total Expenses',v:'$'+exp.toLocaleString(),s:'Spring 2026'},{l:'Balance',v:'$'+(inc-exp).toLocaleString(),s:'Running total'}];
+      return[{l:'Total Income',v:'$'+inc.toLocaleString(),s:'Spring 2026'},{l:'Total Expenses',v:'$'+exp.toLocaleString(),s:'Spring 2026'},{l:'Balance',v:'$'+(inc-exp).toLocaleString(),s:'Running total'},{l:'ICC Forms',v:_iccForms.length,s:'Logged this year'}];
     },
-    links:[{page:'budget',label:'Budget',desc:'Full income & expense log'}]
+    links:[
+      {action:"showTab('portal-finance','budget');initFinBudget()",label:'Budget Ledger',desc:'Full income & expense log'},
+      {action:"showTab('portal-finance','roi');renderROITable()",label:'ROI Analysis',desc:'Event profitability & cost-per-member'},
+      {action:"showTab('portal-finance','iccforms');renderICCForms()",label:'ICC Forms',desc:'Reimbursements, deposits & invoices'},
+      {action:"showTab('portal-finance','finreports');renderFinReports()",label:'Financial Reports',desc:'Quarterly summaries & exports'},
+      {action:"showTab('portal-finance','reimbursements')",label:'Reimbursements',desc:'Member reimbursement tracker'},
+    ]
   },
   'portal-operations':{
     owners:['Addy Hu','Dianne Johnson'],
     stats:()=>{
       const up=eventsData.upcoming.length;
       const open=[...tasks.ebod,...tasks.general].filter(t=>!t.done&&['Addy Hu','Dianne Johnson'].includes(t.owner)).length;
-      return[{l:'Upcoming Events',v:up,s:'Scheduled'},{l:'Open Tasks',v:open,s:'Assigned to you'}];
+      return[{l:'Upcoming Events',v:up,s:'Scheduled'},{l:'Open Tasks',v:open,s:'Assigned to you'},{l:'Logistics',v:_confLogistics.length,s:'Conferences tracked'},{l:'KPI Periods',v:_kpiEntries.length,s:'Recorded'}];
     },
-    links:[{page:'events',label:'Events',desc:'Upcoming, past & run of show'}]
+    links:[
+      {action:"showPage('events')",label:'Events',desc:'Upcoming, past & run of show'},
+      {action:"showTab('portal-operations','conflogistics');renderConfLogistics()",label:'Conf. Logistics',desc:'Hotel, catering & registration'},
+      {action:"showTab('portal-operations','kpis');renderKPIs()",label:'KPI Dashboard',desc:'Budget efficiency & attendance rates'},
+      {action:"showTab('portal-operations','iccexcursions');renderICCExcursions()",label:'ICC Excursions',desc:'Field trips & ICC documentation'},
+      {action:"showTab('portal-operations','venues')",label:'Venues',desc:'Room & venue tracker'},
+    ]
   },
   'portal-strategy':{
     owners:['Arya Somu','Iker Jimenez'],
     stats:()=>{
       const avg=bootcamps.length?Math.round(bootcamps.reduce((s,b)=>s+Math.round(b.att/b.tot*100),0)/bootcamps.length):0;
-      return[{l:'Bootcamp Sessions',v:bootcamps.length,s:'Completed'},{l:'Avg Attendance',v:avg+'%',s:'Across sessions'}];
+      return[{l:'Bootcamp Sessions',v:bootcamps.length,s:'Completed'},{l:'Avg Attendance',v:avg+'%',s:'Across sessions'},{l:'PRG Members',v:_prgRoster.length,s:'Active'},{l:'Dev Goals',v:_devGoals.length,s:'Tracked'}];
     },
-    links:[{page:'bootcamps',label:'Bootcamps',desc:'Session notes & attendance'},{page:'goals',label:'Goals & OKRs',desc:'Quarter targets & progress'}]
+    links:[
+      {action:"showPage('bootcamps')",label:'Bootcamps',desc:'Session notes & attendance'},
+      {action:"showPage('goals')",label:'Goals & OKRs',desc:'Quarter targets & progress'},
+      {action:"showTab('portal-strategy','prg');renderPRG()",label:'Polaris PRG',desc:'Research group roster & initiatives'},
+      {action:"showTab('portal-strategy','onboarding');renderOnboarding()",label:'Onboarding',desc:'New member pipeline & stages'},
+      {action:"showTab('portal-strategy','devgoals');renderDevGoals()",label:'Dev Goals',desc:'Personal leadership development'},
+    ]
   },
   'portal-marketing':{
     owners:['Nhi Tran','Jordan Nguyen'],
     stats:()=>{
       const conf=sponsors.length;
       const pip=pipeline.filter(p=>p.stage!=='Closed').length;
-      return[{l:'Confirmed Sponsors',v:conf,s:'This cycle'},{l:'Active Pipeline',v:pip,s:'Prospects in progress'}];
+      return[{l:'Confirmed Sponsors',v:conf,s:'This cycle'},{l:'Active Pipeline',v:pip,s:'Prospects in progress'},{l:'Campaigns',v:_campaigns.length,s:'This quarter'},{l:'Outreach',v:_outreachLog.length,s:'Initiatives logged'}];
     },
-    links:[{page:'sponsors',label:'Sponsors',desc:'Pipeline & contacts'},{page:'templates',label:'Templates',desc:'Proposals & resources'}]
+    links:[
+      {action:"showPage('sponsors')",label:'Sponsors',desc:'Pipeline & contacts'},
+      {action:"showTab('portal-marketing','campaigns');renderCampaigns()",label:'Campaigns',desc:'Social & digital campaign tracker'},
+      {action:"showTab('portal-marketing','analytics');renderAnalytics()",label:'Analytics',desc:'Platform metrics & engagement data'},
+      {action:"showTab('portal-marketing','outreach');renderOutreach()",label:'Outreach Log',desc:'Club-to-club & community reach'},
+      {action:"showPage('templates')",label:'Templates',desc:'Proposals, flyers & resources'},
+    ]
   },
   'portal-clubaffairs':{
     owners:['Christina Tran'],
     stats:()=>{
       const tot=prospects.length;
       const conv=prospects.filter(p=>p.stage==='Joined').length;
-      return[{l:'Prospects',v:tot,s:'In pipeline'},{l:'Converted',v:conv,s:'Joined this quarter'}];
+      return[{l:'Prospects',v:tot,s:'In pipeline'},{l:'Converted',v:conv,s:'Joined this quarter'},{l:'Partnerships',v:_partners.length,s:'Active'},{l:'Bookings',v:_roomBookings.length,s:'Logged'}];
     },
-    links:[{page:'recruitment',label:'Recruitment',desc:'Prospect pipeline & follow-ups'},{page:'attendance',label:'Attendance',desc:'Member roster & records'}]
+    links:[
+      {action:"showPage('recruitment')",label:'Recruitment',desc:'Prospect pipeline & follow-ups'},
+      {action:"showTab('portal-clubaffairs','partners');renderPartners()",label:'External Partners',desc:'Alumni, corporate & club liaisons'},
+      {action:"showTab('portal-clubaffairs','compliance');renderCompliance()",label:'HR & Compliance',desc:'Conduct log & policy tracking'},
+      {action:"showTab('portal-clubaffairs','roombookings');renderRoomBookings()",label:'Room Bookings',desc:'Facility requests & confirmations'},
+      {action:"showTab('portal-clubaffairs','iccbluepanda');renderICCBluePanda()",label:'ICC / Blue Panda',desc:'Chapter minutes & competition reg.'},
+    ]
+  },
+  'portal-president':{
+    owners:['Nisa Pradhan'],
+    stats:()=>{
+      const pendingDel=_delegations.filter(d=>d.status!=='Done').length;
+      return[{l:'Conferences',v:_confEvents.length,s:'Tracked'},{l:'Agendas',v:_presAgendas.length,s:'This year'},{l:'Delegations',v:_delegations.length,s:'Cross-functional'},{l:'Pending',v:pendingDel,s:'Not yet done'}];
+    },
+    links:[
+      {action:"showTab('portal-president','conferences');renderConfDues()",label:'Conf. Dues',desc:'Track payment status per conference'},
+      {action:"showTab('portal-president','agendas');renderPresAgendas()",label:'Meeting Agendas',desc:'Parliamentary-order agenda builder'},
+      {action:"showTab('portal-president','delegation');renderDelegation()",label:'Board Delegation',desc:'Cross-functional deliverables tracker'},
+    ]
   }
 };
 function renderPortals(){
   Object.entries(PORTALS_CFG).forEach(([id,cfg])=>{
-    const sl=document.getElementById(id+'-stats');
-    if(sl){const stats=cfg.stats();sl.innerHTML=stats.map(s=>`<div class="sc"><div class="sl">${s.l}</div><div class="sv">${s.v}</div><div class="sm">${s.s}</div></div>`).join('');}
-    const tl=document.getElementById(id+'-tasks');
-    if(tl){
-      const myTasks=[...tasks.ebod,...tasks.general].filter(t=>cfg.owners.includes(t.owner));
-      if(!myTasks.length){tl.innerHTML=`<div style="font-size:11px;color:var(--t4);padding:8px 0">No tasks assigned.</div>`;}
-      else{tl.innerHTML=myTasks.map(t=>{const board=tasks.ebod.find(x=>x.id===t.id)?'ebod':'general';return`<div class="tr"><div class="tcb ${t.done?'done':''}" onclick="toggleTask(${t.id},'${board}');renderPortals()"></div><div style="flex:1"><div class="tt ${t.done?'dk':''}" onclick="openTaskDetail(${t.id},'${board}')">${t.text}</div><div class="tm">Due ${t.due} &middot; ${t.cat}</div></div><div class="to">${t.owner}</div></div>`;}).join('');}
-    }
-    const ll=document.getElementById(id+'-links');
-    if(ll){ll.innerHTML=cfg.links.map(l=>`<div class="card" style="cursor:pointer;margin-bottom:0" onclick="showPage('${l.page}')"><div class="ct" style="margin-bottom:4px">${l.label}</div><div style="font-size:10px;color:var(--t3)">${l.desc}</div><div style="font-size:9px;color:var(--grn);margin-top:8px;font-weight:600">Open &rsaquo;</div></div>`).join('');}
+    try{
+      const sl=document.getElementById(id+'-stats');
+      if(sl){
+        try{const stats=cfg.stats();sl.innerHTML=stats.map(s=>`<div class="sc"><div class="sl">${s.l}</div><div class="sv">${s.v}</div><div class="sm">${s.s}</div></div>`).join('');}
+        catch(e){console.warn('Portal stats error for',id,e);}
+      }
+      const tl=document.getElementById(id+'-tasks');
+      if(tl){
+        const myTasks=[...tasks.ebod,...tasks.general].filter(t=>cfg.owners.includes(t.owner));
+        if(!myTasks.length){tl.innerHTML=`<div style="font-size:11px;color:var(--t4);padding:8px 0">No tasks assigned.</div>`;}
+        else{tl.innerHTML=myTasks.map(t=>{const board=tasks.ebod.find(x=>x.id===t.id)?'ebod':'general';return`<div class="tr"><div class="tcb ${t.done?'done':''}" onclick="toggleTask(${t.id},'${board}');renderPortals()"></div><div style="flex:1"><div class="tt ${t.done?'dk':''}" onclick="openTaskDetail(${t.id},'${board}')">${t.text}</div><div class="tm">Due ${t.due} &middot; ${t.cat}</div></div><div class="to">${t.owner}</div></div>`;}).join('');}
+      }
+      const ll=document.getElementById(id+'-links');
+      if(ll){
+        ll.innerHTML=cfg.links.map(l=>{
+          const act=l.action?l.action.replace(/"/g,'&quot;'):`showPage('${l.page||''}')`;
+          return`<div class="card" style="cursor:pointer;margin-bottom:0" onclick="${act}"><div class="ct" style="margin-bottom:4px">${l.label}</div><div style="font-size:10px;color:var(--t3)">${l.desc}</div><div style="font-size:9px;color:var(--grn);margin-top:8px;font-weight:600">Open &#8250;</div></div>`;
+        }).join('');
+      }
+    }catch(e){console.warn('Portal render error for',id,e);}
   });
 }
 
@@ -4300,6 +4911,7 @@ const META={
   events:['Events','Upcoming, past & run of show'],
   templates:['Templates','Proposals, resources & timelines'],
   sponsors:['Sponsors','Pipeline, contacts & email history'],
+  'portal-president':['President\'s Hub','Conference tracking \u00b7 Agendas \u00b7 Board delegation'],
   'portal-finance':['VP of Finance','George Huang \u00b7 Finance portal'],
   'portal-operations':['VP of Operations','Addy Hu \u00b7 Operations portal'],
   'portal-strategy':['VP of Strategy and Development','Arya Somu \u00b7 Strategy portal'],
@@ -4318,6 +4930,7 @@ function showPage(id){
   appEl.querySelectorAll('.ni').forEach(n=>{if(n.getAttribute('onclick')&&n.getAttribute('onclick').includes("'"+id+"'"))n.classList.add('active');});
   const m=META[id];
   if(m){document.getElementById('page-title').textContent=m[0];document.getElementById('page-sub').textContent=m[1];}
+  if(PORTALS_CFG[id])renderPortals();
 }
 function showTab(page,tab){
   const appEl=document.getElementById('app-ebod');
@@ -6542,7 +7155,553 @@ function switchToLanding(){
   resetLanding();
 }
 
+function saveRoleData(key,val){localStorage.setItem('pbl_'+key,JSON.stringify(val));}
+
+// ── HELPERS ──
+function roleRow(cells,delFn){
+  return`<tr>${cells.map(c=>`<td>${c}</td>`).join('')}<td><button class="btn btn-g btn-sm" style="color:var(--cr)" onclick="${delFn}">✕</button></td></tr>`;
+}
+function statusBadge(s){
+  const map={Pending:'var(--gold)',Active:'var(--blu)',Confirmed:'var(--grn)',Completed:'var(--grn)',Denied:'var(--cr)',Draft:'var(--t4)',Sent:'var(--grn)',Approved:'var(--grn)',Done:'var(--grn)','In Progress':'var(--blu)',Open:'var(--gold)',Resolved:'var(--grn)'};
+  const c=map[s]||'var(--t3)';
+  return`<span style="display:inline-block;padding:2px 8px;border-radius:10px;background:${c}22;color:${c};font-size:9.5px;font-weight:700">${s}</span>`;
+}
+function priorityBadge(p){const map={High:'var(--cr)',Medium:'var(--gold)',Low:'var(--grn)'};const c=map[p]||'var(--t3)';return`<span style="display:inline-block;padding:2px 8px;border-radius:10px;background:${c}22;color:${c};font-size:9.5px;font-weight:700">${p}</span>`;}
+
+// ── VP OF FINANCE: ROI ──
+function calcROIPreview(){
+  const rev=parseFloat(document.getElementById('roi-rev').value)||0;
+  const exp=parseFloat(document.getElementById('roi-exp').value)||0;
+  const att=parseInt(document.getElementById('roi-att').value)||0;
+  const net=rev-exp;
+  const roi=exp>0?((net/exp)*100).toFixed(1):0;
+  const cpa=att>0?(exp/att).toFixed(2):0;
+  const el=document.getElementById('roi-preview');
+  if(!el)return;
+  el.style.display='flex';
+  el.innerHTML=[
+    {l:'Net',v:(net>=0?'+':'')+`$${net.toFixed(2)}`,c:net>=0?'var(--grn)':'var(--cr)'},
+    {l:'ROI',v:roi+'%',c:parseFloat(roi)>=0?'var(--grn)':'var(--cr)'},
+    {l:'Cost / Attendee',v:'$'+cpa,c:'var(--blu)'},
+  ].map(s=>`<div style="flex:1;padding:10px 14px;background:${s.c}11;border-radius:8px;border:1px solid ${s.c}33"><div style="font-size:9.5px;color:var(--t3);margin-bottom:2px">${s.l}</div><div style="font-size:16px;font-weight:700;color:${s.c}">${s.v}</div></div>`).join('');
+}
+function addROIEntry(){
+  const name=document.getElementById('roi-name').value.trim();
+  if(!name)return alert('Enter an event name');
+  const rev=parseFloat(document.getElementById('roi-rev').value)||0;
+  const exp=parseFloat(document.getElementById('roi-exp').value)||0;
+  const att=parseInt(document.getElementById('roi-att').value)||0;
+  _roiEntries.push({name,rev,exp,att,date:new Date().toLocaleDateString()});
+  saveRoleData('roi',_roiEntries);
+  ['roi-name','roi-rev','roi-exp','roi-att'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  document.getElementById('roi-preview').style.display='none';
+  renderROITable();
+}
+function renderROITable(){
+  const t=document.getElementById('roi-table');
+  if(!t)return;
+  if(!_roiEntries.length){t.innerHTML='<tr><td colspan="8" style="text-align:center;color:var(--t4);padding:20px;font-size:11px">No ROI entries yet — add your first event above.</td></tr>';return;}
+  t.innerHTML=_roiEntries.map((e,i)=>{
+    const net=e.rev-e.exp;
+    const roi=e.exp>0?((net/e.exp)*100).toFixed(1):'—';
+    const cpa=e.att>0?(e.exp/e.att).toFixed(2):'—';
+    const rating=parseFloat(roi)>=50?'🟢 Excellent':parseFloat(roi)>=0?'🟡 Positive':'🔴 Loss';
+    return roleRow([e.name,`$${e.rev.toFixed(2)}`,`$${e.exp.toFixed(2)}`,`<span style="color:${net>=0?'var(--grn)':'var(--cr)'}">${net>=0?'+':''}$${net.toFixed(2)}</span>`,roi==='—'?'—':roi+'%',cpa==='—'?'—':'$'+cpa,rating],`deleteROI(${i})`);
+  }).join('');
+}
+function deleteROI(i){_roiEntries.splice(i,1);saveRoleData('roi',_roiEntries);renderROITable();}
+
+// ── ICC FORMS ──
+function addICCForm(){openModal('iccform-modal');}
+function submitICCForm(){
+  const type=document.getElementById('iccf-type').value;
+  const amount=parseFloat(document.getElementById('iccf-amount').value)||0;
+  const purpose=document.getElementById('iccf-purpose').value.trim();
+  const status=document.getElementById('iccf-status').value;
+  const notes=document.getElementById('iccf-notes').value.trim();
+  _iccForms.push({type,amount,purpose,status,notes,submitted:new Date().toLocaleDateString()});
+  saveRoleData('iccforms',_iccForms);renderICCForms();closeModals();
+  ['iccf-amount','iccf-purpose','iccf-notes'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+}
+function renderICCForms(){
+  const t=document.getElementById('icc-forms-table');if(!t)return;
+  if(!_iccForms.length){t.innerHTML='<tr><td colspan="7" style="text-align:center;color:var(--t4);padding:20px;font-size:11px">No ICC forms logged yet.</td></tr>';return;}
+  t.innerHTML=_iccForms.map((f,i)=>roleRow([f.type,'$'+f.amount.toFixed(2),f.purpose,f.submitted,statusBadge(f.status),f.notes||'—'],`deleteICCForm(${i})`)).join('');
+}
+function deleteICCForm(i){_iccForms.splice(i,1);saveRoleData('iccforms',_iccForms);renderICCForms();}
+
+// ── FINANCIAL REPORTS ──
+function addFinReport(){openModal('finreport-modal');}
+function submitFinReport(){
+  const quarter=document.getElementById('fr-quarter').value.trim();if(!quarter)return;
+  const summary=document.getElementById('fr-summary').value.trim();
+  _finReports.unshift({quarter,summary,created:new Date().toLocaleDateString()});
+  saveRoleData('finreports',_finReports);renderFinReports();closeModals();
+  document.getElementById('fr-quarter').value='';document.getElementById('fr-summary').value='';
+}
+function renderFinReports(){
+  const el=document.getElementById('fin-reports-list');if(!el)return;
+  if(!_finReports.length){el.innerHTML='<div style="padding:20px;text-align:center;color:var(--t4);font-size:11px">No reports yet.</div>';return;}
+  el.innerHTML=_finReports.map((r,i)=>`
+    <div style="padding:12px 0;border-bottom:1px solid var(--bd);display:flex;justify-content:space-between;align-items:flex-start">
+      <div><div style="font-size:12px;font-weight:700;color:var(--t1);margin-bottom:3px">${r.quarter}</div><div style="font-size:11px;color:var(--t3)">${r.summary||'No summary.'}</div><div style="font-size:10px;color:var(--t4);margin-top:3px">Created ${r.created}</div></div>
+      <button class="btn btn-g btn-sm" style="color:var(--cr);flex-shrink:0" onclick="deleteFinReport(${i})">✕</button>
+    </div>`).join('');
+}
+function deleteFinReport(i){_finReports.splice(i,1);saveRoleData('finreports',_finReports);renderFinReports();}
+
+// ── VP OF OPERATIONS: CONFERENCE LOGISTICS ──
+function addConfLogistic(){openModal('conflogistic-modal');}
+function submitConfLogistic(){
+  const name=document.getElementById('cl-name').value.trim();if(!name)return;
+  const date=document.getElementById('cl-date').value;
+  const hotel=document.getElementById('cl-hotel').value.trim();
+  const catering=document.getElementById('cl-catering').value.trim();
+  const transport=document.getElementById('cl-transport').value.trim();
+  const regStatus=document.getElementById('cl-regstatus').value;
+  const members=document.getElementById('cl-members').value.trim();
+  _confLogistics.push({name,date,hotel,catering,transport,regStatus,members});
+  saveRoleData('conflogistics',_confLogistics);renderConfLogistics();closeModals();
+  ['cl-name','cl-date','cl-hotel','cl-catering','cl-transport','cl-members'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+}
+function renderConfLogistics(){
+  const t=document.getElementById('conf-logistics-table');if(!t)return;
+  if(!_confLogistics.length){t.innerHTML='<tr><td colspan="8" style="text-align:center;color:var(--t4);padding:20px;font-size:11px">No conferences logged yet.</td></tr>';return;}
+  t.innerHTML=_confLogistics.map((c,i)=>roleRow([c.name,c.date||'—',c.hotel||'—',c.catering||'—',c.transport||'—',statusBadge(c.regStatus),c.members||'—'],`deleteConfLogistic(${i})`)).join('');
+}
+function deleteConfLogistic(i){_confLogistics.splice(i,1);saveRoleData('conflogistics',_confLogistics);renderConfLogistics();}
+
+// ── KPI DASHBOARD ──
+function addKPIEntry(){openModal('kpi-modal');}
+function submitKPI(){
+  const period=document.getElementById('kpi-period').value.trim();if(!period)return;
+  const budEff=parseFloat(document.getElementById('kpi-budeff').value)||0;
+  const attRate=parseFloat(document.getElementById('kpi-attrate').value)||0;
+  const vendorScore=parseFloat(document.getElementById('kpi-vendor').value)||0;
+  const events=parseInt(document.getElementById('kpi-events').value)||0;
+  const notes=document.getElementById('kpi-notes').value.trim();
+  _kpiEntries.unshift({period,budEff,attRate,vendorScore,events,notes});
+  saveRoleData('kpis',_kpiEntries);renderKPIs();closeModals();
+  ['kpi-period','kpi-budeff','kpi-attrate','kpi-vendor','kpi-events','kpi-notes'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+}
+function renderKPIs(){
+  const statsRow=document.getElementById('kpi-stats-row');
+  if(statsRow&&_kpiEntries.length){
+    const latest=_kpiEntries[0];
+    statsRow.innerHTML=[
+      {l:'Budget Efficiency',v:latest.budEff+'%',c:'var(--grn)'},
+      {l:'Attendance Rate',v:latest.attRate+'%',c:'var(--blu)'},
+      {l:'Vendor Score',v:latest.vendorScore+'/10',c:'var(--gold)'},
+      {l:'Events Run',v:latest.events,c:'var(--cr)'},
+    ].map(s=>`<div class="stat-card"><div class="stat-val" style="color:${s.c}">${s.v}</div><div class="stat-lbl">${s.l}</div></div>`).join('');
+  }else if(statsRow){statsRow.innerHTML='';}
+  const t=document.getElementById('kpi-table');if(!t)return;
+  if(!_kpiEntries.length){t.innerHTML='<tr><td colspan="7" style="text-align:center;color:var(--t4);padding:20px;font-size:11px">No KPI entries yet.</td></tr>';return;}
+  t.innerHTML=_kpiEntries.map((k,i)=>roleRow([k.period,k.budEff+'%',k.attRate+'%',k.vendorScore+'/10',k.events,k.notes||'—'],`deleteKPI(${i})`)).join('');
+}
+function deleteKPI(i){_kpiEntries.splice(i,1);saveRoleData('kpis',_kpiEntries);renderKPIs();}
+
+// ── ICC EXCURSIONS ──
+function addICCExcursion(){openModal('iccexcursion-modal');}
+function submitICCExcursion(){
+  const trip=document.getElementById('iccex-trip').value.trim();if(!trip)return;
+  const date=document.getElementById('iccex-date').value;
+  const dest=document.getElementById('iccex-dest').value.trim();
+  const mems=document.getElementById('iccex-mems').value.trim();
+  const form=document.getElementById('iccex-formstatus').value;
+  const approval=document.getElementById('iccex-approval').value;
+  const notes=document.getElementById('iccex-notes').value.trim();
+  _iccExcursions.push({trip,date,dest,mems,form,approval,notes});
+  saveRoleData('iccexcursions',_iccExcursions);renderICCExcursions();closeModals();
+  ['iccex-trip','iccex-date','iccex-dest','iccex-mems','iccex-notes'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+}
+function renderICCExcursions(){
+  const t=document.getElementById('icc-excursions-table');if(!t)return;
+  if(!_iccExcursions.length){t.innerHTML='<tr><td colspan="8" style="text-align:center;color:var(--t4);padding:20px;font-size:11px">No ICC excursions logged yet.</td></tr>';return;}
+  t.innerHTML=_iccExcursions.map((e,i)=>roleRow([e.trip,e.date||'—',e.dest||'—',e.mems||'—',statusBadge(e.form),statusBadge(e.approval),e.notes||'—'],`deleteICCExcursion(${i})`)).join('');
+}
+function deleteICCExcursion(i){_iccExcursions.splice(i,1);saveRoleData('iccexcursions',_iccExcursions);renderICCExcursions();}
+
+// ── VP OF STRATEGY: PRG ──
+function addPRGMember(){openModal('prgmember-modal');}
+function submitPRGMember(){
+  const name=document.getElementById('prg-mname').value.trim();if(!name)return;
+  const focus=document.getElementById('prg-mfocus').value.trim();
+  const status=document.getElementById('prg-mstatus').value;
+  const joined=document.getElementById('prg-mjoined').value.trim();
+  _prgRoster.push({name,focus,status,joined});
+  saveRoleData('prg_roster',_prgRoster);renderPRG();closeModals();
+  ['prg-mname','prg-mfocus','prg-mjoined'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+}
+function addPRGInitiative(){openModal('prginitiative-modal');}
+function submitPRGInitiative(){
+  const name=document.getElementById('prgi-name').value.trim();if(!name)return;
+  const lead=document.getElementById('prgi-lead').value.trim();
+  const target=document.getElementById('prgi-target').value;
+  const status=document.getElementById('prgi-status').value;
+  _prgInitiatives.push({name,lead,target,status});
+  saveRoleData('prg_initiatives',_prgInitiatives);renderPRG();closeModals();
+  ['prgi-name','prgi-lead','prgi-target'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+}
+function renderPRG(){
+  const rt=document.getElementById('prg-roster-table');
+  if(rt){
+    if(!_prgRoster.length){rt.innerHTML='<tr><td colspan="5" style="text-align:center;color:var(--t4);padding:16px;font-size:11px">No PRG members yet.</td></tr>';}
+    else rt.innerHTML=_prgRoster.map((m,i)=>roleRow([m.name,m.focus||'—',statusBadge(m.status),m.joined||'—'],`deletePRGMember(${i})`)).join('');
+  }
+  const it=document.getElementById('prg-initiatives-table');
+  if(it){
+    if(!_prgInitiatives.length){it.innerHTML='<tr><td colspan="5" style="text-align:center;color:var(--t4);padding:16px;font-size:11px">No initiatives yet.</td></tr>';}
+    else it.innerHTML=_prgInitiatives.map((p,i)=>roleRow([p.name,p.lead||'—',p.target||'—',statusBadge(p.status)],`deletePRGInitiative(${i})`)).join('');
+  }
+}
+function deletePRGMember(i){_prgRoster.splice(i,1);saveRoleData('prg_roster',_prgRoster);renderPRG();}
+function deletePRGInitiative(i){_prgInitiatives.splice(i,1);saveRoleData('prg_initiatives',_prgInitiatives);renderPRG();}
+
+// ── ONBOARDING PIPELINE ──
+function addOnboardee(){openModal('onboardee-modal');}
+function submitOnboardee(){
+  const name=document.getElementById('ob-name').value.trim();if(!name)return;
+  const stage=document.getElementById('ob-stage').value;
+  const email=document.getElementById('ob-email').value.trim();
+  const notes=document.getElementById('ob-notes').value.trim();
+  _onboardees.push({name,stage,email,notes});
+  saveRoleData('onboardees',_onboardees);renderOnboarding();closeModals();
+  ['ob-name','ob-email','ob-notes'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+}
+function renderOnboarding(){
+  const stages=['Interested','Invited','Onboarded','Active'];
+  stages.forEach(stage=>{
+    const col=document.getElementById('ob-col-'+stage.toLowerCase());
+    if(!col)return;
+    const people=_onboardees.filter(o=>o.stage===stage);
+    if(!people.length){col.innerHTML='<div style="font-size:10px;color:var(--t4);padding:6px 0;font-style:italic">Empty</div>';return;}
+    col.innerHTML=people.map((p,i)=>`
+      <div style="background:var(--s2);border:1px solid var(--bd);border-radius:6px;padding:8px 10px;margin-bottom:6px">
+        <div style="font-size:11px;font-weight:600;color:var(--t1)">${p.name}</div>
+        ${p.email?`<div style="font-size:10px;color:var(--t3)">${p.email}</div>`:''}
+        <div style="display:flex;gap:4px;margin-top:6px;flex-wrap:wrap">
+          ${stage!=='Active'?`<button class="btn btn-p btn-sm" style="font-size:9px;padding:2px 6px" onclick="advanceOnboardee(${_onboardees.indexOf(p)})">→ Next</button>`:''}
+          <button class="btn btn-g btn-sm" style="color:var(--cr);font-size:9px;padding:2px 6px" onclick="deleteOnboardee(${_onboardees.indexOf(p)})">✕</button>
+        </div>
+      </div>`).join('');
+  });
+}
+function advanceOnboardee(i){
+  const stages=['Interested','Invited','Onboarded','Active'];
+  const cur=stages.indexOf(_onboardees[i].stage);
+  if(cur<stages.length-1){_onboardees[i].stage=stages[cur+1];saveRoleData('onboardees',_onboardees);renderOnboarding();}
+}
+function deleteOnboardee(i){_onboardees.splice(i,1);saveRoleData('onboardees',_onboardees);renderOnboarding();}
+
+// ── DEV GOALS ──
+function addDevGoal(){openModal('devgoal-modal');}
+function submitDevGoal(){
+  const member=document.getElementById('dg-member').value.trim();if(!member)return;
+  const goal=document.getElementById('dg-goal').value.trim();
+  const category=document.getElementById('dg-cat').value;
+  const target=document.getElementById('dg-target').value;
+  const progress=parseInt(document.getElementById('dg-progress').value)||0;
+  const status=document.getElementById('dg-status').value;
+  _devGoals.push({member,goal,category,target,progress,status});
+  saveRoleData('devgoals',_devGoals);renderDevGoals();closeModals();
+  ['dg-member','dg-goal','dg-target','dg-progress'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+}
+function renderDevGoals(){
+  const t=document.getElementById('dev-goals-table');if(!t)return;
+  if(!_devGoals.length){t.innerHTML='<tr><td colspan="7" style="text-align:center;color:var(--t4);padding:20px;font-size:11px">No development goals yet.</td></tr>';return;}
+  t.innerHTML=_devGoals.map((g,i)=>{
+    const bar=`<div style="height:6px;background:var(--bd);border-radius:3px;width:80px;display:inline-block;vertical-align:middle"><div style="height:6px;background:var(--grn);border-radius:3px;width:${g.progress}%"></div></div> ${g.progress}%`;
+    return roleRow([g.member,g.goal,g.category,g.target||'—',bar,statusBadge(g.status)],`deleteDevGoal(${i})`);
+  }).join('');
+}
+function deleteDevGoal(i){_devGoals.splice(i,1);saveRoleData('devgoals',_devGoals);renderDevGoals();}
+
+// ── VP OF MARKETING: CAMPAIGNS ──
+function addCampaign(){openModal('campaign-modal');}
+function submitCampaign(){
+  const name=document.getElementById('camp-name').value.trim();if(!name)return;
+  const platforms=document.getElementById('camp-platforms').value.trim();
+  const goal=document.getElementById('camp-goal').value.trim();
+  const start=document.getElementById('camp-start').value;
+  const end=document.getElementById('camp-end').value;
+  const reach=parseInt(document.getElementById('camp-reach').value)||0;
+  const eng=parseInt(document.getElementById('camp-eng').value)||0;
+  const status=document.getElementById('camp-status').value;
+  _campaigns.push({name,platforms,goal,start,end,reach,eng,status});
+  saveRoleData('campaigns',_campaigns);renderCampaigns();closeModals();
+  ['camp-name','camp-platforms','camp-goal','camp-start','camp-end','camp-reach','camp-eng'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+}
+function renderCampaigns(){
+  const t=document.getElementById('campaigns-table');if(!t)return;
+  if(!_campaigns.length){t.innerHTML='<tr><td colspan="9" style="text-align:center;color:var(--t4);padding:20px;font-size:11px">No campaigns yet.</td></tr>';return;}
+  t.innerHTML=_campaigns.map((c,i)=>roleRow([c.name,c.platforms||'—',c.goal||'—',c.start||'—',c.end||'—',c.reach.toLocaleString(),c.eng.toLocaleString(),statusBadge(c.status)],`deleteCampaign(${i})`)).join('');
+}
+function deleteCampaign(i){_campaigns.splice(i,1);saveRoleData('campaigns',_campaigns);renderCampaigns();}
+
+// ── ANALYTICS ──
+function addAnalyticsEntry(){openModal('analytics-modal');}
+function submitAnalytics(){
+  const platform=document.getElementById('an-platform').value;
+  const followers=parseInt(document.getElementById('an-followers').value)||0;
+  const engRate=parseFloat(document.getElementById('an-engrate').value)||0;
+  const reach=parseInt(document.getElementById('an-reach').value)||0;
+  const topPost=document.getElementById('an-toppost').value.trim();
+  _analyticsLog.push({platform,followers,engRate,reach,topPost,logged:new Date().toLocaleDateString()});
+  saveRoleData('analytics',_analyticsLog);renderAnalytics();closeModals();
+  ['an-followers','an-engrate','an-reach','an-toppost'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+}
+function renderAnalytics(){
+  const statsRow=document.getElementById('analytics-stats-row');
+  if(statsRow&&_analyticsLog.length){
+    const totFollowers=_analyticsLog.reduce((s,a)=>s+a.followers,0);
+    const avgEng=(_analyticsLog.reduce((s,a)=>s+a.engRate,0)/_analyticsLog.length).toFixed(1);
+    statsRow.innerHTML=[
+      {l:'Total Followers',v:totFollowers.toLocaleString(),c:'var(--blu)'},
+      {l:'Avg Engagement',v:avgEng+'%',c:'var(--grn)'},
+      {l:'Platforms Tracked',v:_analyticsLog.length,c:'var(--gold)'},
+    ].map(s=>`<div class="stat-card"><div class="stat-val" style="color:${s.c}">${s.v}</div><div class="stat-lbl">${s.l}</div></div>`).join('');
+  }else if(statsRow)statsRow.innerHTML='';
+  const t=document.getElementById('analytics-table');if(!t)return;
+  if(!_analyticsLog.length){t.innerHTML='<tr><td colspan="7" style="text-align:center;color:var(--t4);padding:20px;font-size:11px">No analytics logged yet.</td></tr>';return;}
+  t.innerHTML=_analyticsLog.map((a,i)=>roleRow([a.platform,a.followers.toLocaleString(),a.engRate+'%',a.reach.toLocaleString(),a.topPost||'—',a.logged],`deleteAnalytics(${i})`)).join('');
+}
+function deleteAnalytics(i){_analyticsLog.splice(i,1);saveRoleData('analytics',_analyticsLog);renderAnalytics();}
+
+// ── OUTREACH LOG ──
+function addOutreach(){openModal('outreach-modal');}
+function submitOutreach(){
+  const name=document.getElementById('or-name').value.trim();if(!name)return;
+  const date=document.getElementById('or-date').value;
+  const location=document.getElementById('or-location').value.trim();
+  const lead=document.getElementById('or-lead').value.trim();
+  const contacts=parseInt(document.getElementById('or-contacts').value)||0;
+  const followup=document.getElementById('or-followup').value.trim();
+  const notes=document.getElementById('or-notes').value.trim();
+  _outreachLog.push({name,date,location,lead,contacts,followup,notes});
+  saveRoleData('outreach',_outreachLog);renderOutreach();closeModals();
+  ['or-name','or-date','or-location','or-lead','or-contacts','or-followup','or-notes'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+}
+function renderOutreach(){
+  const t=document.getElementById('outreach-table');if(!t)return;
+  if(!_outreachLog.length){t.innerHTML='<tr><td colspan="8" style="text-align:center;color:var(--t4);padding:20px;font-size:11px">No outreach initiatives logged yet.</td></tr>';return;}
+  t.innerHTML=_outreachLog.map((o,i)=>roleRow([o.name,o.date||'—',o.location||'—',o.lead||'—',o.contacts,o.followup||'—',o.notes||'—'],`deleteOutreach(${i})`)).join('');
+}
+function deleteOutreach(i){_outreachLog.splice(i,1);saveRoleData('outreach',_outreachLog);renderOutreach();}
+
+// ── VP OF CLUB AFFAIRS: PARTNERSHIPS ──
+function addPartner(){openModal('partner-modal');}
+function submitPartner(){
+  const name=document.getElementById('part-name').value.trim();if(!name)return;
+  const type=document.getElementById('part-type').value;
+  const contact=document.getElementById('part-contact').value.trim();
+  const since=document.getElementById('part-since').value.trim();
+  const lastTouch=document.getElementById('part-lasttouch').value;
+  const notes=document.getElementById('part-notes').value.trim();
+  _partners.push({name,type,contact,since,lastTouch,notes});
+  saveRoleData('partners',_partners);renderPartners();closeModals();
+  ['part-name','part-contact','part-since','part-lasttouch','part-notes'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+}
+function renderPartners(){
+  const t=document.getElementById('partners-table');if(!t)return;
+  if(!_partners.length){t.innerHTML='<tr><td colspan="7" style="text-align:center;color:var(--t4);padding:20px;font-size:11px">No partners logged yet.</td></tr>';return;}
+  t.innerHTML=_partners.map((p,i)=>roleRow([p.name,p.type||'—',p.contact||'—',p.since||'—',p.lastTouch||'—',p.notes||'—'],`deletePartner(${i})`)).join('');
+}
+function deletePartner(i){_partners.splice(i,1);saveRoleData('partners',_partners);renderPartners();}
+
+// ── COMPLIANCE / HR ──
+function addComplianceTicket(){openModal('compliance-modal');}
+function submitCompliance(){
+  const type=document.getElementById('comp-type').value;
+  const severity=document.getElementById('comp-severity').value;
+  const members=document.getElementById('comp-members').value.trim();
+  const desc=document.getElementById('comp-desc').value.trim();
+  const status=document.getElementById('comp-status').value;
+  const resolution=document.getElementById('comp-resolution').value.trim();
+  _complianceLog.push({type,members,desc,logged:new Date().toLocaleDateString(),severity,status,resolution});
+  saveRoleData('compliance',_complianceLog);renderCompliance();closeModals();
+  ['comp-members','comp-desc','comp-resolution'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+}
+function renderCompliance(){
+  const t=document.getElementById('compliance-table');if(!t)return;
+  if(!_complianceLog.length){t.innerHTML='<tr><td colspan="8" style="text-align:center;color:var(--t4);padding:20px;font-size:11px">No compliance issues logged. That\'s a good sign!</td></tr>';return;}
+  t.innerHTML=_complianceLog.map((c,i)=>roleRow([c.type,c.members||'—',c.desc||'—',c.logged,priorityBadge(c.severity),statusBadge(c.status),c.resolution||'Pending'],`deleteCompliance(${i})`)).join('');
+}
+function deleteCompliance(i){_complianceLog.splice(i,1);saveRoleData('compliance',_complianceLog);renderCompliance();}
+
+// ── ROOM BOOKINGS ──
+function addRoomBooking(){openModal('roombooking-modal');}
+function submitRoomBooking(){
+  const room=document.getElementById('rb-room').value.trim();if(!room)return;
+  const date=document.getElementById('rb-date').value;
+  const time=document.getElementById('rb-time').value.trim();
+  const status=document.getElementById('rb-status').value;
+  const purpose=document.getElementById('rb-purpose').value.trim();
+  const reqBy=document.getElementById('rb-reqby').value.trim();
+  _roomBookings.push({room,date,time,purpose,reqBy,status});
+  saveRoleData('roombookings',_roomBookings);renderRoomBookings();closeModals();
+  ['rb-room','rb-date','rb-time','rb-purpose','rb-reqby'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+}
+function renderRoomBookings(){
+  const t=document.getElementById('room-bookings-table');if(!t)return;
+  if(!_roomBookings.length){t.innerHTML='<tr><td colspan="7" style="text-align:center;color:var(--t4);padding:20px;font-size:11px">No room bookings yet.</td></tr>';return;}
+  t.innerHTML=_roomBookings.map((b,i)=>roleRow([b.room,b.date||'—',b.time||'—',b.purpose||'—',b.reqBy||'—',statusBadge(b.status)],`deleteRoomBooking(${i})`)).join('');
+}
+function deleteRoomBooking(i){_roomBookings.splice(i,1);saveRoleData('roombookings',_roomBookings);renderRoomBookings();}
+
+// ── ICC MINUTES & BLUE PANDA ──
+function addICCMinutes(){openModal('iccminute-modal');}
+function submitICCMinute(){
+  const date=document.getElementById('iccm-date').value;if(!date)return;
+  const summary=document.getElementById('iccm-summary').value.trim();
+  const actions=document.getElementById('iccm-actions').value.trim();
+  _iccMinutes.unshift({date,summary,actions});
+  saveRoleData('iccminutes',_iccMinutes);renderICCBluePanda();closeModals();
+  ['iccm-date','iccm-summary','iccm-actions'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+}
+function addBluePandaReg(){openModal('bluepanda-modal');}
+function submitBluePanda(){
+  const member=document.getElementById('bp-member').value.trim();if(!member)return;
+  const conf=document.getElementById('bp-conf').value;
+  const event=document.getElementById('bp-event').value.trim();
+  const registered=document.getElementById('bp-registered').value||new Date().toLocaleDateString();
+  const status=document.getElementById('bp-status').value;
+  _bluePandaRegs.push({member,event,conf,registered,status});
+  saveRoleData('bluepanda',_bluePandaRegs);renderICCBluePanda();closeModals();
+  ['bp-member','bp-event','bp-registered'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+}
+function renderICCBluePanda(){
+  const ml=document.getElementById('icc-minutes-list');
+  if(ml){
+    if(!_iccMinutes.length){ml.innerHTML='<div style="padding:20px;text-align:center;color:var(--t4);font-size:11px">No ICC minutes logged yet.</div>';}
+    else ml.innerHTML=_iccMinutes.map((m,i)=>`
+      <div style="padding:12px 0;border-bottom:1px solid var(--bd);display:flex;justify-content:space-between;align-items:flex-start">
+        <div>
+          <div style="font-size:11px;font-weight:700;color:var(--t1)">${m.date} — ICC Meeting</div>
+          <div style="font-size:10.5px;color:var(--t2);margin-top:3px">${m.summary||'No summary.'}</div>
+          ${m.actions?`<div style="font-size:10px;color:var(--t4);margin-top:3px">Action items: ${m.actions}</div>`:''}
+        </div>
+        <button class="btn btn-g btn-sm" style="color:var(--cr);flex-shrink:0" onclick="deleteICCMinutes(${i})">✕</button>
+      </div>`).join('');
+  }
+  const t=document.getElementById('blue-panda-table');if(!t)return;
+  if(!_bluePandaRegs.length){t.innerHTML='<tr><td colspan="6" style="text-align:center;color:var(--t4);padding:16px;font-size:11px">No Blue Panda registrations yet.</td></tr>';return;}
+  t.innerHTML=_bluePandaRegs.map((r,i)=>roleRow([r.member,r.event||'—',r.conf||'—',r.registered,statusBadge(r.status)],`deleteBluePanda(${i})`)).join('');
+}
+function deleteICCMinutes(i){_iccMinutes.splice(i,1);saveRoleData('iccminutes',_iccMinutes);renderICCBluePanda();}
+function deleteBluePanda(i){_bluePandaRegs.splice(i,1);saveRoleData('bluepanda',_bluePandaRegs);renderICCBluePanda();}
+
+// ── PRESIDENT'S HUB ──
+function renderConfDues(){
+  const el=document.getElementById('conf-dues-list');if(!el)return;
+  if(!_confEvents.length){el.innerHTML='<div style="padding:20px;text-align:center;color:var(--t4);font-size:11px">No conferences set up yet.</div>';return;}
+  el.innerHTML=_confEvents.map((c,ci)=>{
+    const allMembers=(typeof members!=='undefined'?members:[]);
+    const paid=c.paid||[];const unpaid=c.unpaid||[];
+    const total=paid.length+unpaid.length;
+    const pct=total>0?Math.round((paid.length/total)*100):0;
+    return`<div class="card" style="margin-bottom:12px">
+      <div class="ch">
+        <div>
+          <div class="ct">${c.name}</div>
+          <div style="font-size:10px;color:var(--t3)">${c.date||''} · $${c.dues} per member</div>
+        </div>
+        <div style="display:flex;gap:6px">
+          <button class="btn btn-p btn-sm" onclick="markDuesPaid(${ci})">+ Mark Paid</button>
+          <button class="btn btn-g btn-sm" onclick="deleteConfEvent(${ci})">✕ Remove</button>
+        </div>
+      </div>
+      <div style="padding:0 16px 14px">
+        <div style="display:flex;gap:10px;margin-bottom:10px;flex-wrap:wrap">
+          <div style="flex:1;min-width:120px;padding:8px 12px;background:var(--grn)11;border:1px solid var(--grn)33;border-radius:6px">
+            <div style="font-size:18px;font-weight:700;color:var(--grn)">${paid.length}</div>
+            <div style="font-size:10px;color:var(--t3)">Paid</div>
+          </div>
+          <div style="flex:1;min-width:120px;padding:8px 12px;background:var(--cr)11;border:1px solid var(--cr)33;border-radius:6px">
+            <div style="font-size:18px;font-weight:700;color:var(--cr)">${unpaid.length}</div>
+            <div style="font-size:10px;color:var(--t3)">Unpaid</div>
+          </div>
+          <div style="flex:1;min-width:120px;padding:8px 12px;background:var(--blu)11;border:1px solid var(--blu)33;border-radius:6px">
+            <div style="font-size:18px;font-weight:700;color:var(--blu)">$${(paid.length*c.dues).toFixed(0)}</div>
+            <div style="font-size:10px;color:var(--t3)">Collected</div>
+          </div>
+        </div>
+        <div style="height:6px;background:var(--bd);border-radius:3px;margin-bottom:6px">
+          <div style="height:6px;background:var(--grn);border-radius:3px;width:${pct}%;transition:width .3s"></div>
+        </div>
+        <div style="font-size:10px;color:var(--t3)">${pct}% collection rate · ${paid.join(', ')||'No paid members yet'}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+function addConfEvent(){openModal('confpres-modal');}
+function submitConfPres(){
+  const name=document.getElementById('cp-name').value.trim();if(!name)return;
+  const date=document.getElementById('cp-date').value.trim();
+  const dues=parseFloat(document.getElementById('cp-dues').value)||0;
+  _confEvents.push({name,date,dues,paid:[],unpaid:[]});
+  saveRoleData('confevents',_confEvents);renderConfDues();closeModals();
+  ['cp-name','cp-date','cp-dues'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+}
+function markDuesPaid(ci){
+  document.getElementById('duespaid-idx').value=ci;
+  openModal('duespaid-modal');
+}
+function submitDuesPaid(){
+  const ci=parseInt(document.getElementById('duespaid-idx').value);
+  const name=document.getElementById('duespaid-member').value.trim();if(!name)return;
+  if(!_confEvents[ci].paid.includes(name)){_confEvents[ci].paid.push(name);}
+  const ui=_confEvents[ci].unpaid.indexOf(name);if(ui>-1)_confEvents[ci].unpaid.splice(ui,1);
+  saveRoleData('confevents',_confEvents);renderConfDues();closeModals();
+  document.getElementById('duespaid-member').value='';
+}
+function deleteConfEvent(ci){_confEvents.splice(ci,1);saveRoleData('confevents',_confEvents);renderConfDues();}
+
+function renderPresAgendas(){
+  const el=document.getElementById('pres-agendas-list');if(!el)return;
+  if(!_presAgendas.length){el.innerHTML='<div style="padding:20px;text-align:center;color:var(--t4);font-size:11px">No agendas yet. Use "New Agenda" to build one.</div>';return;}
+  el.innerHTML=_presAgendas.map((a,i)=>`
+    <div style="border:1px solid var(--bd);border-radius:8px;margin-bottom:10px;overflow:hidden">
+      <div style="padding:10px 14px;background:var(--s2);display:flex;justify-content:space-between;align-items:center">
+        <div>
+          <span style="font-size:9px;font-weight:700;text-transform:uppercase;padding:2px 8px;border-radius:10px;background:var(--cr)22;color:var(--cr);margin-right:6px">${a.type}</span>
+          <span style="font-size:12px;font-weight:700;color:var(--t1)">${a.date}</span>
+        </div>
+        <button class="btn btn-g btn-sm" style="color:var(--cr)" onclick="deletePresAgenda(${i})">✕</button>
+      </div>
+      <div style="padding:10px 14px;font-size:11px;white-space:pre-wrap;color:var(--t2);line-height:1.6">${a.items||'(No items)'}</div>
+    </div>`).join('');
+}
+function newPresAgenda(){openModal('agendapres-modal');}
+function submitPresAgenda(){
+  const type=document.getElementById('ap-type').value;
+  const date=document.getElementById('ap-date').value;if(!date)return;
+  const items=document.getElementById('ap-items').value.trim();
+  _presAgendas.unshift({type,date,items});
+  saveRoleData('agendas',_presAgendas);renderPresAgendas();closeModals();
+  document.getElementById('ap-date').value='';document.getElementById('ap-items').value='';
+}
+function deletePresAgenda(i){_presAgendas.splice(i,1);saveRoleData('agendas',_presAgendas);renderPresAgendas();}
+
+function renderDelegation(){
+  const t=document.getElementById('delegation-table');if(!t)return;
+  if(!_delegations.length){t.innerHTML='<tr><td colspan="7" style="text-align:center;color:var(--t4);padding:20px;font-size:11px">No deliverables assigned yet.</td></tr>';return;}
+  t.innerHTML=_delegations.map((d,i)=>roleRow([d.task,d.assignee,d.portal||'—',d.due||'—',priorityBadge(d.priority),statusBadge(d.status)],`deleteDelegation(${i})`)).join('');
+}
+function addDelegation(){openModal('delegation-modal');}
+function submitDelegation(){
+  const task=document.getElementById('del-task').value.trim();if(!task)return;
+  const assignee=document.getElementById('del-assignee').value;
+  const portal=document.getElementById('del-portal').value;
+  const due=document.getElementById('del-due').value;
+  const priority=document.getElementById('del-priority').value;
+  const status=document.getElementById('del-status').value;
+  _delegations.push({task,assignee,portal,due,priority,status});
+  saveRoleData('delegation',_delegations);renderDelegation();closeModals();
+  document.getElementById('del-task').value='';document.getElementById('del-due').value='';
+}
+function deleteDelegation(i){_delegations.splice(i,1);saveRoleData('delegation',_delegations);renderDelegation();}
+
 </script>
 </body>
-</html>
 </html>
