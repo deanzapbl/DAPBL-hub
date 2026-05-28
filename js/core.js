@@ -291,17 +291,101 @@ function sec(label,content){return`<div style="margin-bottom:18px"><div class="d
 // MEMBER EDIT
 function openMemberDetail(id){
   const m=members.find(x=>x.id===id);
-  const r=Math.round(m.att.filter(x=>x).length/m.att.length*100);
+  const r=_attRate(m.att);
   openDetail(m.first+' '+m.last,'Member profile — click Save to apply changes',
     row2(fld('First Name',inp('ed-first',m.first)),fld('Last Name',inp('ed-last',m.last)))+
     row2(fld('Role',sel('ed-role',['Member','Exec'],m.role)),fld('Email',inp('ed-email',m.email)))+
-    sec('Attendance',`<div style="display:flex;gap:4px;margin-bottom:8px">${m.att.map((a,i)=>`<div style="text-align:center"><div style="font-size:8px;color:var(--t4);margin-bottom:3px">S${i+1}</div><div class="dot ${a?'dg':'dr'}" style="width:12px;height:12px;cursor:pointer;border-radius:3px" onclick="toggleAtt(${id},${i})"></div></div>`).join('')}</div><div style="font-size:11px;color:var(--t3)">Attendance rate: ${r}%</div>`)+
+    sec('Attendance',`
+      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px">
+        ${m.att.map((a,i)=>`
+          <div style="text-align:center">
+            <div style="font-size:8px;color:var(--t4);margin-bottom:2px">S${i+1}</div>
+            <div style="width:30px;height:30px;border-radius:5px;background:${_attColor(a)};display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;cursor:pointer" onclick="toggleAtt(${id},${i})" title="Tap to toggle Present / Absent">${_attLabel(a)}</div>
+            <select style="font-size:8px;width:30px;margin-top:2px;border:1px solid var(--bd);border-radius:3px;background:var(--s2);color:var(--t3);cursor:pointer;padding:0 1px" onchange="setAtt(${id},${i},+this.value);this.blur()">
+              <option value="0"${a===0?' selected':''}>A</option>
+              <option value="1"${a===1?' selected':''}>P</option>
+              <option value="2"${a===2?' selected':''}>L</option>
+              <option value="3"${a===3?' selected':''}>E</option>
+            </select>
+          </div>`).join('')}
+      </div>
+      <div style="font-size:9px;color:var(--t4);margin-bottom:6px">Tap square = Present / Absent &nbsp;·&nbsp; Use dropdown for Late or Excused</div>
+      <div style="font-size:11px;color:var(--t3)">Attendance rate: <strong>${r}%</strong> (Excused not counted)</div>`)+
     `<div style="display:flex;gap:7px;margin-top:4px"><button class="btn btn-p btn-sm" onclick="saveMember(${id},this)">Save</button><button class="btn btn-g btn-sm" style="color:#E57373" onclick="removeMember(${id});closeDetail()">Remove</button></div>`,m);
+}
+// 0=Absent, 1=Present, 2=Late, 3=Excused
+function _attClass(v){return v===1?'dg':v===2?'dl':v===3?'de':'dr';}
+function _attLabel(v){return v===1?'P':v===2?'L':v===3?'E':'A';}
+function _attColor(v){return v===1?'var(--grn)':v===2?'#FF9800':v===3?'#42A5F5':'#E57373';}
+function _attRate(att){
+  const scored=att.filter(a=>a!==3); // excused don't count against rate
+  if(!scored.length)return 100;
+  return Math.round(scored.filter(a=>a===1||a===2).length/scored.length*100);
 }
 function toggleAtt(memberId,idx){
   const m=members.find(x=>x.id===memberId);
-  if(m){m.att[idx]=m.att[idx]?0:1;openMemberDetail(memberId);renderMembers();}
+  if(m){m.att[idx]=m.att[idx]===1?0:1;openMemberDetail(memberId);renderMembers();}
 }
+function setAtt(memberId,idx,val){
+  const m=members.find(x=>x.id===memberId);
+  if(m){m.att[idx]=val;openMemberDetail(memberId);renderMembers();}
+}
+
+// ── QUICK ATTENDANCE ──────────────────────────────────────────────────────────
+function openQuickAtt(){
+  const maxSess=members.length?Math.max(...members.map(m=>m.att?m.att.length:0)):1;
+  const n=maxSess||1;
+  const sel=document.getElementById('qa-sess-sel');
+  sel.innerHTML=Array.from({length:n},(_,i)=>`<option value="${i}">Session ${i+1}</option>`).join('');
+  sel.value=n-1;
+  renderQuickAtt(n-1);
+  openModal('quick-att-modal');
+}
+function renderQuickAtt(sessIdx){
+  const el=document.getElementById('qa-list');
+  if(!el)return;
+  if(!members.length){el.innerHTML='<div style="padding:20px;text-align:center;color:var(--t4);font-size:12px">No members yet.</div>';return;}
+  const sorted=[...members].sort((a,b)=>(a.last+a.first).localeCompare(b.last+b.first));
+  el.innerHTML=sorted.map(m=>{
+    const a=m.att&&m.att[sessIdx]!=null?m.att[sessIdx]:0;
+    const bg=_attColor(a);
+    return`<div style="display:flex;align-items:center;gap:10px;padding:8px 2px;border-bottom:1px solid var(--bd)">
+      <div style="flex:1;min-width:0">
+        <div style="font-size:12px;font-weight:600;color:var(--t1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${m.first} ${m.last}</div>
+        <div style="font-size:10px;color:var(--t3)">${m.role}</div>
+      </div>
+      <button style="min-width:62px;height:36px;border-radius:7px;border:none;font-weight:700;font-size:12px;cursor:pointer;background:${bg};color:#fff" onclick="qaToggle(${m.id},${sessIdx})">${a===1?'Present':'Absent'}</button>
+      <select style="font-size:10px;height:36px;border:1px solid var(--bd);border-radius:5px;background:var(--s2);color:var(--t2);padding:0 4px;cursor:pointer" onchange="qaSetAtt(${m.id},${sessIdx},+this.value)">
+        <option value="1"${a===1?' selected':''}>P – Present</option>
+        <option value="0"${a===0?' selected':''}>A – Absent</option>
+        <option value="2"${a===2?' selected':''}>L – Late</option>
+        <option value="3"${a===3?' selected':''}>E – Excused</option>
+      </select>
+    </div>`;
+  }).join('');
+  const rateEl=document.getElementById('qa-rate');
+  if(rateEl){
+    const here=members.filter(m=>m.att&&(m.att[sessIdx]===1||m.att[sessIdx]===2)).length;
+    rateEl.textContent=`${here} / ${members.length} here`;
+  }
+}
+function qaToggle(memberId,sessIdx){
+  const m=members.find(x=>x.id===memberId);
+  if(!m)return;
+  if(!m.att)m.att=[];
+  while(m.att.length<=sessIdx)m.att.push(0);
+  m.att[sessIdx]=m.att[sessIdx]===1?0:1;
+  renderQuickAtt(sessIdx);renderMembers();
+}
+function qaSetAtt(memberId,sessIdx,val){
+  const m=members.find(x=>x.id===memberId);
+  if(!m)return;
+  if(!m.att)m.att=[];
+  while(m.att.length<=sessIdx)m.att.push(0);
+  m.att[sessIdx]=val;
+  renderQuickAtt(sessIdx);renderMembers();
+}
+
 function saveMember(id,btn){
   const m=members.find(x=>x.id===id);
   m.first=g('ed-first');m.last=g('ed-last');m.role=g('ed-role');m.email=g('ed-email');
@@ -507,9 +591,9 @@ function renderEmailList(){
 function renderMembers(){
   const l=document.getElementById('member-list');if(!l)return;
   l.innerHTML=members.map(m=>{
-    const r=Math.round(m.att.filter(x=>x).length/m.att.length*100);
+    const r=_attRate(m.att);
     const sc=r>=80?'bg':r>=50?'bo':'br';const sl=r>=80?'Good':r>=50?'At Risk':'Inactive';
-    const d=m.att.map(a=>`<div class="dot ${a?'dg':'dr'}"></div>`).join('');
+    const d=m.att.map(a=>`<div class="dot ${_attClass(a)}"></div>`).join('');
     return`<div class="mr" style="cursor:pointer" onclick="openMemberDetail(${m.id})"><div class="mav">${m.first[0]+m.last[0]}</div><div class="mi"><div class="mn">${m.first} ${m.last}</div><div class="mro">${m.role} &middot; ${m.email}</div></div><div class="dots" style="margin-right:10px">${d}</div><span style="font-size:11px;color:var(--t3);margin-right:8px">${r}%</span><span class="badge ${sc}">${sl}</span><span style="font-size:9px;color:var(--t4);margin-left:8px">Edit</span></div>`;
   }).join('');updateStats();
 }
@@ -1353,7 +1437,7 @@ function renderDashboard(){
   const totalInc=transactions.income.reduce((s,t)=>s+t.amount,0);
   const totalExp=transactions.expense.reduce((s,t)=>s+t.amount,0);
   const bal=totalInc-totalExp;
-  const avgAtt=members.length?Math.round(members.reduce((s,m)=>s+m.att.filter(x=>x).length/m.att.length*100,0)/members.length):0;
+  const avgAtt=members.length?Math.round(members.reduce((s,m)=>s+_attRate(m.att),0)/members.length):0;
 
   const statsEl=document.getElementById('dash-stats');
   if(statsEl)statsEl.innerHTML=`
@@ -1364,7 +1448,7 @@ function renderDashboard(){
 
   // Alerts - things that need attention
   const alerts=[];
-  const atRisk=members.filter(m=>Math.round(m.att.filter(x=>x).length/m.att.length*100)<50);
+  const atRisk=members.filter(m=>_attRate(m.att)<50);
   if(atRisk.length)alerts.push({color:'#E57373',text:`${atRisk.length} member${atRisk.length>1?'s':''} below 50% attendance: ${atRisk.map(m=>m.first+' '+m.last).join(', ')}`});
   const overdueTasks=[...tasks.ebod,...tasks.general].filter(t=>!t.done&&t.due&&t.due!=='TBD');
   if(overdueTasks.length)alerts.push({color:'var(--gold2)',text:`${overdueTasks.length} open task${overdueTasks.length>1?'s':''} — oldest due: ${overdueTasks[0].due} (${overdueTasks[0].text})`});
@@ -1952,6 +2036,14 @@ let contentPosts=[
   {id:2,date:'May 20',platform:'GroupMe',type:'Announcement',caption:'SBLC results are up — check the website for placements!',status:'Sent'},
 ];let nPost=3;
 
+function switchBrandKitTab(kit){
+  document.getElementById('bk-pbl').style.display=kit==='pbl'?'':'none';
+  document.getElementById('bk-polaris').style.display=kit==='polaris'?'':'none';
+  const btnPbl=document.getElementById('bk-tab-pbl');
+  const btnPol=document.getElementById('bk-tab-polaris');
+  if(btnPbl){btnPbl.className=kit==='pbl'?'btn btn-p btn-sm':'btn btn-g btn-sm';btnPbl.style.cssText='font-size:11px'+(kit==='pbl'?'':';background:transparent;color:var(--t3);border-color:var(--bd)');}
+  if(btnPol){btnPol.style.cssText='font-size:11px;background:'+(kit==='polaris'?'#011c43':'transparent')+';color:'+(kit==='polaris'?'#fff':'var(--t3)')+';border-color:'+(kit==='polaris'?'#011c43':'var(--bd)');}
+}
 function renderBrandKit(){
   const cc=document.getElementById('brand-colors');
   if(cc)cc.innerHTML=brandKit.colors.map(c=>`
