@@ -1,3 +1,145 @@
+// ── FBLA EVENTS (IM Dashboard) ───────────────────────────────────────────────
+let _fblaEvents=JSON.parse(localStorage.getItem('pbl_fblaevents')||JSON.stringify([
+  {name:'Business Plan',members:'Arya Somu, Iker Jimenez',competition:'NLC 2026',type:'Team',notes:'Top 10 nationally last year'},
+  {name:'Entrepreneurship',members:'Jordan Nguyen, Nhi Tran',competition:'NLC 2026',type:'Team',notes:''},
+  {name:'Financial Analysis',members:'George Huang, Anna Huynh',competition:'NLC 2026',type:'Team',notes:''},
+  {name:'Management Decision Making',members:'Addy Hu',competition:'NLC 2026',type:'Individual',notes:''},
+  {name:'Public Speaking',members:'Nisa Pradhan',competition:'NLC 2026',type:'Individual',notes:''},
+  {name:'Community Service Project',members:'Christina Tran, Carine Chan',competition:'NLC 2026',type:'Team',notes:'1st place SBLC 2026'},
+]));
+function saveFBLAEvents(){localStorage.setItem('pbl_fblaevents',JSON.stringify(_fblaEvents));}
+function renderFBLAEvents(){
+  const el=document.getElementById('fbla-events-list');if(!el)return;
+  if(!_fblaEvents.length){el.innerHTML='<div style="padding:14px;font-size:11px;color:var(--t4)">No events added yet. Add one to display on the member dashboard.</div>';return;}
+  el.innerHTML=_fblaEvents.map((e,i)=>`
+    <div class="ime-ed-item">
+      <div style="flex:1;min-width:0">
+        <div class="ime-ed-title">${e.name} <span class="badge bb" style="font-size:9px">${e.type}</span>${e.notes?` <span style="font-size:9px;color:var(--gold2);font-weight:600">${e.notes}</span>`:''}</div>
+        <div class="ime-ed-sub">${e.members} · ${e.competition}</div>
+      </div>
+      <div style="display:flex;gap:5px">
+        <button class="btn btn-g btn-sm" onclick="editFBLAEvent(${i})">Edit</button>
+        <button class="btn btn-g btn-sm" style="color:var(--cr)" onclick="deleteFBLAEvent(${i})">✕</button>
+      </div>
+    </div>`).join('');
+}
+function addFBLAEvent(){
+  openDetail('Add FBLA Event','This event will appear on the member dashboard.',
+    row2(fld('Event Name',inp('fbla-name','')),fld('Competition',inp('fbla-comp','NLC 2026')))+
+    row2(fld('Type',sel('fbla-type',['Team','Individual'],'Team')),fld('Notes / Badge',inp('fbla-notes','')))+
+    fld('Members (comma-separated)',inp('fbla-members',''))+
+    `<button class="btn btn-p btn-sm" onclick="saveFBLAEventNew(this)">Add Event</button>`);
+}
+function saveFBLAEventNew(btn){
+  const e={name:g('fbla-name'),competition:g('fbla-comp'),type:g('fbla-type'),notes:g('fbla-notes'),members:g('fbla-members')};
+  if(!e.name)return;
+  _fblaEvents.push(e);saveFBLAEvents();renderFBLAEvents();closeDetail();saved(btn);
+}
+function editFBLAEvent(i){
+  const e=_fblaEvents[i];
+  openDetail('Edit FBLA Event','',
+    row2(fld('Event Name',inp('fbla-name',e.name)),fld('Competition',inp('fbla-comp',e.competition)))+
+    row2(fld('Type',sel('fbla-type',['Team','Individual'],e.type)),fld('Notes / Badge',inp('fbla-notes',e.notes)))+
+    fld('Members (comma-separated)',inp('fbla-members',e.members))+
+    `<button class="btn btn-p btn-sm" onclick="saveFBLAEventEdit(${i},this)">Save</button>`);
+}
+function saveFBLAEventEdit(i,btn){
+  _fblaEvents[i]={name:g('fbla-name'),competition:g('fbla-comp'),type:g('fbla-type'),notes:g('fbla-notes'),members:g('fbla-members')};
+  saveFBLAEvents();renderFBLAEvents();closeDetail();saved(btn);
+}
+function deleteFBLAEvent(i){_fblaEvents.splice(i,1);saveFBLAEvents();renderFBLAEvents();}
+
+// ── CONTACTS DIRECTORY ───────────────────────────────────────────────────────
+let _contacts=JSON.parse(localStorage.getItem('pbl_contacts')||JSON.stringify([
+  {id:1,name:'Bus Driver / Charter Co.',org:'Charter Bus Company',cat:'Vendor',phone:'',email:'',notes:'Contact for transportation to SBLC/NLC. Book at least 6 weeks out.'},
+  {id:2,name:'Embroidery / Merch',org:'Embroidery Vendor',cat:'Vendor',phone:'',email:'',notes:'Chapter shirts, jackets, name badges. Minimum order qty TBD.'},
+  {id:3,name:'State Advisor',org:'FBLA-PBL California',cat:'Leadership',phone:'',email:'',notes:'State chapter advisor. Key contact for SBLC registration and rules.'},
+  {id:4,name:'National Leadership',org:'FBLA-PBL National',cat:'Leadership',phone:'',email:'',notes:'National office contact for NLC registration, eligibility, and awards.'},
+  {id:5,name:'Faculty Advisor',org:'De Anza College',cat:'School',phone:'',email:'',notes:'Required signatory on ICC forms and conference travel approvals.'},
+]));
+let _nContact=(_contacts.length?Math.max(..._contacts.map(c=>c.id||0)):0)+1;
+function saveContacts(){localStorage.setItem('pbl_contacts',JSON.stringify(_contacts));}
+
+let _contactFilter='';
+function filterContacts(cat){
+  _contactFilter=cat;
+  document.querySelectorAll('#contacts-filter-tabs button').forEach(b=>b.className='btn btn-g btn-sm'+b.style.cssText);
+  const active=document.getElementById(cat?'cf-'+cat:'cf-all');
+  if(active){active.className='btn btn-p btn-sm';active.style.borderRadius='20px';}
+  renderContacts();
+}
+function renderContacts(){
+  const el=document.getElementById('contacts-list');if(!el)return;
+  // restore tab styles
+  document.querySelectorAll('#contacts-filter-tabs button').forEach(b=>{b.style.borderRadius='20px';});
+  const active=document.getElementById(_contactFilter?'cf-'+_contactFilter:'cf-all');
+  if(active){active.className='btn btn-p btn-sm';active.style.borderRadius='20px';}
+
+  const list=_contactFilter?_contacts.filter(c=>c.cat===_contactFilter):_contacts;
+  if(!list.length){
+    el.innerHTML='<div class="card"><div style="padding:24px;text-align:center;font-size:11px;color:var(--t4)">No contacts in this category. Click + Add Contact to get started.</div></div>';
+    return;
+  }
+  const catColors={Vendor:'var(--blu)',Leadership:'var(--cr)',School:'var(--grn)',Partner:'var(--gold2)',Other:'var(--t3)'};
+  const grouped={};
+  list.forEach(c=>{(grouped[c.cat]=grouped[c.cat]||[]).push(c);});
+  el.innerHTML=Object.entries(grouped).map(([cat,items])=>`
+    <div class="card" style="margin-bottom:14px">
+      <div class="ch">
+        <div style="display:flex;align-items:center;gap:8px">
+          <div style="width:8px;height:8px;border-radius:50%;background:${catColors[cat]||'var(--t3)'}"></div>
+          <div class="ct">${cat==='School'?'School / Admin':cat+'s'}</div>
+          <span style="font-size:10px;color:var(--t4)">${items.length}</span>
+        </div>
+      </div>
+      ${items.map(c=>`
+        <div style="display:flex;align-items:flex-start;gap:12px;padding:13px 16px;border-bottom:1px solid var(--bd)" id="contact-row-${c.id}">
+          <div style="width:36px;height:36px;border-radius:8px;background:${catColors[c.cat]||'var(--t3)'}22;border:1px solid ${catColors[c.cat]||'var(--t3)'}44;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:14px;font-weight:700;color:${catColors[c.cat]||'var(--t3)'}">${c.name.charAt(0).toUpperCase()}</div>
+          <div style="flex:1;min-width:0">
+            <div style="font-size:12px;font-weight:600;color:var(--t1)">${c.name}</div>
+            <div style="font-size:10px;color:var(--t3);margin-top:1px">${c.org||''}</div>
+            <div style="display:flex;gap:12px;margin-top:5px;flex-wrap:wrap">
+              ${c.phone?`<a href="tel:${c.phone}" style="font-size:10px;color:var(--cr);text-decoration:none">📞 ${c.phone}</a>`:''}
+              ${c.email?`<a href="mailto:${c.email}" style="font-size:10px;color:var(--cr);text-decoration:none">✉ ${c.email}</a>`:''}
+            </div>
+            ${c.notes?`<div style="font-size:10px;color:var(--t4);margin-top:5px;line-height:1.5">${c.notes}</div>`:''}
+          </div>
+          <div style="display:flex;gap:5px;flex-shrink:0">
+            <button class="btn btn-g btn-sm" onclick="editContact(${c.id})">Edit</button>
+            <button class="btn btn-g btn-sm" style="color:var(--cr)" onclick="deleteContact(${c.id})">✕</button>
+          </div>
+        </div>`).join('')}
+    </div>`).join('');
+}
+function addContact(){
+  openDetail('Add Contact','',
+    row2(fld('Name',inp('ct-name','')),fld('Organization / Role',inp('ct-org','')))+
+    row2(fld('Category',sel('ct-cat',['Vendor','Leadership','School','Partner','Other'],'Vendor')),fld('Phone',inp('ct-phone','')))+
+    fld('Email',inp('ct-email',''))+
+    fld('Notes',ta('ct-notes','',3))+
+    `<button class="btn btn-p btn-sm" onclick="saveContactNew(this)">Add Contact</button>`);
+}
+function saveContactNew(btn){
+  const name=g('ct-name');if(!name)return;
+  _contacts.push({id:_nContact++,name,org:g('ct-org'),cat:g('ct-cat'),phone:g('ct-phone'),email:g('ct-email'),notes:g('ct-notes')});
+  saveContacts();renderContacts();closeDetail();saved(btn);
+}
+function editContact(id){
+  const c=_contacts.find(x=>x.id===id);if(!c)return;
+  openDetail('Edit Contact','',
+    row2(fld('Name',inp('ct-name',c.name)),fld('Organization / Role',inp('ct-org',c.org)))+
+    row2(fld('Category',sel('ct-cat',['Vendor','Leadership','School','Partner','Other'],c.cat)),fld('Phone',inp('ct-phone',c.phone||'')))+
+    fld('Email',inp('ct-email',c.email||''))+
+    fld('Notes',ta('ct-notes',c.notes||'',3))+
+    `<button class="btn btn-p btn-sm" onclick="saveContactEdit(${id},this)">Save</button>`);
+}
+function saveContactEdit(id,btn){
+  const idx=_contacts.findIndex(x=>x.id===id);if(idx<0)return;
+  _contacts[idx]={..._contacts[idx],name:g('ct-name'),org:g('ct-org'),cat:g('ct-cat'),phone:g('ct-phone'),email:g('ct-email'),notes:g('ct-notes')};
+  saveContacts();renderContacts();closeDetail();saved(btn);
+}
+function deleteContact(id){_contacts=_contacts.filter(x=>x.id!==id);saveContacts();renderContacts();}
+
 // ── HOMEWORK GRADING (EBOD) ──────────────────────────────────────────────────
 let hwAssignments=JSON.parse(localStorage.getItem('pblhub_hw_assignments')||'[]');
 
@@ -159,7 +301,7 @@ function _enterEBOD(){
   document.getElementById('landing').style.display='none';
   document.getElementById('app-ebod').style.display='block';
   loadData();
-  renderMembers();renderExec();renderBootcamps();renderTasks();renderAgendas();renderEvents();renderRos();renderTemplates();renderSponsors();renderEmailList();renderConsulting();renderCompetition();renderBudget();renderMinutes();renderRecruitment();renderGoals();renderTransition();renderAnnouncements();renderMentorship();renderDashboard();renderPortals();renderEcSelect();renderReimbursements();renderVenues();renderVolSlots();renderCompPrep();renderCurriculum();renderBrandKit();renderContentCalendar();renderCaMentors();renderMemberCheckIns();renderCalendar();renderEBODHomework();renderMemberContent();loadBKEdits();
+  renderMembers();renderExec();renderBootcamps();renderTasks();renderAgendas();renderEvents();renderRos();renderTemplates();renderSponsors();renderEmailList();renderConsulting();renderCompetition();renderBudget();renderMinutes();renderRecruitment();renderGoals();renderTransition();renderAnnouncements();renderMentorship();renderDashboard();renderPortals();renderEcSelect();renderReimbursements();renderVenues();renderVolSlots();renderCompPrep();renderCurriculum();renderBrandKit();renderContentCalendar();renderCaMentors();renderMemberCheckIns();renderCalendar();renderEBODHomework();renderMktgContacts();renderFBLAEvents();renderOHSlots();renderContacts();loadBKEdits();
   if(typeof updateMemberDisplay==='function')updateMemberDisplay();
   initExtraListeners();
   loadEBODHWFromFirestore();
@@ -811,12 +953,81 @@ function updateImReimb(id,status){
 // ============================================================
 // ── OFFICE HOURS ─────────────────────────────────────────────
 // ============================================================
+let _ohSlots=JSON.parse(localStorage.getItem('pbl_ohslots')||'[]');
+function saveOHSlots(){localStorage.setItem('pbl_ohslots',JSON.stringify(_ohSlots));}
+let _nOHSlot=(_ohSlots.length?Math.max(..._ohSlots.map(s=>s.id||0)):0)+1;
+
+function renderOHSlots(){
+  const el=document.getElementById('oh-slots-list');if(!el)return;
+  if(!_ohSlots.length){
+    el.innerHTML='<div style="font-size:11px;color:var(--t4);padding:12px 0">No slots added yet. Add slots to let members book sessions.</div>';
+    return;
+  }
+  el.innerHTML=_ohSlots.map((s,i)=>`
+    <div class="ime-ed-item">
+      <div style="flex:1;min-width:0">
+        <div class="ime-ed-title">${s.officer} <span class="badge ${s.available?'bg':'br'}" style="font-size:9px;cursor:pointer" onclick="toggleOHSlot(${i})">${s.available?'Open':'Closed'}</span></div>
+        <div class="ime-ed-sub">${s.day} &nbsp;·&nbsp; ${s.time}${s.note?' &nbsp;·&nbsp; '+s.note:''}</div>
+      </div>
+      <div style="display:flex;gap:5px">
+        <button class="btn btn-g btn-sm" onclick="editOHSlot(${i})">Edit</button>
+        <button class="btn btn-g btn-sm" style="color:var(--cr)" onclick="deleteOHSlot(${i})">✕</button>
+      </div>
+    </div>`).join('');
+}
+function addOHSlot(){
+  const officers=(typeof mExecTeam!=='undefined'?mExecTeam:[]).map(e=>e.name);
+  openDetail('Add Office Hour Slot','This slot will appear on the member portal for booking.',
+    row2(fld('Officer',sel('ohs-officer',officers,officers[0]||'')),fld('Day / Date',inp('ohs-day','')))+
+    row2(fld('Time Window',inp('ohs-time','')),fld('Note (optional)',inp('ohs-note','')))+
+    `<button class="btn btn-p btn-sm" onclick="saveOHSlotNew(this)">Add Slot</button>`);
+}
+function saveOHSlotNew(btn){
+  const s={id:_nOHSlot++,officer:g('ohs-officer'),day:g('ohs-day'),time:g('ohs-time'),note:g('ohs-note'),available:true};
+  if(!s.officer||!s.day||!s.time)return;
+  _ohSlots.push(s);saveOHSlots();renderOHSlots();closeDetail();saved(btn);
+}
+function editOHSlot(i){
+  const s=_ohSlots[i];
+  const officers=(typeof mExecTeam!=='undefined'?mExecTeam:[]).map(e=>e.name);
+  openDetail('Edit Office Hour Slot','',
+    row2(fld('Officer',sel('ohs-officer',officers,s.officer)),fld('Day / Date',inp('ohs-day',s.day)))+
+    row2(fld('Time Window',inp('ohs-time',s.time)),fld('Note (optional)',inp('ohs-note',s.note||'')))+
+    `<button class="btn btn-p btn-sm" onclick="saveOHSlotEdit(${i},this)">Save</button>`);
+}
+function saveOHSlotEdit(i,btn){
+  _ohSlots[i]={..._ohSlots[i],officer:g('ohs-officer'),day:g('ohs-day'),time:g('ohs-time'),note:g('ohs-note')};
+  saveOHSlots();renderOHSlots();closeDetail();saved(btn);
+}
+function deleteOHSlot(i){_ohSlots.splice(i,1);saveOHSlots();renderOHSlots();}
+function toggleOHSlot(i){_ohSlots[i].available=!_ohSlots[i].available;saveOHSlots();renderOHSlots();}
 function renderIMConsulting(){
   const el=document.getElementById('im-consult-list');if(!el)return;
   const uid=firebase.auth().currentUser?.uid;
-  if(!uid){el.innerHTML='<div class="empty">Sign in to request a session.</div>';return;}
+  if(!uid){el.innerHTML='<div class="empty">Sign in to book a session.</div>';return;}
   const myReqs=_officeHourReqs.filter(r=>r.uid===uid);
-  el.innerHTML=`<div style="padding:0 4px">
+  const slots=JSON.parse(localStorage.getItem('pbl_ohslots')||'[]');
+  const openSlots=slots.filter(s=>s.available);
+
+  // ── Slots view (when EBOD has set availability) ─────────────
+  const slotsHtml=openSlots.length
+    ?openSlots.map((s,i)=>{
+      const alreadyBooked=myReqs.some(r=>r.slotId===s.id&&r.status!=='Denied');
+      return`<div style="display:flex;align-items:center;gap:12px;padding:11px 16px;border-bottom:1px solid var(--bd)">
+        <div style="flex:1;min-width:0">
+          <div style="font-size:12px;font-weight:600;color:var(--t1)">${s.officer}</div>
+          <div style="font-size:10px;color:var(--t3);margin-top:2px">${s.day} &nbsp;·&nbsp; ${s.time}</div>
+          ${s.note?`<div style="font-size:10px;color:var(--t2);margin-top:1px">${s.note}</div>`:''}
+        </div>
+        ${alreadyBooked
+          ?`<span class="badge bo">Requested</span>`
+          :`<button onclick="bookOHSlot(${s.id})" style="padding:6px 14px;background:var(--cr);color:#fff;border:none;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;white-space:nowrap">Book</button>`}
+      </div>`;
+    }).join('')
+    :'<div style="padding:14px 16px;font-size:11px;color:var(--t4)">No open slots right now — check back soon.</div>';
+
+  // ── Fallback free-form (no slots set by EBOD) ───────────────
+  const freeformHtml=`<div style="padding:0 4px">
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
       <div><div style="font-size:10px;color:var(--t3);margin-bottom:4px">Exec Officer</div>
         <select id="oh-exec" style="width:100%;box-sizing:border-box;padding:7px 10px;border:1px solid var(--bd);border-radius:6px;background:var(--s2);color:var(--t1);font-size:11px;outline:none">
@@ -826,11 +1037,13 @@ function renderIMConsulting(){
         <input id="oh-topic" type="text" placeholder="e.g. NLC competition prep" style="width:100%;box-sizing:border-box;padding:7px 10px;border:1px solid var(--bd);border-radius:6px;background:var(--s2);color:var(--t1);font-size:11px;outline:none"></div>
     </div>
     <div style="margin-bottom:10px"><div style="font-size:10px;color:var(--t3);margin-bottom:4px">Preferred Time / Days</div>
-      <input id="oh-time" type="text" placeholder="e.g. Mon/Wed after 4pm, or anytime Friday" style="width:100%;box-sizing:border-box;padding:7px 10px;border:1px solid var(--bd);border-radius:6px;background:var(--s2);color:var(--t1);font-size:11px;outline:none"></div>
+      <input id="oh-time" type="text" placeholder="e.g. Mon/Wed after 4pm" style="width:100%;box-sizing:border-box;padding:7px 10px;border:1px solid var(--bd);border-radius:6px;background:var(--s2);color:var(--t1);font-size:11px;outline:none"></div>
     <div id="oh-err" style="font-size:10px;min-height:14px;margin-bottom:8px"></div>
     <button onclick="submitOfficeHour()" style="padding:7px 16px;background:var(--cr);color:#fff;border:none;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer">Request Session</button>
-  </div>
-  ${myReqs.length?`<div style="margin-top:16px;padding-top:14px;border-top:1px solid var(--bd)">
+  </div>`;
+
+  // ── My past requests ────────────────────────────────────────
+  const myReqsHtml=myReqs.length?`<div style="margin-top:16px;padding-top:14px;border-top:1px solid var(--bd)">
     <div style="font-size:10px;font-weight:600;color:var(--t3);letter-spacing:1px;text-transform:uppercase;margin-bottom:8px">My Requests</div>
     ${myReqs.map(r=>{
       const sc=r.status==='Confirmed'?'bg':r.status==='Denied'?'br':'bo';
@@ -840,7 +1053,24 @@ function renderIMConsulting(){
         ${r.preferredTime?`<div style="font-size:10px;color:var(--t4)">${r.preferredTime}</div>`:''}</div>
         <span class="badge ${sc}">${r.status}</span></div>`;
     }).join('')}
-  </div>`:''}`;
+  </div>`:'';
+
+  el.innerHTML=(slots.length?slotsHtml:freeformHtml)+myReqsHtml;
+}
+function bookOHSlot(slotId){
+  const uid=firebase.auth().currentUser?.uid;
+  if(!uid){showSignIn();return;}
+  const slots=JSON.parse(localStorage.getItem('pbl_ohslots')||'[]');
+  const slot=slots.find(s=>s.id===slotId);if(!slot)return;
+  if(!window._db)return;
+  _db.collection('office-hours').add({
+    uid,memberName:selectedMember?.name||'',memberEmail:selectedMember?.email||'',
+    exec:slot.officer,topic:slot.day+' · '+slot.time+(slot.note?' — '+slot.note:''),
+    preferredTime:slot.day+' '+slot.time,slotId,
+    submittedAt:new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}),
+    status:'Pending'
+  }).then(()=>renderIMConsulting())
+    .catch(e=>console.warn('bookOHSlot:',e));
 }
 function submitOfficeHour(){
   const uid=firebase.auth().currentUser?.uid;
@@ -1270,33 +1500,137 @@ function renderCampaigns(){
 function deleteCampaign(i){_campaigns.splice(i,1);saveRoleData('campaigns',_campaigns);renderCampaigns();}
 
 // ── ANALYTICS ──
-function addAnalyticsEntry(){openModal('analytics-modal');}
-function submitAnalytics(){
-  const platform=document.getElementById('an-platform').value;
-  const followers=parseInt(document.getElementById('an-followers').value)||0;
-  const engRate=parseFloat(document.getElementById('an-engrate').value)||0;
-  const reach=parseInt(document.getElementById('an-reach').value)||0;
-  const topPost=document.getElementById('an-toppost').value.trim();
-  _analyticsLog.push({platform,followers,engRate,reach,topPost,logged:new Date().toLocaleDateString()});
-  saveRoleData('analytics',_analyticsLog);renderAnalytics();closeModals();
-  ['an-followers','an-engrate','an-reach','an-toppost'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+function addAnalyticsEntry(){} // kept for backward compat
+function renderAnalytics(){_renderWebMetrics();_renderSocialMetrics();}
+function deleteAnalytics(){}
+
+// ── ANALYTICS: WEBSITE ────────────────────────────────────────────────────────
+let _webMetrics=JSON.parse(localStorage.getItem('pbl_webmetrics')||'{}');
+function _renderWebMetrics(){
+  const el=document.getElementById('web-metrics-display');if(!el)return;
+  const m=_webMetrics;
+  const updated=m.updated||'';
+  if(!m.sessions&&!m.pageviews&&!m.bounceRate){
+    el.innerHTML=`<div style="padding:16px;text-align:center;color:var(--t4);font-size:11px">No data yet — click ✎ Update to enter your website stats.</div>`;return;
+  }
+  const stat=(label,val,sub)=>`<div style="text-align:center;padding:12px 8px;background:var(--s2);border-radius:8px">
+    <div style="font-size:18px;font-weight:700;color:var(--t1)">${val||'—'}</div>
+    <div style="font-size:10px;font-weight:600;color:var(--t2);margin-top:3px">${label}</div>
+    ${sub?`<div style="font-size:9px;color:var(--t4);margin-top:2px">${sub}</div>`:''}
+  </div>`;
+  el.innerHTML=`
+    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-bottom:10px">
+      ${stat('Sessions',m.sessions)}
+      ${stat('Page Views',m.pageviews)}
+      ${stat('Bounce Rate',m.bounceRate?m.bounceRate+'%':'')}
+      ${stat('Avg. Duration',m.avgDuration)}
+      ${stat('New Users',m.newUsers)}
+    </div>
+    ${m.topPage||m.source||m.notes?`<div style="font-size:10px;color:var(--t3);padding:8px 0;border-top:1px solid var(--bd);line-height:1.7">
+      ${m.topPage?`<span style="font-weight:600">Top Page:</span> ${m.topPage} &nbsp;&nbsp;`:''}
+      ${m.source?`<span style="font-weight:600">Top Source:</span> ${m.source} &nbsp;&nbsp;`:''}
+      ${m.notes?`<span style="font-weight:600">Notes:</span> ${m.notes}`:''}
+    </div>`:''}
+    ${updated?`<div style="font-size:9px;color:var(--t4);margin-top:4px">Last updated: ${updated}</div>`:''}`;
 }
-function renderAnalytics(){
-  const statsRow=document.getElementById('analytics-stats-row');
-  if(statsRow&&_analyticsLog.length){
-    const totFollowers=_analyticsLog.reduce((s,a)=>s+a.followers,0);
-    const avgEng=(_analyticsLog.reduce((s,a)=>s+a.engRate,0)/_analyticsLog.length).toFixed(1);
-    statsRow.innerHTML=[
-      {l:'Total Followers',v:totFollowers.toLocaleString(),c:'var(--blu)'},
-      {l:'Avg Engagement',v:avgEng+'%',c:'var(--grn)'},
-      {l:'Platforms Tracked',v:_analyticsLog.length,c:'var(--gold)'},
-    ].map(s=>`<div class="stat-card"><div class="stat-val" style="color:${s.c}">${s.v}</div><div class="stat-lbl">${s.l}</div></div>`).join('');
-  }else if(statsRow)statsRow.innerHTML='';
-  const t=document.getElementById('analytics-table');if(!t)return;
-  if(!_analyticsLog.length){t.innerHTML='<tr><td colspan="7" style="text-align:center;color:var(--t4);padding:20px;font-size:11px">No analytics logged yet.</td></tr>';return;}
-  t.innerHTML=_analyticsLog.map((a,i)=>roleRow([a.platform,a.followers.toLocaleString(),a.engRate+'%',a.reach.toLocaleString(),a.topPost||'—',a.logged],`deleteAnalytics(${i})`)).join('');
+function editWebMetrics(){
+  const m=_webMetrics;
+  openDetail('Update Website Analytics','Enter your latest website stats (from Google Analytics, Squarespace, etc.)',
+    `<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+      ${fld('Sessions',inp('wm-sessions',m.sessions||''))}
+      ${fld('Page Views',inp('wm-pageviews',m.pageviews||''))}
+      ${fld('Bounce Rate (%)',inp('wm-bounce',m.bounceRate||'','number'))}
+      ${fld('Avg. Session Duration',inp('wm-dur',m.avgDuration||''))}
+      ${fld('New Users',inp('wm-newusers',m.newUsers||''))}
+      ${fld('Top Traffic Source',inp('wm-source',m.source||''))}
+    </div>`+
+    fld('Top Page / URL',inp('wm-toppage',m.topPage||''))+
+    fld('Notes',ta('wm-notes',m.notes||'',2))+
+    `<button class="btn btn-p btn-sm" onclick="saveWebMetrics(this)">Save</button>`);
 }
-function deleteAnalytics(i){_analyticsLog.splice(i,1);saveRoleData('analytics',_analyticsLog);renderAnalytics();}
+function saveWebMetrics(btn){
+  _webMetrics={
+    sessions:g('wm-sessions'),pageviews:g('wm-pageviews'),bounceRate:g('wm-bounce'),
+    avgDuration:g('wm-dur'),newUsers:g('wm-newusers'),source:g('wm-source'),
+    topPage:g('wm-toppage'),notes:g('wm-notes'),
+    updated:new Date().toLocaleDateString()
+  };
+  localStorage.setItem('pbl_webmetrics',JSON.stringify(_webMetrics));
+  _renderWebMetrics();closeDetail();saved(btn);
+}
+
+// ── ANALYTICS: SOCIAL MEDIA ───────────────────────────────────────────────────
+const _smPlatforms=[
+  {key:'instagram',label:'Instagram',icon:'📸'},
+  {key:'tiktok',label:'TikTok',icon:'🎵'},
+  {key:'linkedin',label:'LinkedIn',icon:'💼'},
+  {key:'facebook',label:'Facebook',icon:'👥'},
+  {key:'twitter',label:'Twitter / X',icon:'🐦'},
+  {key:'youtube',label:'YouTube',icon:'▶️'},
+  {key:'threads',label:'Threads',icon:'🧵'},
+  {key:'groupme',label:'GroupMe',icon:'💬'},
+];
+let _socialMetrics=JSON.parse(localStorage.getItem('pbl_socialmetrics')||'{}');
+function _renderSocialMetrics(){
+  const el=document.getElementById('social-metrics-display');if(!el)return;
+  const active=_smPlatforms.filter(p=>_socialMetrics[p.key]);
+  if(!active.length){
+    el.innerHTML=`<div style="padding:16px;text-align:center;color:var(--t4);font-size:11px">No data yet — click ✎ Update to enter your social media stats.</div>`;return;
+  }
+  el.innerHTML=`<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px;margin-top:4px">`+
+    active.map(p=>{
+      const m=_socialMetrics[p.key];
+      return`<div style="border:1px solid var(--bd);border-radius:8px;padding:12px">
+        <div style="display:flex;align-items:center;gap:7px;margin-bottom:10px;padding-bottom:8px;border-bottom:1px solid var(--bd)">
+          <span style="font-size:18px">${p.icon}</span>
+          <span style="font-size:12px;font-weight:700;color:var(--t1)">${p.label}</span>
+        </div>
+        ${m.followers?`<div style="margin-bottom:5px"><div style="font-size:15px;font-weight:700;color:var(--t1)">${m.followers}</div><div style="font-size:9px;color:var(--t4)">Followers</div></div>`:''}
+        ${m.engRate?`<div style="margin-bottom:5px"><div style="font-size:13px;font-weight:600;color:var(--grn)">${m.engRate}%</div><div style="font-size:9px;color:var(--t4)">Engagement Rate</div></div>`:''}
+        ${m.reach?`<div style="margin-bottom:5px"><div style="font-size:13px;font-weight:600;color:var(--blu)">${m.reach}</div><div style="font-size:9px;color:var(--t4)">Reach (30d)</div></div>`:''}
+        ${m.impressions?`<div style="margin-bottom:5px"><div style="font-size:13px;font-weight:600;color:var(--t2)">${m.impressions}</div><div style="font-size:9px;color:var(--t4)">Impressions</div></div>`:''}
+        ${m.posts?`<div style="margin-bottom:5px"><div style="font-size:13px;font-weight:600;color:var(--t2)">${m.posts}</div><div style="font-size:9px;color:var(--t4)">Posts</div></div>`:''}
+        ${m.notes?`<div style="font-size:10px;color:var(--t3);margin-top:6px;padding-top:6px;border-top:1px solid var(--bd)">${m.notes}</div>`:''}
+        ${m.updated?`<div style="font-size:9px;color:var(--t4);margin-top:6px">${m.updated}</div>`:''}
+      </div>`;
+    }).join('')+`</div>`;
+}
+function editSocialMetrics(){
+  const sections=_smPlatforms.map(p=>{
+    const m=_socialMetrics[p.key]||{};
+    return`<div style="border:1px solid var(--bd);border-radius:8px;padding:12px;margin-bottom:12px">
+      <div style="font-size:12px;font-weight:700;color:var(--t1);margin-bottom:10px">${p.icon} ${p.label}</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">
+        <div>${fld('Followers',inp('sm-'+p.key+'-followers',m.followers||''))}</div>
+        <div>${fld('Eng. Rate (%)',inp('sm-'+p.key+'-eng',m.engRate||'','number'))}</div>
+        <div>${fld('Reach (30d)',inp('sm-'+p.key+'-reach',m.reach||''))}</div>
+        <div>${fld('Impressions',inp('sm-'+p.key+'-impressions',m.impressions||''))}</div>
+        <div>${fld('Posts / Videos',inp('sm-'+p.key+'-posts',m.posts||''))}</div>
+        <div>${fld('Notes',inp('sm-'+p.key+'-notes',m.notes||''))}</div>
+      </div>
+    </div>`;
+  }).join('');
+  openDetail('Update Social Media Analytics','Leave fields blank to hide a platform from the display.',
+    sections+`<button class="btn btn-p btn-sm" onclick="saveSocialMetrics(this)">Save All</button>`);
+}
+function saveSocialMetrics(btn){
+  const updated=new Date().toLocaleDateString();
+  _smPlatforms.forEach(p=>{
+    const followers=g('sm-'+p.key+'-followers');
+    const engRate=g('sm-'+p.key+'-eng');
+    const reach=g('sm-'+p.key+'-reach');
+    const impressions=g('sm-'+p.key+'-impressions');
+    const posts=g('sm-'+p.key+'-posts');
+    const notes=g('sm-'+p.key+'-notes');
+    if(followers||engRate||reach||impressions||posts||notes){
+      _socialMetrics[p.key]={followers,engRate,reach,impressions,posts,notes,updated};
+    } else {
+      delete _socialMetrics[p.key];
+    }
+  });
+  localStorage.setItem('pbl_socialmetrics',JSON.stringify(_socialMetrics));
+  _renderSocialMetrics();closeDetail();saved(btn);
+}
 
 // ── OUTREACH LOG ──
 function addOutreach(){openModal('outreach-modal');}
@@ -2001,6 +2335,198 @@ function submitGraphicRequest(){
 }
 function deleteGraphicRequest(i){_graphicRequests.splice(i,1);saveRoleData('graphicrequests',_graphicRequests);renderGraphicRequests();}
 
+// ── MARKETING: CONTACTS ───────────────────────────────────────────────────────
+let _mktgContacts=JSON.parse(localStorage.getItem('pbl_mktgcontacts')||'[]');
+function renderMktgContacts(){
+  const t=document.getElementById('mktg-contacts-table');if(!t)return;
+  if(!_mktgContacts.length){t.innerHTML='<tr><td colspan="8" style="font-size:11px;color:var(--t4);padding:12px">No contacts yet. Click "+ Add Contact" to get started.</td></tr>';return;}
+  const tc={Club:'bg',Sponsor:'bo',Vendor:'br',Media:'bo',Other:'bo'};
+  t.innerHTML=_mktgContacts.map((c,i)=>`<tr>
+    <td style="font-weight:600;font-size:11px">${c.name}</td>
+    <td style="font-size:11px">${c.role||'—'}</td>
+    <td style="font-size:11px">${c.org||'—'}</td>
+    <td style="font-size:11px">${c.email?`<a href="mailto:${c.email}" style="color:var(--blu)">${c.email}</a>`:'—'}</td>
+    <td style="font-size:11px">${c.phone||'—'}</td>
+    <td><span class="badge ${tc[c.type]||'bo'}">${c.type||'Other'}</span></td>
+    <td style="font-size:10px;color:var(--t3);max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${c.notes||'—'}</td>
+    <td><button class="btn btn-g btn-sm" style="color:var(--cr)" onclick="deleteMktgContact(${i})">✕</button></td>
+  </tr>`).join('');
+}
+function addMktgContact(){
+  openDetail('Add Contact','Fill in the contact details',
+    fld('Full Name',inp('mc-name',''))+
+    row2(fld('Role / Title',inp('mc-role','')),fld('Organization',inp('mc-org','')))+
+    row2(fld('Email',inp('mc-email','')),fld('Phone',inp('mc-phone','')))+
+    fld('Type',sel('mc-type',['Club','Sponsor','Vendor','Media','Other'],'Other'))+
+    fld('Notes',ta('mc-notes','',2))+
+    `<button class="btn btn-p btn-sm" onclick="saveMktgContact(this)">Save Contact</button>`);
+}
+function saveMktgContact(btn){
+  const name=document.getElementById('mc-name').value.trim();if(!name)return;
+  _mktgContacts.push({name,role:g('mc-role'),org:g('mc-org'),email:g('mc-email'),phone:g('mc-phone'),type:g('mc-type'),notes:g('mc-notes')});
+  saveRoleData('mktgcontacts',_mktgContacts);renderMktgContacts();closeDetail();saved(btn);
+}
+function deleteMktgContact(i){_mktgContacts.splice(i,1);saveRoleData('mktgcontacts',_mktgContacts);renderMktgContacts();}
+
+// ── MARKETING: EMAIL MARKETING ────────────────────────────────────────────────
+let _emailLists=JSON.parse(localStorage.getItem('pbl_emaillists')||'[]');
+let _emailCampaigns=JSON.parse(localStorage.getItem('pbl_emailcampaigns')||'[]');
+let _emailMktgTemplates=JSON.parse(localStorage.getItem('pbl_emailmktgtemplates')||'[]');
+function renderEmailMktg(){
+  _renderEmailLists();_renderEmailCampaigns();_renderEmailMktgTemplates();
+  const totalSubs=_emailLists.reduce((s,l)=>s+(+l.count||0),0);
+  const el=document.getElementById('em-total-subs');if(el)el.textContent=totalSubs||'—';
+  const el2=document.getElementById('em-campaigns-sent');if(el2)el2.textContent=_emailCampaigns.filter(c=>c.status==='Sent').length||'—';
+}
+function _renderEmailLists(){
+  const el=document.getElementById('email-lists-container');if(!el)return;
+  if(!_emailLists.length){el.innerHTML='<div style="padding:12px 16px;font-size:11px;color:var(--t4)">No lists yet.</div>';return;}
+  el.innerHTML=_emailLists.map((l,i)=>`
+    <div style="display:flex;align-items:center;gap:10px;padding:8px 16px;border-bottom:1px solid var(--bd)">
+      <div style="flex:1">
+        <div style="font-size:11px;font-weight:600;color:var(--t1)">${l.name}</div>
+        <div style="font-size:10px;color:var(--t3)">${l.platform||'—'} &middot; ${l.count||0} subscribers</div>
+        ${l.notes?`<div style="font-size:10px;color:var(--t4)">${l.notes}</div>`:''}
+      </div>
+      <button class="btn btn-g btn-sm" style="color:var(--cr)" onclick="deleteEmailList(${i})">✕</button>
+    </div>`).join('');
+}
+function addEmailList(){
+  openDetail('Add Subscriber List','',
+    fld('List Name',inp('el-name',''))+
+    row2(fld('Platform',sel('el-platform',['Mailchimp','Constant Contact','ConvertKit','Manual','Other'],'Mailchimp')),fld('Subscriber Count',inp('el-count','','number')))+
+    fld('Notes',ta('el-notes','',2))+
+    `<button class="btn btn-p btn-sm" onclick="saveEmailList(this)">Save List</button>`);
+}
+function saveEmailList(btn){
+  const name=document.getElementById('el-name').value.trim();if(!name)return;
+  _emailLists.push({name,platform:g('el-platform'),count:g('el-count'),notes:g('el-notes')});
+  saveRoleData('emaillists',_emailLists);renderEmailMktg();closeDetail();saved(btn);
+}
+function deleteEmailList(i){_emailLists.splice(i,1);saveRoleData('emaillists',_emailLists);renderEmailMktg();}
+function _renderEmailCampaigns(){
+  const t=document.getElementById('email-campaigns-table');if(!t)return;
+  if(!_emailCampaigns.length){t.innerHTML='<tr><td colspan="9" style="font-size:11px;color:var(--t4);padding:12px">No campaigns yet.</td></tr>';return;}
+  const sc={Draft:'bo',Scheduled:'bo',Sent:'bg',Cancelled:'br'};
+  t.innerHTML=_emailCampaigns.map((c,i)=>`<tr>
+    <td style="font-weight:600;font-size:11px">${c.name}</td>
+    <td style="font-size:11px">${c.list||'—'}</td>
+    <td style="font-size:11px;max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${c.subject||'—'}</td>
+    <td style="font-size:11px">${c.platform||'—'}</td>
+    <td style="font-size:11px">${c.date||'—'}</td>
+    <td style="font-size:11px">${c.recipients||'—'}</td>
+    <td style="font-size:11px">${c.openrate?c.openrate+'%':'—'}</td>
+    <td><span class="badge ${sc[c.status]||'bo'}">${c.status}</span></td>
+    <td><button class="btn btn-g btn-sm" style="color:var(--cr)" onclick="deleteEmailCampaign(${i})">✕</button></td>
+  </tr>`).join('');
+}
+function addEmailCampaign(){
+  openDetail('New Email Campaign','',
+    fld('Campaign Name',inp('ec2-name',''))+
+    row2(fld('Subject Line',inp('ec2-subject','')),fld('List',inp('ec2-list','')))+
+    row2(fld('Platform',sel('ec2-platform',['Mailchimp','Constant Contact','ConvertKit','Gmail','Other'],'Mailchimp')),fld('Date Sent',inp('ec2-date','','date')))+
+    row2(fld('Recipients',inp('ec2-recipients','','number')),fld('Open Rate (%)',inp('ec2-openrate','','number')))+
+    fld('Status',sel('ec2-status',['Draft','Scheduled','Sent','Cancelled'],'Draft'))+
+    `<button class="btn btn-p btn-sm" onclick="saveEmailCampaign(this)">Save Campaign</button>`);
+}
+function saveEmailCampaign(btn){
+  const name=document.getElementById('ec2-name').value.trim();if(!name)return;
+  _emailCampaigns.push({name,subject:g('ec2-subject'),list:g('ec2-list'),platform:g('ec2-platform'),date:g('ec2-date'),recipients:g('ec2-recipients'),openrate:g('ec2-openrate'),status:g('ec2-status')});
+  saveRoleData('emailcampaigns',_emailCampaigns);renderEmailMktg();closeDetail();saved(btn);
+}
+function deleteEmailCampaign(i){_emailCampaigns.splice(i,1);saveRoleData('emailcampaigns',_emailCampaigns);renderEmailMktg();}
+function _renderEmailMktgTemplates(){
+  const el=document.getElementById('email-mktg-templates-list');if(!el)return;
+  if(!_emailMktgTemplates.length){el.innerHTML='<div style="padding:12px 16px;font-size:11px;color:var(--t4)">No templates yet.</div>';return;}
+  el.innerHTML=_emailMktgTemplates.map((t,i)=>`
+    <div style="padding:10px 16px;border-bottom:1px solid var(--bd)">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div><div style="font-size:11px;font-weight:600;color:var(--t1)">${t.name}</div><div style="font-size:10px;color:var(--t3)">${t.type||'General'}</div></div>
+        <button class="btn btn-g btn-sm" style="color:var(--cr)" onclick="deleteEmailMktgTemplate(${i})">✕</button>
+      </div>
+      ${t.body?`<div style="font-size:10px;color:var(--t2);margin-top:6px;white-space:pre-wrap;line-height:1.6;max-height:60px;overflow:hidden">${t.body.slice(0,200)}${t.body.length>200?'…':''}</div>`:''}
+    </div>`).join('');
+}
+function addEmailMktgTemplate(){
+  openDetail('Add Email Template','',
+    row2(fld('Template Name',inp('et-name','')),fld('Type',sel('et-type',['Newsletter','Announcement','Sponsor','Reminder','Other'],'Newsletter')))+
+    fld('Body / Content',ta('et-body','',6))+
+    `<button class="btn btn-p btn-sm" onclick="saveEmailMktgTemplate(this)">Save Template</button>`);
+}
+function saveEmailMktgTemplate(btn){
+  const name=document.getElementById('et-name').value.trim();if(!name)return;
+  _emailMktgTemplates.push({name,type:g('et-type'),body:g('et-body')});
+  saveRoleData('emailmktgtemplates',_emailMktgTemplates);renderEmailMktg();closeDetail();saved(btn);
+}
+function deleteEmailMktgTemplate(i){_emailMktgTemplates.splice(i,1);saveRoleData('emailmktgtemplates',_emailMktgTemplates);renderEmailMktg();}
+
+// ── MARKETING: SPONSORS ───────────────────────────────────────────────────────
+let _mktgSponsors=JSON.parse(localStorage.getItem('pbl_mktgsponsors')||'[]');
+let _sponsorPosts=JSON.parse(localStorage.getItem('pbl_sponsorposts')||'[]');
+function renderMktgSponsors(){
+  _renderMktgSponsorTable();_renderSponsorContentTable();
+}
+function _renderMktgSponsorTable(){
+  const t=document.getElementById('mktg-sponsors-table');if(!t)return;
+  if(!_mktgSponsors.length){t.innerHTML='<tr><td colspan="8" style="font-size:11px;color:var(--t4);padding:12px">No sponsors yet.</td></tr>';return;}
+  const sc={Active:'bg',Inactive:'bo',Pending:'br'};
+  t.innerHTML=_mktgSponsors.map((s,i)=>`<tr>
+    <td style="font-weight:600;font-size:11px">${s.company}</td>
+    <td style="font-size:11px">${s.assets?`<a href="${s.assets}" target="_blank" style="color:var(--blu);font-size:10px">Assets ↗</a>`:'—'}</td>
+    <td style="font-size:11px">${s.social||'—'}</td>
+    <td style="font-size:11px">${s.contact||'—'}</td>
+    <td style="font-size:10px;color:var(--t3);max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${s.cobrand||'—'}</td>
+    <td style="font-size:10px;color:var(--t3);max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${s.deliverables||'—'}</td>
+    <td><span class="badge ${sc[s.status]||'bo'}">${s.status||'Active'}</span></td>
+    <td><button class="btn btn-g btn-sm" style="color:var(--cr)" onclick="deleteMktgSponsor(${i})">✕</button></td>
+  </tr>`).join('');
+}
+function addMktgSponsor(){
+  openDetail('Add Marketing Sponsor','Brand & co-marketing details',
+    fld('Company Name',inp('ms-company',''))+
+    row2(fld('Brand Assets URL',inp('ms-assets','')),fld('Social Handle',inp('ms-social','')))+
+    row2(fld('Contact Name',inp('ms-contact','')),fld('Contact Email',inp('ms-email','')))+
+    fld('Co-Branding Rules',ta('ms-cobrand','',2))+
+    fld('Deliverables',ta('ms-deliverables','',2))+
+    fld('Status',sel('ms-status',['Active','Pending','Inactive'],'Active'))+
+    `<button class="btn btn-p btn-sm" onclick="saveMktgSponsor(this)">Save Sponsor</button>`);
+}
+function saveMktgSponsor(btn){
+  const company=document.getElementById('ms-company').value.trim();if(!company)return;
+  _mktgSponsors.push({company,assets:g('ms-assets'),social:g('ms-social'),contact:g('ms-contact'),email:g('ms-email'),cobrand:g('ms-cobrand'),deliverables:g('ms-deliverables'),status:g('ms-status')});
+  saveRoleData('mktgsponsors',_mktgSponsors);renderMktgSponsors();closeDetail();saved(btn);
+}
+function deleteMktgSponsor(i){_mktgSponsors.splice(i,1);saveRoleData('mktgsponsors',_mktgSponsors);renderMktgSponsors();}
+function _renderSponsorContentTable(){
+  const t=document.getElementById('sponsor-content-table');if(!t)return;
+  if(!_sponsorPosts.length){t.innerHTML='<tr><td colspan="8" style="font-size:11px;color:var(--t4);padding:12px">No sponsor posts yet.</td></tr>';return;}
+  const sc={Planned:'bo',['In Progress']:'bo',Approved:'bg',Posted:'bg',Cancelled:'br'};
+  t.innerHTML=_sponsorPosts.map((p,i)=>`<tr>
+    <td style="font-size:11px;font-weight:600">${p.sponsor}</td>
+    <td style="font-size:11px">${p.platform||'—'}</td>
+    <td style="font-size:11px">${p.type||'—'}</td>
+    <td style="font-size:11px">${p.due||'—'}</td>
+    <td style="font-size:11px">${p.assigned||'—'}</td>
+    <td><span class="badge ${sc[p.status]||'bo'}">${p.status}</span></td>
+    <td>${p.link?`<a href="${p.link}" target="_blank" style="color:var(--blu);font-size:10px">View ↗</a>`:'—'}</td>
+    <td><button class="btn btn-g btn-sm" style="color:var(--cr)" onclick="deleteSponsorPost(${i})">✕</button></td>
+  </tr>`).join('');
+}
+function addSponsorPost(){
+  openDetail('Add Sponsor Post','',
+    row2(fld('Sponsor',inp('sp-sponsor','')),fld('Platform',sel('sp-platform',['Instagram','LinkedIn','Facebook','Twitter/X','Email','Other'],'Instagram')))+
+    row2(fld('Content Type',sel('sp-type',['Post','Story','Reel','Newsletter','Event','Other'],'Post')),fld('Due Date',inp('sp-due','','date')))+
+    row2(fld('Assigned To',inp('sp-assigned','')),fld('Status',sel('sp-status',['Planned','In Progress','Approved','Posted','Cancelled'],'Planned')))+
+    fld('Content Link',inp('sp-link',''))+
+    `<button class="btn btn-p btn-sm" onclick="saveSponsorPost(this)">Save Post</button>`);
+}
+function saveSponsorPost(btn){
+  const sponsor=document.getElementById('sp-sponsor').value.trim();if(!sponsor)return;
+  _sponsorPosts.push({sponsor,platform:g('sp-platform'),type:g('sp-type'),due:g('sp-due'),assigned:g('sp-assigned'),status:g('sp-status'),link:g('sp-link')});
+  saveRoleData('sponsorposts',_sponsorPosts);renderMktgSponsors();closeDetail();saved(btn);
+}
+function deleteSponsorPost(i){_sponsorPosts.splice(i,1);saveRoleData('sponsorposts',_sponsorPosts);renderMktgSponsors();}
+
 // ── COMPETITION HISTORY ───────────────────────────────────────────────────────
 function logCompResult(){openModal('comp-history-modal');document.getElementById('ch-date').value=new Date().toISOString().slice(0,10);}
 function renderCompHistory(){
@@ -2029,4 +2555,5 @@ function submitCompResult(){
   ['ch-member','ch-event','ch-conf','ch-placement','ch-notes'].forEach(id=>document.getElementById(id).value='');
 }
 function deleteCompResult(i){_compResults.splice(i,1);saveRoleData('compresults',_compResults);renderCompHistory();}
+
 
