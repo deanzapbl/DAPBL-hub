@@ -26,17 +26,21 @@ function submitPolarisAssignment(){
     status:document.getElementById('pa-status').value,
     grade:document.getElementById('pa-grade').value.trim(),
     notes:document.getElementById('pa-notes').value.trim(),
-    fileName:'',fileData:''
+    fileName:'',fileURL:''
   };
   function _save(){_polarisAssignments.push(entry);saveRoleData('polarisassignments',_polarisAssignments);renderPolarisAssignments();closeModals();fileInput.value='';}
-  if(file){
-    const r=new FileReader();
-    r.onload=e=>{
-      if(e.target.result.length<2000000){entry.fileName=file.name;entry.fileData=e.target.result;}
-      else entry.fileName=file.name+' (file too large to store locally)';
+  if(file&&window._storage){
+    const btn=document.querySelector('#polaris-assignment-modal .btn-p');
+    if(btn){btn.textContent='Uploading…';btn.disabled=true;}
+    const ref=window._storage.ref('polaris-assignments/'+Date.now()+'_'+file.name);
+    ref.put(file).then(snap=>snap.ref.getDownloadURL()).then(url=>{
+      entry.fileName=file.name;entry.fileURL=url;
+      if(btn){btn.textContent='Add Assignment';btn.disabled=false;}
       _save();
-    };
-    r.readAsDataURL(file);
+    }).catch(err=>{
+      if(btn){btn.textContent='Add Assignment';btn.disabled=false;}
+      alert('Upload failed: '+err.message);
+    });
   } else _save();
 }
 function renderPolarisAssignments(){
@@ -58,7 +62,7 @@ function renderPolarisAssignments(){
       <td style="font-size:11px">${a.due||'—'}</td>
       <td style="font-size:11px">${a.assignedto||'—'}</td>
       <td><span class="badge ${sc[a.status]||'bo'}">${a.status}</span></td>
-      <td>${a.fileData?`<a href="${a.fileData}" download="${a.fileName}" style="color:var(--blu);font-size:10px">⬇ ${a.fileName}</a>`:a.fileName?`<span style="font-size:10px;color:var(--t3)">${a.fileName}</span>`:'—'}</td>
+      <td>${a.fileURL?`<a href="${a.fileURL}" target="_blank" style="color:var(--blu);font-size:10px">⬇ ${a.fileName}</a>`:a.fileData?`<a href="${a.fileData}" download="${a.fileName}" style="color:var(--blu);font-size:10px">⬇ ${a.fileName}</a>`:a.fileName?`<span style="font-size:10px;color:var(--t3)">${a.fileName}</span>`:'—'}</td>
       <td><button class="btn btn-g btn-sm" style="color:var(--cr)" onclick="deletePolarisAssignment(${realIdx})">✕</button></td>
     </tr>`;
   }).join('');
