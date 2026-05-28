@@ -137,11 +137,8 @@
       <div class="ni" onclick="showPage('templates')">
         <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="1" width="10" height="14" rx="1"/><path d="M6 5h4M6 8h4M6 11h2"/></svg>Templates
       </div>
-      <div class="ni" onclick="showPage('member-content')">
-        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="2" width="14" height="12" rx="1"/><path d="M1 6h14M5 2v4"/></svg>Member Portal Content
-      </div>
-      <div class="ni" onclick="showPage('sponsors')">
-        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="4" width="14" height="9" rx="1"/><path d="M1 8h14M5 4V3a3 3 0 016 0v1"/></svg>Sponsors
+      <div class="ni" onclick="showPage('member-content');renderIMEditor()">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="1" y="2" width="14" height="12" rx="1"/><path d="M1 6h14M5 2v4"/></svg>IM Dashboard Editor
       </div>
     </div>
     <div class="nav-group">
@@ -163,6 +160,9 @@
       </div>
       <div class="ni" onclick="showPage('transition')">
         <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 8h12M10 4l4 4-4 4"/></svg>Transition
+      </div>
+      <div class="ni" onclick="showPage('contacts')">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="12" height="12" rx="1"/><path d="M5 6h6M5 9h4"/></svg>Contacts
       </div>
     </div>
   </div>
@@ -361,28 +361,6 @@
       </div>
 
       <!-- SPONSORS -->
-      <div class="page" id="page-sponsors">
-        <div class="tabs">
-          <div class="tab active" onclick="showTab('sponsors','active')">Active Sponsors</div>
-          <div class="tab" onclick="showTab('sponsors','pipeline')">Pipeline</div>
-          <div class="tab" onclick="showTab('sponsors','emails')">Past Emails</div>
-        </div>
-        <div class="sub active" id="sponsors-active">
-          <div class="card">
-            <div class="ch"><div class="ct">Confirmed Sponsors</div><div style="display:flex;gap:6px"><button class="btn-csv" onclick="openImportDataModal('sponsors')">Import CSV</button><button class="btn btn-p btn-sm" onclick="addSponsor()">+ Add Sponsor</button></div></div>
-            <div id="sponsor-active-list"></div>
-          </div>
-        </div>
-        <div class="sub" id="sponsors-pipeline">
-          <div class="card">
-            <div class="ch"><div class="ct">Pipeline</div><div style="display:flex;gap:6px"><button class="btn-csv" onclick="openImportDataModal('pipeline')">Import CSV</button><button class="btn btn-p btn-sm" onclick="addPipelineLead()">+ Add Lead</button></div></div>
-            <table><thead><tr><th>Company</th><th>Ask</th><th>Stage</th><th>Next Step</th></tr></thead><tbody id="pipeline-list"></tbody></table>
-          </div>
-        </div>
-        <div class="sub" id="sponsors-emails">
-          <div id="email-list-container"></div><button class="btn btn-p btn-sm" style="margin-top:8px" onclick="addEmail()">+ New Email</button>
-        </div>
-      </div>
 
       <!-- CONSULTING -->
       <div class="page" id="page-consulting">
@@ -516,6 +494,22 @@
         </div>
       </div>
 
+      <!-- CONTACTS -->
+      <div class="page" id="page-contacts">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;flex-wrap:wrap;gap:8px">
+          <div style="display:flex;gap:6px;flex-wrap:wrap" id="contacts-filter-tabs">
+            <button class="btn btn-p btn-sm" style="border-radius:20px" onclick="filterContacts('')" id="cf-all">All</button>
+            <button class="btn btn-g btn-sm" style="border-radius:20px" onclick="filterContacts('Vendor')" id="cf-Vendor">Vendors</button>
+            <button class="btn btn-g btn-sm" style="border-radius:20px" onclick="filterContacts('Leadership')" id="cf-Leadership">Leadership</button>
+            <button class="btn btn-g btn-sm" style="border-radius:20px" onclick="filterContacts('School')" id="cf-School">School / Admin</button>
+            <button class="btn btn-g btn-sm" style="border-radius:20px" onclick="filterContacts('Partner')" id="cf-Partner">Partners</button>
+            <button class="btn btn-g btn-sm" style="border-radius:20px" onclick="filterContacts('Other')" id="cf-Other">Other</button>
+          </div>
+          <button class="btn btn-p btn-sm" onclick="addContact()">+ Add Contact</button>
+        </div>
+        <div id="contacts-list"></div>
+      </div>
+
       <!-- ANNOUNCEMENTS -->
       <div class="page" id="page-announcements">
         <div class="tabs">
@@ -537,44 +531,53 @@
       </div>
 
       <!-- MEMBER PORTAL CONTENT -->
-      <div class="page" id="page-member-content">
-        <div class="tabs">
-          <div class="tab active" onclick="showTab('member-content','announcements')">Announcements</div>
-          <div class="tab" onclick="showTab('member-content','guides')">Guides</div>
-          <div class="tab" onclick="showTab('member-content','templates')">Templates</div>
-          <div class="tab" onclick="showTab('member-content','eventslides')">Event Slides</div>
-          <div class="tab" onclick="showTab('member-content','lectureslides')">Lecture Slides</div>
-        </div>
-        <div class="sub active" id="member-content-announcements">
-          <div class="card">
-            <div class="ch"><div class="ct">Published Announcements</div><button class="btn btn-p btn-sm" onclick="addAnnouncement('draft');showPage('announcements')">+ New Announcement</button></div>
-            <div style="font-size:11px;color:var(--t3);margin-bottom:10px">Toggle "Publish to Members" on any announcement to make it visible in the member portal.</div>
-            <div id="mc-ann-list"></div>
+      <div class="page" id="page-member-content" style="padding:0;overflow:hidden">
+        <div style="display:flex;min-height:calc(100vh - 56px)">
+
+          <!-- LEFT: IM PREVIEW PANEL -->
+          <div style="flex:0 0 52%;border-right:2px solid var(--bd);overflow-y:auto;background:var(--bg)">
+            <div style="background:var(--cr);padding:10px 16px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:5">
+              <div style="display:flex;align-items:center;gap:8px">
+                <span style="font-size:12px;font-weight:700;color:#fff">📱 Member Portal</span>
+                <span style="font-size:10px;color:rgba(255,255,255,.65)">Live Preview</span>
+              </div>
+              <button style="background:rgba(255,255,255,.18);border:none;color:#fff;padding:4px 10px;border-radius:5px;font-size:10px;cursor:pointer;font-weight:600" onclick="renderIMPreview()">↻ Refresh</button>
+            </div>
+            <div style="padding:14px">
+              <div class="ime-sec" id="ime-sec-announcements" onclick="imeSelect('announcements')">
+                <div class="ime-sec-lbl">📢 Announcements</div>
+                <div id="ime-prev-ann" style="pointer-events:none"></div>
+              </div>
+              <div class="ime-sec" id="ime-sec-events" onclick="imeSelect('events')">
+                <div class="ime-sec-lbl">📅 Upcoming Events</div>
+                <div id="ime-prev-events" style="pointer-events:none"></div>
+              </div>
+              <div class="ime-sec" id="ime-sec-highlights" onclick="imeSelect('highlights')">
+                <div class="ime-sec-lbl">✨ Season Highlights</div>
+                <div id="ime-prev-highlights" style="pointer-events:none"></div>
+              </div>
+              <div class="ime-sec" id="ime-sec-links" onclick="imeSelect('links')">
+                <div class="ime-sec-lbl">🔗 Quick Links</div>
+                <div id="ime-prev-links" style="pointer-events:none"></div>
+              </div>
+              <div class="ime-sec" id="ime-sec-resources" onclick="imeSelect('resources')">
+                <div class="ime-sec-lbl">📚 Guides &amp; Templates</div>
+                <div id="ime-prev-resources" style="pointer-events:none"></div>
+              </div>
+            </div>
           </div>
-        </div>
-        <div class="sub" id="member-content-guides">
-          <div class="card">
-            <div class="ch"><div class="ct">Member Guides</div><button class="btn btn-p btn-sm" onclick="addMCGuide()">+ Add Guide</button></div>
-            <div id="mc-guides-list"></div>
+
+          <!-- RIGHT: EDITOR PANEL -->
+          <div style="flex:1;overflow-y:auto;padding:16px;background:var(--s1)">
+            <div id="ime-editor">
+              <div style="text-align:center;padding:48px 24px;color:var(--t4)">
+                <div style="font-size:32px;margin-bottom:12px">👈</div>
+                <div style="font-size:13px;font-weight:600;color:var(--t2);margin-bottom:6px">Click any section in the preview</div>
+                <div style="font-size:11px;color:var(--t3)">The editor for that section will appear here</div>
+              </div>
+            </div>
           </div>
-        </div>
-        <div class="sub" id="member-content-templates">
-          <div class="card">
-            <div class="ch"><div class="ct">Member Templates</div><button class="btn btn-p btn-sm" onclick="addMCTemplate()">+ Add Template</button></div>
-            <div id="mc-templates-list"></div>
-          </div>
-        </div>
-        <div class="sub" id="member-content-eventslides">
-          <div class="card">
-            <div class="ch"><div class="ct">Event Slides</div><button class="btn btn-p btn-sm" onclick="addEventSlide()">+ Add Slide Deck</button></div>
-            <div id="mc-eventslides-list"></div>
-          </div>
-        </div>
-        <div class="sub" id="member-content-lectureslides">
-          <div class="card">
-            <div class="ch"><div class="ct">Lecture Slides</div><button class="btn btn-p btn-sm" onclick="addLectureSlide()">+ Add Slide Deck</button></div>
-            <div id="mc-lectureslides-list"></div>
-          </div>
+
         </div>
       </div>
 
@@ -591,6 +594,7 @@
           <div class="tab" onclick="showTab('portal-finance','roi');renderROITable()">ROI Analysis</div>
           <div class="tab" onclick="showTab('portal-finance','iccforms');renderICCForms()">ICC Forms</div>
           <div class="tab" onclick="showTab('portal-finance','finreports');renderStatementBuilder();renderFinReports()">Reports</div>
+          <div class="tab" onclick="showTab('portal-finance','sponsors');renderSponsors()">Sponsors</div>
         </div>
         <div class="sub active" id="portal-finance-overview">
           <div class="sg" id="portal-finance-stats"></div>
@@ -738,7 +742,17 @@
             <div id="ebod-im-reimb-list"><div style="font-size:11px;color:var(--t4);padding:10px 0">No member requests yet.</div></div>
           </div>
           <div class="card" style="margin-top:14px">
-            <div class="ch"><div class="ct">Office Hour Requests<span class="nbadge" id="oh-badge" style="display:none">0</span></div><div style="font-size:10px;color:var(--t3)">Members requesting 1-on-1 sessions</div></div>
+            <div class="ch">
+              <div>
+                <div class="ct">Office Hour Availability</div>
+                <div style="font-size:10px;color:var(--t3);margin-top:2px">Slots visible to members for booking</div>
+              </div>
+              <button class="btn btn-p btn-sm" onclick="addOHSlot()">+ Add Slot</button>
+            </div>
+            <div id="oh-slots-list"></div>
+          </div>
+          <div class="card" style="margin-top:14px">
+            <div class="ch"><div class="ct">Office Hour Requests<span class="nbadge" id="oh-badge" style="display:none">0</span></div><div style="font-size:10px;color:var(--t3)">Booked by members</div></div>
             <div id="ebod-office-hours-list"><div style="font-size:11px;color:var(--t4);padding:10px 0">No session requests yet.</div></div>
           </div>
         </div>
@@ -965,6 +979,22 @@
           </div>
         </div>
 
+        <!-- SPONSORS TAB (moved from sidebar) -->
+        <div class="sub" id="portal-finance-sponsors">
+          <div class="card" style="margin-bottom:14px">
+            <div class="ch"><div class="ct">Confirmed Sponsors</div><div style="display:flex;gap:6px"><button class="btn-csv" onclick="openImportDataModal('sponsors')">Import CSV</button><button class="btn btn-p btn-sm" onclick="addSponsor()">+ Add Sponsor</button></div></div>
+            <div id="sponsor-active-list"></div>
+          </div>
+          <div class="card" style="margin-bottom:14px">
+            <div class="ch"><div class="ct">Sponsor Pipeline</div><div style="display:flex;gap:6px"><button class="btn-csv" onclick="openImportDataModal('pipeline')">Import CSV</button><button class="btn btn-p btn-sm" onclick="addPipelineLead()">+ Add Lead</button></div></div>
+            <table><thead><tr><th>Company</th><th>Ask</th><th>Stage</th><th>Next Step</th></tr></thead><tbody id="pipeline-list"></tbody></table>
+          </div>
+          <div class="card">
+            <div class="ch"><div class="ct">Past Sponsor Emails</div><button class="btn btn-p btn-sm" onclick="addEmail()">+ New Email</button></div>
+            <div id="email-list-container"></div>
+          </div>
+        </div>
+
       </div>
 
       <!-- OPERATIONS PORTAL -->
@@ -1072,10 +1102,20 @@
           <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px" id="portal-strategy-links"></div>
         </div>
         <div class="sub" id="portal-strategy-compprep">
-          <div class="card">
+          <div class="card" style="margin-bottom:14px">
             <div class="ch"><div class="ct">Competition Prep Tracker</div><button class="btn btn-p btn-sm" onclick="addCompPrep()">+ Add Member</button></div>
             <table><thead><tr><th>Member</th><th>Event</th><th>Readiness</th><th>Last Practice</th><th>Notes</th><th></th></tr></thead>
             <tbody id="compprep-table"></tbody></table>
+          </div>
+          <div class="card">
+            <div class="ch">
+              <div>
+                <div class="ct">FBLA Event Roster</div>
+                <div style="font-size:10px;color:var(--t3);margin-top:2px">Displayed on the member dashboard</div>
+              </div>
+              <button class="btn btn-p btn-sm" onclick="addFBLAEvent()">+ Add Event</button>
+            </div>
+            <div id="fbla-events-list"></div>
           </div>
         </div>
         <div class="sub" id="portal-strategy-curriculum">
@@ -1207,6 +1247,9 @@
           <div class="tab" onclick="showTab('portal-marketing','outreach');renderOutreach()">Outreach Log</div>
           <div class="tab" onclick="showTab('portal-marketing','commslog');renderCommsLog()">Comms Log</div>
           <div class="tab" onclick="showTab('portal-marketing','graphicrequests');renderGraphicRequests()">Graphic Requests</div>
+          <div class="tab" onclick="showTab('portal-marketing','contacts');renderMktgContacts()">Contacts</div>
+          <div class="tab" onclick="showTab('portal-marketing','emailmktg');renderEmailMktg()">Email Marketing</div>
+          <div class="tab" onclick="showTab('portal-marketing','mktgsponsors');renderMktgSponsors()">Sponsors</div>
         </div>
         <div class="sub active" id="portal-marketing-overview">
           <div class="sg" id="portal-marketing-stats"></div>
@@ -1463,12 +1506,15 @@
 
         <!-- ANALYTICS TAB -->
         <div class="sub" id="portal-marketing-analytics">
-          <div class="ch" style="margin-bottom:12px"><div class="ct">Social Media Analytics</div><button class="btn btn-p btn-sm" onclick="addAnalyticsEntry()">+ Update Metrics</button></div>
-          <div class="sg" id="analytics-stats-row"></div>
-          <div class="card" style="margin-top:14px">
-            <div class="ch"><div class="ct">Platform Metrics Log</div></div>
-            <table><thead><tr><th>Platform</th><th>Followers</th><th>Eng. Rate</th><th>Reach (30d)</th><th>Top Post</th><th>Logged</th><th></th></tr></thead>
-            <tbody id="analytics-table"></tbody></table>
+          <!-- Website Analytics -->
+          <div class="card" style="margin-bottom:14px">
+            <div class="ch"><div class="ct">Website Analytics</div><button class="btn btn-p btn-sm" onclick="editWebMetrics()">✎ Update</button></div>
+            <div id="web-metrics-display" style="padding:0 16px 14px"></div>
+          </div>
+          <!-- Social Media -->
+          <div class="card">
+            <div class="ch"><div class="ct">Social Media Analytics</div><button class="btn btn-p btn-sm" onclick="editSocialMetrics()">✎ Update</button></div>
+            <div id="social-metrics-display" style="padding:0 16px 14px"></div>
           </div>
         </div>
 
@@ -1498,6 +1544,56 @@
             <tbody id="graphic-requests-table"></tbody></table>
           </div>
         </div>
+
+        <!-- CONTACTS TAB -->
+        <div class="sub" id="portal-marketing-contacts">
+          <div class="card">
+            <div class="ch"><div class="ct">Club Contact Directory</div><button class="btn btn-p btn-sm" onclick="addMktgContact()">+ Add Contact</button></div>
+            <table><thead><tr><th>Name</th><th>Role / Title</th><th>Organization</th><th>Email</th><th>Phone</th><th>Type</th><th>Notes</th><th></th></tr></thead>
+            <tbody id="mktg-contacts-table"></tbody></table>
+          </div>
+        </div>
+
+        <!-- EMAIL MARKETING TAB -->
+        <div class="sub" id="portal-marketing-emailmktg">
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px">
+            <div class="card">
+              <div class="ch"><div class="ct">Subscriber Lists</div><button class="btn btn-p btn-sm" onclick="addEmailList()">+ Add List</button></div>
+              <div id="email-lists-container"></div>
+            </div>
+            <div class="card">
+              <div class="ch"><div class="ct">Campaign Stats</div></div>
+              <div class="sg" style="padding:12px 16px">
+                <div class="sc"><div class="sl">Total Subscribers</div><div class="sv" id="em-total-subs">—</div><div class="sm">Across all lists</div></div>
+                <div class="sc"><div class="sl">Campaigns Sent</div><div class="sv" id="em-campaigns-sent">—</div><div class="sm">This semester</div></div>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <div class="ch"><div class="ct">Email Campaigns</div><button class="btn btn-p btn-sm" onclick="addEmailCampaign()">+ New Campaign</button></div>
+            <table><thead><tr><th>Campaign Name</th><th>List</th><th>Subject Line</th><th>Platform</th><th>Date Sent</th><th>Recipients</th><th>Open Rate</th><th>Status</th><th></th></tr></thead>
+            <tbody id="email-campaigns-table"></tbody></table>
+          </div>
+          <div class="card" style="margin-top:14px">
+            <div class="ch"><div class="ct">Email Templates</div><button class="btn btn-p btn-sm" onclick="addEmailMktgTemplate()">+ Add Template</button></div>
+            <div id="email-mktg-templates-list"></div>
+          </div>
+        </div>
+
+        <!-- MARKETING SPONSORS TAB -->
+        <div class="sub" id="portal-marketing-mktgsponsors">
+          <div class="card" style="margin-bottom:14px">
+            <div class="ch"><div class="ct">Sponsor Brand Assets</div><button class="btn btn-p btn-sm" onclick="addMktgSponsor()">+ Add Sponsor</button></div>
+            <table><thead><tr><th>Company</th><th>Logo / Assets</th><th>Social Handle</th><th>Contact</th><th>Co-Brand Rules</th><th>Deliverables</th><th>Status</th><th></th></tr></thead>
+            <tbody id="mktg-sponsors-table"></tbody></table>
+          </div>
+          <div class="card">
+            <div class="ch"><div class="ct">Sponsor Content Calendar</div><button class="btn btn-p btn-sm" onclick="addSponsorPost()">+ Add Post</button></div>
+            <table><thead><tr><th>Sponsor</th><th>Platform</th><th>Content Type</th><th>Due Date</th><th>Assigned To</th><th>Status</th><th>Link</th><th></th></tr></thead>
+            <tbody id="sponsor-content-table"></tbody></table>
+          </div>
+        </div>
+
       </div>
 
       <!-- CLUB AFFAIRS PORTAL -->
@@ -1944,7 +2040,7 @@
     <div class="nav-group">
       <div class="ngl">My Activity</div>
       <div class="ni" onclick="mShowPage('finance')">
-        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="4" width="12" height="9" rx="1"/><path d="M5 4V3a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v1"/><path d="M8 9v.01M5 9h.01M11 9h.01"/></svg>Finance &amp; Office Hours
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="4" width="12" height="9" rx="1"/><path d="M5 4V3a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v1"/><path d="M8 9v.01M5 9h.01M11 9h.01"/></svg>Dues &amp; Office Hours
       </div>
       <div class="ni" onclick="mShowPage('mentorship')">
         <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="5" cy="5" r="2.5"/><path d="M1 14c0-2.5 1.8-4 4-4"/><path d="M10 10l2 2 3-3"/></svg>Mentorship
@@ -2010,16 +2106,22 @@
           </div>
         </div>
         <div class="card">
-          <div class="ch"><div class="ct">NLC 2026 — Chapter Roster</div><button class="btn-lnk" onclick="mShowPage('competition')">View all events</button></div>
+          <div class="ch"><div class="ct">FBLA Event Roster</div><button class="btn-lnk" onclick="mShowPage('competition')">View all events</button></div>
           <div id="home-nlc"></div>
         </div>
       </div>
 
       <!-- ANNOUNCEMENTS -->
       <div class="page" id="m-page-announcements">
-        <div class="card">
-          <div class="ch"><div class="ct">All Announcements</div></div>
-          <div id="ann-list"></div>
+        <div class="tabs">
+          <div class="tab active" onclick="mShowTab('announcements','recent')">Recent</div>
+          <div class="tab" onclick="mShowTab('announcements','archive')">Archive</div>
+        </div>
+        <div class="sub active" id="announcements-recent">
+          <div id="ann-list-recent"></div>
+        </div>
+        <div class="sub" id="announcements-archive">
+          <div id="ann-list-archive"></div>
         </div>
       </div>
 
@@ -2107,16 +2209,7 @@
 
       <!-- RESOURCES -->
       <div class="page" id="page-resources">
-        <div class="tabs">
-          <div class="tab active" onclick="mShowTab('resources','guides')">Prep Guides</div>
-          <div class="tab" onclick="mShowTab('resources','templates')">Templates</div>
-        </div>
-        <div class="sub active" id="resources-guides">
-          <div id="res-guides-list"></div>
-        </div>
-        <div class="sub" id="resources-templates">
-          <div id="res-templates-list"></div>
-        </div>
+        <div id="res-guides-list"></div>
       </div>
 
       <!-- TEAM -->
@@ -2127,24 +2220,11 @@
         </div>
       </div>
 
-      <!-- FINANCE (IM) -->
+      <!-- DUES & OFFICE HOURS (IM) -->
       <div class="page" id="m-page-finance">
         <div class="card" style="margin-bottom:14px">
-          <div class="ch"><div class="ct">Submit Reimbursement Request</div></div>
-          <div style="padding:0 4px">
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
-              <div><div style="font-size:10px;color:var(--t3);margin-bottom:4px">Item / Description *</div><input id="imr-item" type="text" placeholder="e.g. Name badge supplies" style="width:100%;box-sizing:border-box;padding:7px 10px;border:1px solid var(--bd);border-radius:6px;background:var(--s2);color:var(--t1);font-size:11px;outline:none"></div>
-              <div><div style="font-size:10px;color:var(--t3);margin-bottom:4px">Amount ($) *</div><input id="imr-amount" type="number" min="0" step="0.01" placeholder="0.00" style="width:100%;box-sizing:border-box;padding:7px 10px;border:1px solid var(--bd);border-radius:6px;background:var(--s2);color:var(--t1);font-size:11px;outline:none"></div>
-            </div>
-            <div style="margin-bottom:10px"><div style="font-size:10px;color:var(--t3);margin-bottom:4px">Receipt / Invoice Link</div><input id="imr-receipt" type="url" placeholder="Google Drive link to receipt..." style="width:100%;box-sizing:border-box;padding:7px 10px;border:1px solid var(--bd);border-radius:6px;background:var(--s2);color:var(--t1);font-size:11px;font-family:var(--mono);outline:none"></div>
-            <div style="margin-bottom:12px"><div style="font-size:10px;color:var(--t3);margin-bottom:4px">Notes</div><textarea id="imr-notes" rows="2" placeholder="Any additional details..." style="width:100%;box-sizing:border-box;padding:7px 10px;border:1px solid var(--bd);border-radius:6px;background:var(--s2);color:var(--t1);font-size:11px;outline:none;resize:vertical;font-family:'IBM Plex Sans',sans-serif"></textarea></div>
-            <div id="imr-err" style="font-size:10px;min-height:14px;margin-bottom:8px"></div>
-            <button onclick="submitImReimb()" style="padding:8px 18px;background:var(--cr);color:#fff;border:none;border-radius:6px;font-size:12px;font-weight:600;cursor:pointer">Submit Request</button>
-          </div>
-        </div>
-        <div class="card" style="margin-bottom:14px">
-          <div class="ch"><div class="ct">My Reimbursement Requests</div></div>
-          <div id="im-reimb-list"></div>
+          <div class="ch"><div class="ct">Amount Due to EBOD</div><div style="font-size:10px;color:var(--t3)">Conference dues &amp; chapter fees</div></div>
+          <div id="im-dues-list"></div>
         </div>
         <div class="card">
           <div class="ch"><div class="ct">Book an Office Hour Session</div><div style="font-size:10px;color:var(--t3)">1-on-1 with an exec officer</div></div>
