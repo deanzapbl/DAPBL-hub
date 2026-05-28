@@ -159,7 +159,7 @@ function _enterEBOD(){
   document.getElementById('landing').style.display='none';
   document.getElementById('app-ebod').style.display='block';
   loadData();
-  renderMembers();renderExec();renderBootcamps();renderTasks();renderAgendas();renderEvents();renderRos();renderTemplates();renderSponsors();renderEmailList();renderConsulting();renderCompetition();renderBudget();renderMinutes();renderRecruitment();renderGoals();renderTransition();renderAnnouncements();renderMentorship();renderDashboard();renderPortals();renderEcSelect();renderReimbursements();renderVenues();renderVolSlots();renderCompPrep();renderCurriculum();renderBrandKit();renderContentCalendar();renderCaMentors();renderMemberCheckIns();renderCalendar();renderEBODHomework();renderMemberContent();
+  renderMembers();renderExec();renderBootcamps();renderTasks();renderAgendas();renderEvents();renderRos();renderTemplates();renderSponsors();renderEmailList();renderConsulting();renderCompetition();renderBudget();renderMinutes();renderRecruitment();renderGoals();renderTransition();renderAnnouncements();renderMentorship();renderDashboard();renderPortals();renderEcSelect();renderReimbursements();renderVenues();renderVolSlots();renderCompPrep();renderCurriculum();renderBrandKit();renderContentCalendar();renderCaMentors();renderMemberCheckIns();renderCalendar();renderEBODHomework();renderMemberContent();loadBKEdits();
   if(typeof updateMemberDisplay==='function')updateMemberDisplay();
   initExtraListeners();
   loadEBODHWFromFirestore();
