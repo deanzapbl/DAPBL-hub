@@ -1,10 +1,10 @@
-// â”€â”€â”€ GLOBAL STATE â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─── GLOBAL STATE ────────────────────────────────────────────────────────────
 let currentApp = null; // declared first to avoid TDZ errors from async callbacks
 
-// â”€â”€â”€ IM CONSTANTS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─── IM CONSTANTS ────────────────────────────────────────────────────────────
 const IM_SAVE_KEY = 'pblmember_v1';
 
-// â”€â”€â”€ EBOD JS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ─── EBOD JS ─────────────────────────────────────────────────────────────────
 // ---- HELPERS ----
 function fld(label,inputHtml){return`<div class="fg"><div class="fl">${label}</div>${inputHtml}</div>`;}
 function row2(a,b){return`<div class="fr">${a}${b}</div>`;}
@@ -156,27 +156,27 @@ let tasks={
 let agendas=[
   {id:1,name:'Spring Gen. Meeting',date:'May 14',items:'Officer reports\nDAIS 2026 update\nBootcamp recap\nSponsor pipeline review\nOpen Q&A\nAnnouncements',notes:'Send to all members by May 12. Reserve MLC 105.',status:'Draft',files:[]},
   {id:2,name:'EBOD Weekly #12',date:'May 7',items:'DAIS venue update\nTask check-ins\nSponsor follow-ups\nBootcamp Session 5 prep',notes:'Quick 30-min sync. All execs attend.',status:'Final',files:[]},
-  {id:3,name:'IM Meeting â€” Nationals/Consulting Prep',date:'May 7',items:'Nationals prep overview\nConsulting team strategy form due\nQ&A',notes:'5â€“7 PM, MLC 105, business casual.',status:'Final',files:[]},
-  {id:4,name:'IM Meeting â€” Nationals/Consulting Prep',date:'May 12',items:'Nationals prep continued\nConsulting check-in\nAnnouncements',notes:'5â€“7 PM, MLC 105, business casual.',status:'Final',files:[]},
-  {id:5,name:'IM Meeting â€” Nationals/Consulting Prep',date:'May 14',items:'Nationals prep\nConsulting progress update\nOpen floor',notes:'5â€“7 PM, MLC 105, business casual.',status:'Draft',files:[]},
-  {id:6,name:'IM Meeting â€” Run Throughs',date:'May 19',items:'Run throughs with leaderboard\nFeedback rounds\nFinal prep notes',notes:'5â€“7 PM, MLC 105, business casual.',status:'Draft',files:[]},
-  {id:7,name:'IM Meeting â€” Run Throughs',date:'May 21',items:'Run throughs with leaderboard\nFinal adjustments\nNLC logistics',notes:'5â€“7 PM, MLC 105, business casual.',status:'Draft',files:[]},
+  {id:3,name:'IM Meeting — Nationals/Consulting Prep',date:'May 7',items:'Nationals prep overview\nConsulting team strategy form due\nQ&A',notes:'5–7 PM, MLC 105, business casual.',status:'Final',files:[]},
+  {id:4,name:'IM Meeting — Nationals/Consulting Prep',date:'May 12',items:'Nationals prep continued\nConsulting check-in\nAnnouncements',notes:'5–7 PM, MLC 105, business casual.',status:'Final',files:[]},
+  {id:5,name:'IM Meeting — Nationals/Consulting Prep',date:'May 14',items:'Nationals prep\nConsulting progress update\nOpen floor',notes:'5–7 PM, MLC 105, business casual.',status:'Draft',files:[]},
+  {id:6,name:'IM Meeting — Run Throughs',date:'May 19',items:'Run throughs with leaderboard\nFeedback rounds\nFinal prep notes',notes:'5–7 PM, MLC 105, business casual.',status:'Draft',files:[]},
+  {id:7,name:'IM Meeting — Run Throughs',date:'May 21',items:'Run throughs with leaderboard\nFinal adjustments\nNLC logistics',notes:'5–7 PM, MLC 105, business casual.',status:'Draft',files:[]},
 ];let nA=8;
 
 let eventsData={
   upcoming:[
     {id:1,name:'DAIS 2026',date:'Jun 3, 2026',loc:'TBD',att:60,desc:'Annual De Anza Case & Investment Competition.\n\nGoals:\n- 60+ attendees\n- 3+ sponsor tables\n- Awards for top 3 case teams\n\nOutstanding:\n- Venue confirmation\n- Catering order\n- Judge panel (3 external)\n- Award certificate design',files:[]},
     {id:2,name:'Spring General Meeting',date:'May 14, 2026',loc:'MLC 105',att:35,desc:'End-of-quarter all-hands meeting.\n\nAgenda:\n- Officer reports\n- DAIS preview\n- NLC prep update\n- Recruitment\n- Open floor',files:[]},
-    {id:4,name:'IM Meeting â€” Nationals/Consulting Prep',date:'May 12, 2026',loc:'MLC 105',att:35,desc:'Intermediate Member meeting.\n\nFocus: Nationals prep and consulting track overview.\nTime: 5â€“7 PM, business casual.',files:[]},
-    {id:5,name:'Group Pics / Headshots',date:'May 8, 2026',loc:'Communications Hill Grand Staircase',att:47,desc:'Official chapter group photos and individual headshots.\nTime: 2:30â€“4:00 PM, business formal.',files:[]},
-    {id:6,name:'IM Meeting â€” Nationals/Consulting Prep',date:'May 7, 2026',loc:'MLC 105',att:35,desc:'Intermediate Member meeting.\n\nFocus: Nationals prep and consulting team strategy.\nTime: 5â€“7 PM, business casual.',files:[]},
-    {id:7,name:'IM Meeting â€” Run Throughs',date:'May 19, 2026',loc:'MLC 105',att:35,desc:'Intermediate Member meeting.\n\nFocus: Run throughs with leaderboard.\nTime: 5â€“7 PM, business casual.',files:[]},
-    {id:8,name:'IM Meeting â€” Run Throughs',date:'May 21, 2026',loc:'MLC 105',att:35,desc:'Intermediate Member meeting.\n\nFocus: Run throughs with leaderboard.\nTime: 5â€“7 PM, business casual.',files:[]},
-    {id:9,name:'CSP Planting Event',date:'May 16, 2026',loc:'De Anza Campus',att:20,desc:'Community service planting event with CSP.\nTime: 9:00 AMâ€“12:00 PM.\nRSVP via Eventbrite link.',files:[]},
+    {id:4,name:'IM Meeting — Nationals/Consulting Prep',date:'May 12, 2026',loc:'MLC 105',att:35,desc:'Intermediate Member meeting.\n\nFocus: Nationals prep and consulting track overview.\nTime: 5–7 PM, business casual.',files:[]},
+    {id:5,name:'Group Pics / Headshots',date:'May 8, 2026',loc:'Communications Hill Grand Staircase',att:47,desc:'Official chapter group photos and individual headshots.\nTime: 2:30–4:00 PM, business formal.',files:[]},
+    {id:6,name:'IM Meeting — Nationals/Consulting Prep',date:'May 7, 2026',loc:'MLC 105',att:35,desc:'Intermediate Member meeting.\n\nFocus: Nationals prep and consulting team strategy.\nTime: 5–7 PM, business casual.',files:[]},
+    {id:7,name:'IM Meeting — Run Throughs',date:'May 19, 2026',loc:'MLC 105',att:35,desc:'Intermediate Member meeting.\n\nFocus: Run throughs with leaderboard.\nTime: 5–7 PM, business casual.',files:[]},
+    {id:8,name:'IM Meeting — Run Throughs',date:'May 21, 2026',loc:'MLC 105',att:35,desc:'Intermediate Member meeting.\n\nFocus: Run throughs with leaderboard.\nTime: 5–7 PM, business casual.',files:[]},
+    {id:9,name:'CSP Planting Event',date:'May 16, 2026',loc:'De Anza Campus',att:20,desc:'Community service planting event with CSP.\nTime: 9:00 AM–12:00 PM.\nRSVP via Eventbrite link.',files:[]},
   ],
   past:[
     {id:3,name:'SBLC 2026 - Emeryville, CA',date:'Mar 2026',loc:'Emeryville',att:23,desc:'State Business Leadership Conference 2026.\n\nResults:\n- 17 entries total\n- 1st Place: Community Service Project\n- 1st Place: Entrepreneurship Pitch Competition\n\nPost-Event Notes:\n- Need more prep time for written events\n- Financial gaps identified, inform bootcamp curriculum\n- Start prep 6 weeks out instead of 4',files:[]},
-    {id:10,name:'BJ\'s Fundraiser Night',date:'May 7, 2026',loc:'BJ\'s â€” 10690 N De Anza Blvd',att:30,desc:'CSP fundraiser night at BJ\'s Restaurant.\nTime: 7:00â€“11:00 PM.\nCode: MAY411 at checkout.',files:[]},
+    {id:10,name:'BJ\'s Fundraiser Night',date:'May 7, 2026',loc:'BJ\'s — 10690 N De Anza Blvd',att:30,desc:'CSP fundraiser night at BJ\'s Restaurant.\nTime: 7:00–11:00 PM.\nCode: MAY411 at checkout.',files:[]},
   ]
 };let nEv=11;
 
@@ -292,7 +292,7 @@ function sec(label,content){return`<div style="margin-bottom:18px"><div class="d
 function openMemberDetail(id){
   const m=members.find(x=>x.id===id);
   const r=_attRate(m.att);
-  openDetail(m.first+' '+m.last,'Member profile â€” click Save to apply changes',
+  openDetail(m.first+' '+m.last,'Member profile — click Save to apply changes',
     row2(fld('First Name',inp('ed-first',m.first)),fld('Last Name',inp('ed-last',m.last)))+
     row2(fld('Role',sel('ed-role',['Member','Exec'],m.role)),fld('Email',inp('ed-email',m.email)))+
     sec('Attendance',`
@@ -309,7 +309,7 @@ function openMemberDetail(id){
             </select>
           </div>`).join('')}
       </div>
-      <div style="font-size:9px;color:var(--t4);margin-bottom:6px">Tap square = Present / Absent &nbsp;Â·&nbsp; Use dropdown for Late or Excused</div>
+      <div style="font-size:9px;color:var(--t4);margin-bottom:6px">Tap square = Present / Absent &nbsp;·&nbsp; Use dropdown for Late or Excused</div>
       <div style="font-size:11px;color:var(--t3)">Attendance rate: <strong>${r}%</strong> (Excused not counted)</div>`)+
     `<div style="display:flex;gap:7px;margin-top:4px"><button class="btn btn-p btn-sm" onclick="saveMember(${id},this)">Save</button><button class="btn btn-g btn-sm" style="color:#E57373" onclick="removeMember(${id});closeDetail()">Remove</button></div>`,m);
 }
@@ -331,7 +331,7 @@ function setAtt(memberId,idx,val){
   if(m){m.att[idx]=val;openMemberDetail(memberId);renderMembers();}
 }
 
-// â”€â”€ QUICK ATTENDANCE â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── QUICK ATTENDANCE ──────────────────────────────────────────────────────────
 function openQuickAtt(){
   const maxSess=members.length?Math.max(...members.map(m=>m.att?m.att.length:0)):1;
   const n=maxSess||1;
@@ -356,10 +356,10 @@ function renderQuickAtt(sessIdx){
       </div>
       <button style="min-width:62px;height:36px;border-radius:7px;border:none;font-weight:700;font-size:12px;cursor:pointer;background:${bg};color:#fff" onclick="qaToggle(${m.id},${sessIdx})">${a===1?'Present':'Absent'}</button>
       <select style="font-size:10px;height:36px;border:1px solid var(--bd);border-radius:5px;background:var(--s2);color:var(--t2);padding:0 4px;cursor:pointer" onchange="qaSetAtt(${m.id},${sessIdx},+this.value)">
-        <option value="1"${a===1?' selected':''}>P â€“ Present</option>
-        <option value="0"${a===0?' selected':''}>A â€“ Absent</option>
-        <option value="2"${a===2?' selected':''}>L â€“ Late</option>
-        <option value="3"${a===3?' selected':''}>E â€“ Excused</option>
+        <option value="1"${a===1?' selected':''}>P – Present</option>
+        <option value="0"${a===0?' selected':''}>A – Absent</option>
+        <option value="2"${a===2?' selected':''}>L – Late</option>
+        <option value="3"${a===3?' selected':''}>E – Excused</option>
       </select>
     </div>`;
   }).join('');
@@ -396,13 +396,23 @@ function saveMember(id,btn){
 // EXEC EDIT
 function openExecDetail(id){
   const e=execTeam.find(x=>x.id===id);
+  const _ec=JSON.parse(localStorage.getItem('pbl_execcontacts')||'{}');
+  const ct=_ec[e.name]||{email:'',phone:''};
   openDetail(e.name,e.position,
     row2(fld('Name',inp('ed-ename',e.name)),fld('Position',inp('ed-epos',e.position)))+
-    `<div style="display:flex;gap:7px;margin-top:4px"><button class="btn btn-p btn-sm" onclick="saveExec(${id},this)">Save</button><button class="btn btn-g btn-sm" style="color:#E57373" onclick="removeExec(${id});closeDetail()">Remove</button></div>`,e);
+    row2(fld('Email (visible to members)',inp('ed-email',ct.email)),fld('Phone / GroupMe (optional)',inp('ed-phone',ct.phone)))+
+    `<div style="font-size:10px;color:var(--t3);margin-bottom:8px">Contact info appears on the member portal exec team page.</div>`+
+    `<div style="display:flex;gap:7px"><button class="btn btn-p btn-sm" onclick="saveExec(${id},this)">Save</button><button class="btn btn-g btn-sm" style="color:#E57373" onclick="removeExec(${id});closeDetail()">Remove</button></div>`,e);
 }
 function saveExec(id,btn){
   const e=execTeam.find(x=>x.id===id);
+  const oldName=e.name;
   e.name=g('ed-ename');e.position=g('ed-epos');
+  // save contact info keyed by name
+  const _ec=JSON.parse(localStorage.getItem('pbl_execcontacts')||'{}');
+  if(oldName!==e.name)delete _ec[oldName];
+  _ec[e.name]={email:g('ed-email'),phone:g('ed-phone')};
+  localStorage.setItem('pbl_execcontacts',JSON.stringify(_ec));
   renderExec();saved(btn);
   document.getElementById('d-title').textContent=e.name;
   document.getElementById('d-sub').textContent=e.position;
@@ -419,7 +429,7 @@ function openBcDetail(id){
       <span>${m.first} ${m.last}</span><span style="color:var(--t4);font-size:10px">${m.role||''}</span>
     </label>`;
   }).join('');
-  openDetail(b.name+' â€” '+b.topic,b.date,
+  openDetail(b.name+' — '+b.topic,b.date,
     row2(fld('Session Name',inp('ed-bname',b.name)),fld('Date',inp('ed-bdate',b.date)))+
     row2(fld('Topic',inp('ed-btopic',b.topic)),'<div></div>')+
     row2(fld('Attended',inp('ed-batt',b.att,'number')),fld('Total Members',inp('ed-btot',b.tot,'number')))+
@@ -444,7 +454,7 @@ function saveBc(id,btn){
   b.att=parseInt(g('ed-batt'))||0;b.tot=parseInt(g('ed-btot'))||47;
   b.notes=g('ed-bnotes');
   renderBootcamps();saved(btn);
-  document.getElementById('d-title').textContent=b.name+' â€” '+b.topic;
+  document.getElementById('d-title').textContent=b.name+' — '+b.topic;
 }
 
 // TASK EDIT
@@ -452,7 +462,7 @@ function openTaskDetail(id,board){
   const t=[...tasks.ebod,...tasks.general].find(x=>x.id===id);
   const owners=['President','VP Events','VP Education','VP Operations','Secretary','Treasurer','Dir. Marketing','Dir. Design'];
   const cats=['Events','Sponsors','Competition','Education','Marketing','Design','General','Operations'];
-  openDetail(t.text,'Due '+t.due+' Â· '+t.owner,
+  openDetail(t.text,'Due '+t.due+' · '+t.owner,
     fld('Task Text',inp('ed-ttext',t.text))+
     row2(fld('Owner',sel('ed-towner',owners,t.owner)),fld('Due Date',inp('ed-tdue',t.due)))+
     row2(fld('Category',sel('ed-tcat',cats,t.cat)),fld('Status',sel('ed-tstatus',['Open','Complete'],t.done?'Complete':'Open')))+
@@ -467,13 +477,13 @@ function saveTask(id,board,btn){
   t.notes=g('ed-tnotes');
   renderTasks();saved(btn);
   document.getElementById('d-title').textContent=t.text;
-  document.getElementById('d-sub').textContent='Due '+t.due+' Â· '+t.owner;
+  document.getElementById('d-sub').textContent='Due '+t.due+' · '+t.owner;
 }
 
 // AGENDA EDIT
 function openAgendaDetail(id){
   const a=agendas.find(x=>x.id===id);
-  openDetail(a.name,a.date+' Â· '+a.status,
+  openDetail(a.name,a.date+' · '+a.status,
     row2(fld('Meeting Name',inp('ed-aname',a.name)),fld('Date',inp('ed-adate',a.date)))+
     fld('Status',sel('ed-astatus',['Draft','Final','Complete'],a.status))+
     fld('Agenda Items (one per line)',ta('ed-aitems',a.items,5))+
@@ -487,13 +497,13 @@ function saveAgenda(id,btn){
   a.items=g('ed-aitems');a.notes=g('ed-anotes');
   renderAgendas();saved(btn);
   document.getElementById('d-title').textContent=a.name;
-  document.getElementById('d-sub').textContent=a.date+' Â· '+a.status;
+  document.getElementById('d-sub').textContent=a.date+' · '+a.status;
 }
 
 // EVENT EDIT
 function openEventDetail(id,bucket){
   const e=eventsData[bucket].find(x=>x.id===id);
-  openDetail(e.name,e.date+' Â· '+e.loc,
+  openDetail(e.name,e.date+' · '+e.loc,
     row2(fld('Event Name',inp('ed-evname',e.name)),fld('Date',inp('ed-evdate',e.date)))+
     row2(fld('Location',inp('ed-evloc',e.loc)),fld('Est. Attendance',inp('ed-evatt',e.att,'number')))+
     fld('Description & Notes',ta('ed-evdesc',e.desc,6))+
@@ -506,7 +516,7 @@ function saveEvent(id,bucket,btn){
   e.att=parseInt(g('ed-evatt'))||0;e.desc=g('ed-evdesc');
   renderEvents();saved(btn);
   document.getElementById('d-title').textContent=e.name;
-  document.getElementById('d-sub').textContent=e.date+' Â· '+e.loc;
+  document.getElementById('d-sub').textContent=e.date+' · '+e.loc;
 }
 
 // TEMPLATE EDIT
@@ -557,7 +567,7 @@ function addTemplate(section){
 // EMAIL EDIT
 function openEmailDetail(idx){
   const e=emails[idx];
-  openDetail(e.subj,e.to+' Â· '+e.date,
+  openDetail(e.subj,e.to+' · '+e.date,
     fld('Subject',inp('ed-esubj',e.subj))+
     row2(fld('To',inp('ed-eto',e.to)),fld('Date',inp('ed-edate',e.date)))+
     fld('Status',sel('ed-estats',['Responded','Awaiting response','Sent','Draft'],e.status))+
@@ -755,43 +765,43 @@ let compHistory=[
 // BUDGET
 let transactions={
   income:[
-    // â”€â”€ CONFERENCE MEMBER PAYMENTS â”€â”€
+    // ── CONFERENCE MEMBER PAYMENTS ──
     {id:1,desc:'Fall Conference Member Payments',cat:'Conference',date:'Oct 2024',amount:6200},
     {id:2,desc:'State Conference Member Payments',cat:'Conference',date:'Feb 2025',amount:25814},
     {id:3,desc:'National Conference Member Payments',cat:'Conference',date:'May 2025',amount:17176},
-    // â”€â”€ SPONSORSHIPS â”€â”€
+    // ── SPONSORSHIPS ──
     {id:4,desc:'Key Point Credit Union (Fall)',cat:'Sponsorship',date:'Sep 2024',amount:2000},
     {id:5,desc:'Moss Adams Sponsorship',cat:'Sponsorship',date:'Nov 2024',amount:3000},
     {id:6,desc:'Star One Credit Union Sponsorship',cat:'Sponsorship',date:'Oct 2024',amount:500},
     {id:7,desc:'Key Point Credit Union (Spring)',cat:'Sponsorship',date:'Mar 2025',amount:1500},
-    // â”€â”€ OTHER INCOME â”€â”€
+    // ── OTHER INCOME ──
     {id:8,desc:'Donations',cat:'Donation',date:'2024-2025',amount:2000},
-    {id:9,desc:'ICC Award â€” Most Decorated (Club Day)',cat:'ICC Award',date:'May 2025',amount:100},
-    {id:10,desc:'ICC Award â€” Club of the Year',cat:'ICC Award',date:'May 2025',amount:300},
-    {id:11,desc:'ICC Award â€” Most Popular',cat:'ICC Award',date:'May 2025',amount:150},
-    {id:12,desc:'ICC Award â€” Perfect Attendance',cat:'ICC Award',date:'May 2025',amount:100},
+    {id:9,desc:'ICC Award — Most Decorated (Club Day)',cat:'ICC Award',date:'May 2025',amount:100},
+    {id:10,desc:'ICC Award — Club of the Year',cat:'ICC Award',date:'May 2025',amount:300},
+    {id:11,desc:'ICC Award — Most Popular',cat:'ICC Award',date:'May 2025',amount:150},
+    {id:12,desc:'ICC Award — Perfect Attendance',cat:'ICC Award',date:'May 2025',amount:100},
     {id:13,desc:'Merch Sales',cat:'Merchandise',date:'2024-2025',amount:1190},
     {id:14,desc:'Club Budget Request (De Anza)',cat:'Grant',date:'Sep 2024',amount:444},
   ],
   expense:[
-    // â”€â”€ FALL CONFERENCE â”€â”€
+    // ── FALL CONFERENCE ──
     {id:15,desc:'Fall Conference Expense',cat:'Conference',date:'Oct 2024',amount:6200},
-    // â”€â”€ STATE CONFERENCE â”€â”€
-    {id:16,desc:'State Conference â€” Hotel & Registration',cat:'Conference',date:'Feb 2025',amount:14665},
-    {id:17,desc:'State Conference â€” Transportation',cat:'Travel',date:'Feb 2025',amount:7408},
-    {id:18,desc:'State Conference â€” Reimbursements',cat:'Reimbursement',date:'Feb 2025',amount:4427},
-    {id:19,desc:'State Conference â€” Food',cat:'Food',date:'Feb 2025',amount:2314},
-    // â”€â”€ NATIONAL CONFERENCE â”€â”€
-    {id:20,desc:'Nationals â€” Hotel & Registration',cat:'Conference',date:'Jun 2025',amount:14343},
-    {id:21,desc:'Nationals â€” Financial Aid Refund',cat:'Reimbursement',date:'Jun 2025',amount:2900},
-    {id:22,desc:'Nationals â€” Scholarship Refund',cat:'Reimbursement',date:'Jun 2025',amount:2145},
-    {id:23,desc:'Nationals â€” Aquarium Excursion',cat:'Events',date:'Jun 2025',amount:821},
-    {id:24,desc:'Nationals â€” PayPal Fees',cat:'Admin',date:'Jun 2025',amount:465},
-    // â”€â”€ DE ANZA BUSINESS CONFERENCE â”€â”€
-    {id:25,desc:'DABC â€” Custodial Fees',cat:'Events',date:'Apr 2025',amount:444},
-    {id:26,desc:'DABC â€” Food',cat:'Food',date:'Apr 2025',amount:180},
-    {id:27,desc:'DABC â€” Supplies',cat:'Admin',date:'Apr 2025',amount:48},
-    // â”€â”€ OTHER EXPENSES â”€â”€
+    // ── STATE CONFERENCE ──
+    {id:16,desc:'State Conference — Hotel & Registration',cat:'Conference',date:'Feb 2025',amount:14665},
+    {id:17,desc:'State Conference — Transportation',cat:'Travel',date:'Feb 2025',amount:7408},
+    {id:18,desc:'State Conference — Reimbursements',cat:'Reimbursement',date:'Feb 2025',amount:4427},
+    {id:19,desc:'State Conference — Food',cat:'Food',date:'Feb 2025',amount:2314},
+    // ── NATIONAL CONFERENCE ──
+    {id:20,desc:'Nationals — Hotel & Registration',cat:'Conference',date:'Jun 2025',amount:14343},
+    {id:21,desc:'Nationals — Financial Aid Refund',cat:'Reimbursement',date:'Jun 2025',amount:2900},
+    {id:22,desc:'Nationals — Scholarship Refund',cat:'Reimbursement',date:'Jun 2025',amount:2145},
+    {id:23,desc:'Nationals — Aquarium Excursion',cat:'Events',date:'Jun 2025',amount:821},
+    {id:24,desc:'Nationals — PayPal Fees',cat:'Admin',date:'Jun 2025',amount:465},
+    // ── DE ANZA BUSINESS CONFERENCE ──
+    {id:25,desc:'DABC — Custodial Fees',cat:'Events',date:'Apr 2025',amount:444},
+    {id:26,desc:'DABC — Food',cat:'Food',date:'Apr 2025',amount:180},
+    {id:27,desc:'DABC — Supplies',cat:'Admin',date:'Apr 2025',amount:48},
+    // ── OTHER EXPENSES ──
     {id:28,desc:'Merch Expense',cat:'Merchandise',date:'2024-2025',amount:678},
     {id:29,desc:'Banquet Expense',cat:'Events',date:'May 2025',amount:374},
     {id:30,desc:'Advisor Gift',cat:'Admin',date:'Jun 2025',amount:187},
@@ -821,7 +831,7 @@ let goals=[
   {id:4,title:'Consulting Projects',metric:'Complete 4 client projects',progress:1,target:4,unit:'projects',notes:'Orkizz active, 3 more needed. Reach out to local businesses.',status:'Behind'},
 ];let nGoal=5;
 
-// â”€â”€ NEW FINANCE / CALENDAR DATA (must be before global render call) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── NEW FINANCE / CALENDAR DATA (must be before global render call) ──────────
 let pblTransactions={income:[],expense:[]};let nPblTr=1;
 let budgetTarget=parseFloat(localStorage.getItem('dapbl_budget_target'))||4000;
 let merchSales=[];let nMerch=1;
@@ -829,14 +839,14 @@ let importedCalEvents=[];
 
 // TRANSITION
 let transitionDocs=[
-  {id:1,position:'President',author:'Nisa Pradhan',updated:'May 2026',content:'KEY CONTACTS\n- Advisor: [Name, email]\n- FBLA State Office: [contact]\n- Venue Contacts: MLC 105 Facilities x1234\n\nONGOING RELATIONSHIPS\n- Bay Area Credit Union (Maria Santos) â€” renews annually, very receptive\n- Tech District Co. (James Wu) â€” prefers email, follow up in March\n\nDO NOT FORGET\n- Submit chapter dues to national by Sept 15\n- Reserve rooms for bootcamps at least 3 weeks out\n- Start SBLC prep in October, not November\n\nWHAT I WOULD DO DIFFERENTLY\n- Delegate more to VPs earlier\n- Set exec expectations in writing Week 1\n- Build sponsor relationships before you need them',files:[]},
+  {id:1,position:'President',author:'Nisa Pradhan',updated:'May 2026',content:'KEY CONTACTS\n- Advisor: [Name, email]\n- FBLA State Office: [contact]\n- Venue Contacts: MLC 105 Facilities x1234\n\nONGOING RELATIONSHIPS\n- Bay Area Credit Union (Maria Santos) — renews annually, very receptive\n- Tech District Co. (James Wu) — prefers email, follow up in March\n\nDO NOT FORGET\n- Submit chapter dues to national by Sept 15\n- Reserve rooms for bootcamps at least 3 weeks out\n- Start SBLC prep in October, not November\n\nWHAT I WOULD DO DIFFERENTLY\n- Delegate more to VPs earlier\n- Set exec expectations in writing Week 1\n- Build sponsor relationships before you need them',files:[]},
   {id:2,position:'VP of Operations',author:'Addy Hu',updated:'May 2026',content:'EVENT LOGISTICS\n- DAIS: book venue by March, catering 2 weeks out, judges confirmed 3 weeks out\n- Always get room confirmation in writing from facilities\n\nVENDORS\n- Catering: [Contact]\n- Printing: Local Print Co. (in-kind sponsor)\n\nTEMPLATES\n- Run of Show template in Hub > Templates\n- DAIS 2025 folder in Drive has all previous materials',files:[]},
 ];let nTD=3;
 
 // ANNOUNCEMENTS
 let announcements={
   draft:[
-    {id:1,title:'DAIS 2026 Save the Date',channel:'GroupMe + Instagram',date:'May 10',content:'DAIS 2026 is coming up June 3rd! Mark your calendars. More details coming soon. This is our biggest event of the year â€” bring a friend.'},
+    {id:1,title:'DAIS 2026 Save the Date',channel:'GroupMe + Instagram',date:'May 10',content:'DAIS 2026 is coming up June 3rd! Mark your calendars. More details coming soon. This is our biggest event of the year — bring a friend.'},
     {id:2,title:'NLC Prep Bootcamp Reminder',channel:'GroupMe',date:'May 12',content:'Reminder: Bootcamp Session 5 is this Wednesday. All NLC competitors must attend. Session covers advanced case strategies. See you at 6pm in MLC 105.'},
   ],
   sent:[
@@ -877,7 +887,7 @@ function renderConsulting(){
 function openConsultingProjectDetail(id){
   const p=consultingProjects.find(x=>x.id===id);
   const statusOpts=['Active','Complete','On Hold','Cancelled'];
-  openDetail(p.name,p.client+' Â· '+p.status,
+  openDetail(p.name,p.client+' · '+p.status,
     row2(fld('Project Name',inp('ed-cname',p.name)),fld('Client',inp('ed-cclient',p.client)))+
     row2(fld('Lead',inp('ed-clead',p.lead)),fld('Start Date',inp('ed-cstart',p.start)))+
     fld('Status',sel('ed-cstatus',statusOpts,p.status))+
@@ -891,7 +901,7 @@ function saveConsultingProject(id,btn){
   p.start=g('ed-cstart');p.status=g('ed-cstatus');p.notes=g('ed-cnotes');
   renderConsulting();saved(btn);
   document.getElementById('d-title').textContent=p.name;
-  document.getElementById('d-sub').textContent=p.client+' Â· '+p.status;
+  document.getElementById('d-sub').textContent=p.client+' · '+p.status;
 }
 function addConsultingProject(){
   consultingProjects.push({id:nCon++,name:'New Project',client:'',lead:'',start:'',status:'Active',notes:'',files:[]});
@@ -945,14 +955,14 @@ function renderCompetition(){
   if(et)et.innerHTML=compEvents.map(e=>{
     const sups=_compSignupsMap[e.id]||[];
     const supBadge=sups.length?`<span class="badge bg" title="${sups.map(s=>s.name).join(', ')}" style="cursor:default">${sups.length} interested</span>`:'';
-    return`<tr class="cr" onclick="openCompEventDetail(${e.id})"><td class="nm">${e.name}</td><td>${e.members}</td><td>${e.competition}</td><td><span class="badge bb">${e.type}</span></td><td style="color:var(--t3);font-size:10px">${e.notes||'â€”'}</td><td>${supBadge}</td></tr>`;
+    return`<tr class="cr" onclick="openCompEventDetail(${e.id})"><td class="nm">${e.name}</td><td>${e.members}</td><td>${e.competition}</td><td><span class="badge bb">${e.type}</span></td><td style="color:var(--t3);font-size:10px">${e.notes||'—'}</td><td>${supBadge}</td></tr>`;
   }).join('');
   const ht=document.getElementById('comp-history-table');
-  if(ht)ht.innerHTML=compHistory.map(h=>`<tr class="cr" onclick="openCompHistoryDetail(${h.id})"><td class="nm">${h.year}</td><td>${h.competition}</td><td>${h.entries}</td><td><span class="badge bg">${h.first}</span></td><td>${h.top5}</td><td style="color:var(--t3);font-size:10px">${h.notes||'â€”'}</td></tr>`).join('');
+  if(ht)ht.innerHTML=compHistory.map(h=>`<tr class="cr" onclick="openCompHistoryDetail(${h.id})"><td class="nm">${h.year}</td><td>${h.competition}</td><td>${h.entries}</td><td><span class="badge bg">${h.first}</span></td><td>${h.top5}</td><td style="color:var(--t3);font-size:10px">${h.notes||'—'}</td></tr>`).join('');
 }
 function openCompResultDetail(id){
   const r=compResults.find(x=>x.id===id);
-  openDetail(r.member+' â€” '+r.event,r.competition+' '+r.year,
+  openDetail(r.member+' — '+r.event,r.competition+' '+r.year,
     row2(fld('Member',inp('ed-crmem',r.member)),fld('Event',inp('ed-crevt',r.event)))+
     row2(fld('Competition',inp('ed-crcomp',r.competition)),fld('Year',inp('ed-cryear',r.year)))+
     fld('Placement',sel('ed-crpl',['1st','2nd','3rd','4th','5th','Top 10','Participated'],r.placement))+
@@ -963,7 +973,7 @@ function saveCompResult(id,btn){
   r.member=g('ed-crmem');r.event=g('ed-crevt');r.competition=g('ed-crcomp');
   r.year=g('ed-cryear');r.placement=g('ed-crpl');
   renderCompetition();saved(btn);
-  document.getElementById('d-title').textContent=r.member+' â€” '+r.event;
+  document.getElementById('d-title').textContent=r.member+' — '+r.event;
 }
 function addCompResult(){
   compResults.push({id:nCR++,member:'',event:'',competition:'',placement:'Participated',year:'2026'});
@@ -1058,7 +1068,7 @@ function renderMinutes(){
 }
 function openMinutesDetail(id){
   const m=meetingMinutes.find(x=>x.id===id);
-  openDetail(m.name,m.date+' Â· Recorded by '+m.recorder,
+  openDetail(m.name,m.date+' · Recorded by '+m.recorder,
     row2(fld('Meeting Name',inp('ed-mnname',m.name)),fld('Date',inp('ed-mndate',m.date)))+
     fld('Recorded By',inp('ed-mnrec',m.recorder))+
     fld('Action Items (one per line)',ta('ed-mnact',m.actions,5))+
@@ -1072,7 +1082,7 @@ function saveMinutes(id,btn){
   m.actions=g('ed-mnact');m.notes=g('ed-mnnotes');
   renderMinutes();saved(btn);
   document.getElementById('d-title').textContent=m.name;
-  document.getElementById('d-sub').textContent=m.date+' Â· Recorded by '+m.recorder;
+  document.getElementById('d-sub').textContent=m.date+' · Recorded by '+m.recorder;
 }
 function addMinutes(){
   meetingMinutes.push({id:nMin++,name:'New Meeting',date:'',recorder:'',actions:'',notes:'',files:[]});
@@ -1083,7 +1093,7 @@ function addMinutes(){
 function renderRecruitment(){
   const t=document.getElementById('rec-table');if(!t)return;
   const stages=['Interested','Attended Meeting','Followed Up','Converted','Dropped'];
-  t.innerHTML=prospects.map(p=>`<tr class="cr" onclick="openProspectDetail(${p.id})"><td class="nm">${p.name}</td><td style="font-size:10px;color:var(--t3)">${p.contact}</td><td><span class="badge bb">${p.source}</span></td><td><span class="badge ${p.stage==='Converted'?'bg':p.stage==='Dropped'?'br':'bo'}">${p.stage}</span></td><td style="font-size:10px;color:var(--t3)">${p.followup||'â€”'}</td></tr>`).join('');
+  t.innerHTML=prospects.map(p=>`<tr class="cr" onclick="openProspectDetail(${p.id})"><td class="nm">${p.name}</td><td style="font-size:10px;color:var(--t3)">${p.contact}</td><td><span class="badge bb">${p.source}</span></td><td><span class="badge ${p.stage==='Converted'?'bg':p.stage==='Dropped'?'br':'bo'}">${p.stage}</span></td><td style="font-size:10px;color:var(--t3)">${p.followup||'—'}</td></tr>`).join('');
   const el=id=>document.getElementById(id);
   if(el('rec-total'))el('rec-total').textContent=prospects.filter(p=>p.stage!=='Converted'&&p.stage!=='Dropped').length;
   if(el('rec-converted'))el('rec-converted').textContent=prospects.filter(p=>p.stage==='Converted').length;
@@ -1198,7 +1208,7 @@ function openAnnouncementDetail(id,bucket){
     fld('Title',inp('ed-antitle',a.title))+
     row2(fld('Channel',sel('ed-anchan',channels,a.channel)),fld('Date',inp('ed-andate',a.date)))+
     fld('Announcement Text',ta('ed-ancontent',a.content,6))+
-    `<div style="display:flex;gap:7px;flex-wrap:wrap"><button class="btn btn-p btn-sm" onclick="saveAnnouncement(${id},'${bucket}',this)">Save</button><button class="btn btn-g btn-sm" onclick="copyAnnouncementDetail(this)">Copy</button><button class="btn btn-p btn-sm" id="pub-btn-${id}" style="background:${a.published?'var(--grn)':''};" onclick="publishAnnouncement(${id},'${bucket}',this)">${a.published?'âœ“ Published to Members':'Publish to Members'}</button><button class="btn btn-g btn-sm" style="color:#E57373" onclick="announcements['${bucket}']=announcements['${bucket}'].filter(x=>x.id!==${id});renderAnnouncements();closeDetail()">Delete</button></div>`,a);
+    `<div style="display:flex;gap:7px;flex-wrap:wrap"><button class="btn btn-p btn-sm" onclick="saveAnnouncement(${id},'${bucket}',this)">Save</button><button class="btn btn-g btn-sm" onclick="copyAnnouncementDetail(this)">Copy</button><button class="btn btn-p btn-sm" id="pub-btn-${id}" style="background:${a.published?'var(--grn)':''};" onclick="publishAnnouncement(${id},'${bucket}',this)">${a.published?'✓ Published to Members':'Publish to Members'}</button><button class="btn btn-g btn-sm" style="color:#E57373" onclick="announcements['${bucket}']=announcements['${bucket}'].filter(x=>x.id!==${id});renderAnnouncements();closeDetail()">Delete</button></div>`,a);
 }
 function saveAnnouncement(id,bucket,btn){
   const a=announcements[bucket].find(x=>x.id===id);
@@ -1210,7 +1220,7 @@ function publishAnnouncement(id,bucket,btn){
   const a=announcements[bucket].find(x=>x.id===id);if(!a)return;
   a.published=!a.published;
   saveData();renderAnnouncements();
-  btn.textContent=a.published?'âœ“ Published to Members':'Publish to Members';
+  btn.textContent=a.published?'✓ Published to Members':'Publish to Members';
   btn.style.background=a.published?'var(--grn)':'';
 }
 function copyAnnouncementDetail(btn){
@@ -1242,7 +1252,7 @@ function renderMemberContent(){
       </div>
       <div style="display:flex;gap:6px">
         <button class="btn btn-g btn-sm" onclick="editMCGuide(${i})">Edit</button>
-        <button class="btn btn-g btn-sm" style="color:#E57373" onclick="deleteMCItem('guides',${i})">Ã—</button>
+        <button class="btn btn-g btn-sm" style="color:#E57373" onclick="deleteMCItem('guides',${i})">×</button>
       </div>
     </div>`).join('')||'<div style="font-size:11px;color:var(--t4);padding:8px 0">No guides yet.</div>';
   // Templates
@@ -1255,7 +1265,7 @@ function renderMemberContent(){
       </div>
       <div style="display:flex;gap:6px">
         <button class="btn btn-g btn-sm" onclick="editMCTemplate(${i})">Edit</button>
-        <button class="btn btn-g btn-sm" style="color:#E57373" onclick="deleteMCItem('templates',${i})">Ã—</button>
+        <button class="btn btn-g btn-sm" style="color:#E57373" onclick="deleteMCItem('templates',${i})">×</button>
       </div>
     </div>`).join('')||'<div style="font-size:11px;color:var(--t4);padding:8px 0">No templates yet.</div>';
   // Event Slides
@@ -1269,7 +1279,7 @@ function renderMemberContent(){
       </div>
       <div style="display:flex;gap:6px">
         <button class="btn btn-g btn-sm" onclick="editEventSlide(${i})">Edit</button>
-        <button class="btn btn-g btn-sm" style="color:#E57373" onclick="deleteSlide('event',${i})">Ã—</button>
+        <button class="btn btn-g btn-sm" style="color:#E57373" onclick="deleteSlide('event',${i})">×</button>
       </div>
     </div>`).join('')||'<div style="font-size:11px;color:var(--t4);padding:8px 0">No event slides yet.</div>';
   // Lecture Slides
@@ -1277,16 +1287,263 @@ function renderMemberContent(){
   if(lsl)lsl.innerHTML=lectureSlides.map((s,i)=>`
     <div class="tc">
       <div style="flex:1">
-        <div class="tn">${s.session} â€” ${s.topic}</div>
+        <div class="tn">${s.session} — ${s.topic}</div>
         <div class="td2">${s.date} &middot; ${s.desc}</div>
         <div style="font-size:10px;color:var(--grn);margin-top:2px">${s.link}</div>
       </div>
       <div style="display:flex;gap:6px">
         <button class="btn btn-g btn-sm" onclick="editLectureSlide(${i})">Edit</button>
-        <button class="btn btn-g btn-sm" style="color:#E57373" onclick="deleteSlide('lecture',${i})">Ã—</button>
+        <button class="btn btn-g btn-sm" style="color:#E57373" onclick="deleteSlide('lecture',${i})">×</button>
       </div>
     </div>`).join('')||'<div style="font-size:11px;color:var(--t4);padding:8px 0">No lecture slides yet.</div>';
 }
+// ── IM REMOTE EDITOR ──────────────────────────────────────────────────────────
+let _imeSection=null;
+
+function renderIMEditor(){renderIMPreview();}
+
+function renderIMPreview(){
+  _imePrevAnn();_imePrevEvents();_imePrevHighlights();_imePrevLinks();_imePrevResources();
+  if(_imeSection)imeSelect(_imeSection);
+}
+
+function imeSelect(section){
+  _imeSection=section;
+  document.querySelectorAll('.ime-sec').forEach(el=>el.classList.remove('ime-active'));
+  const sec=document.getElementById('ime-sec-'+section);
+  if(sec){sec.classList.add('ime-active');sec.scrollIntoView({behavior:'smooth',block:'nearest'});}
+  const ed=document.getElementById('ime-editor');if(!ed)return;
+  const editors={announcements:_imeEdAnn,events:_imeEdEvents,highlights:_imeEdHighlights,links:_imeEdLinks,resources:_imeEdResources};
+  if(editors[section])ed.innerHTML=editors[section]();
+}
+
+// ─── PREVIEW RENDERERS ────────────────────────────────────────────────────────
+function _imePrevAnn(){
+  const el=document.getElementById('ime-prev-ann');if(!el)return;
+  const all=[...(announcements.sent||[]),...(announcements.draft||[])].filter(a=>a.published);
+  el.innerHTML=all.length?all.slice(0,3).map(a=>`
+    <div style="padding:10px 14px;border-bottom:1px solid var(--bd)">
+      <div style="font-size:12px;font-weight:600;color:var(--t1)">${a.title}</div>
+      <div style="font-size:10px;color:var(--t3);margin:2px 0">${a.channel||''} · ${a.date||''}</div>
+      <div style="font-size:11px;color:var(--t2);line-height:1.5">${(a.content||'').slice(0,90)}${(a.content||'').length>90?'…':''}</div>
+    </div>`).join('')
+    :`<div style="padding:14px;font-size:11px;color:var(--t4);text-align:center">No published announcements</div>`;
+}
+function _imePrevEvents(){
+  const el=document.getElementById('ime-prev-events');if(!el)return;
+  const evts=(typeof mEventsData!=='undefined'&&mEventsData.upcoming)||events||[];
+  const upcoming=evts.slice(0,4);
+  el.innerHTML=upcoming.length?upcoming.map(e=>{
+    const d=new Date(e.date);
+    const mo=isNaN(d)?'':d.toLocaleString('default',{month:'short'}).toUpperCase();
+    const dy=isNaN(d)?'':d.getDate();
+    return`<div style="display:flex;align-items:center;gap:10px;padding:8px 14px;border-bottom:1px solid var(--bd)">
+      <div style="min-width:34px;height:34px;border-radius:6px;background:var(--cr);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center">
+        <div style="font-size:7px;line-height:1">${mo}</div><div style="font-size:13px;font-weight:700;line-height:1">${dy||'?'}</div>
+      </div>
+      <div><div style="font-size:12px;font-weight:600;color:var(--t1)">${e.name}</div><div style="font-size:10px;color:var(--t3)">${e.loc||e.location||''}</div></div>
+    </div>`;}).join('')
+    :`<div style="padding:14px;font-size:11px;color:var(--t4);text-align:center">No upcoming events</div>`;
+}
+function _imePrevHighlights(){
+  const el=document.getElementById('ime-prev-highlights');if(!el)return;
+  if(typeof highlights==='undefined'||!highlights.length){el.innerHTML='<div style="padding:14px;font-size:11px;color:var(--t4);text-align:center">No highlights</div>';return;}
+  el.innerHTML=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:12px">`+
+    highlights.map(h=>`<div style="background:var(--s2);border:1px solid var(--bd);border-radius:6px;padding:10px;border-left:3px solid ${h.color}">
+      <div style="font-size:9px;color:var(--t3);letter-spacing:1px;text-transform:uppercase;margin-bottom:3px">${h.label}</div>
+      <div style="font-size:20px;font-weight:800;color:${h.color}">${h.value}</div>
+      <div style="font-size:10px;color:var(--t3);margin-top:2px">${h.sub}</div>
+    </div>`).join('')+`</div>`;
+}
+function _imePrevLinks(){
+  const el=document.getElementById('ime-prev-links');if(!el)return;
+  if(typeof quickLinks==='undefined'||!quickLinks.length){el.innerHTML='<div style="padding:14px;font-size:11px;color:var(--t4);text-align:center">No quick links</div>';return;}
+  el.innerHTML=`<div style="padding:10px 14px">`+quickLinks.map(l=>`
+    <div style="display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--bd)">
+      <div style="width:26px;height:26px;border-radius:5px;background:${l.bg};color:${l.ic};font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0">${l.icon}</div>
+      <div><div style="font-size:11px;font-weight:600;color:var(--t1)">${l.label}</div><div style="font-size:10px;color:var(--t3)">${l.desc}</div></div>
+    </div>`).join('')+`</div>`;
+}
+function _imePrevResources(){
+  const el=document.getElementById('ime-prev-resources');if(!el)return;
+  const guides=(resources&&resources.guides)||[];
+  const templates=(resources&&resources.templates)||[];
+  const total=guides.length+templates.length+eventSlides.length+lectureSlides.length;
+  el.innerHTML=`<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:0">
+    ${[['Guides',guides.length,'📖'],['Templates',templates.length,'📄'],['Event Slides',eventSlides.length,'🎞'],['Lecture Slides',lectureSlides.length,'📓']].map(([l,c,i])=>`
+    <div style="padding:12px 8px;text-align:center;border-right:1px solid var(--bd)">
+      <div style="font-size:20px">${i}</div><div style="font-size:15px;font-weight:700;color:var(--t1)">${c}</div><div style="font-size:9px;color:var(--t3)">${l}</div>
+    </div>`).join('')}
+  </div>`;
+}
+
+// ─── EDITOR PANELS ────────────────────────────────────────────────────────────
+function _imeEdAnn(){
+  const all=[...(announcements.sent||[]),...(announcements.draft||[])];
+  return`<div class="card">
+    <div class="ch"><div class="ct">Announcements</div><button class="btn btn-p btn-sm" onclick="addAnnouncement('draft');_imePrevAnn()">+ New</button></div>
+    <div style="font-size:10px;color:var(--t3);padding:6px 16px 8px">Toggle "Publish to Members" on each announcement to control what members see.</div>
+    ${all.length?all.map(a=>{
+      const bucket=announcements.sent.find(x=>x.id===a.id)?'sent':'draft';
+      return`<div class="ime-ed-item">
+        <div style="flex:1;min-width:0">
+          <div class="ime-ed-title">${a.title}</div>
+          <div class="ime-ed-sub">${a.channel||''} · ${a.date||''}</div>
+          <div style="margin-top:4px">
+            <span class="badge ${a.published?'bg':'bo'}" style="cursor:pointer" onclick="publishAnnouncement(${a.id},'${bucket}',this);_imePrevAnn()">${a.published?'✓ Published':'Unpublished — click to publish'}</span>
+          </div>
+        </div>
+        <button class="btn btn-g btn-sm" onclick="openAnnouncementDetail(${a.id},'${bucket}')">Edit</button>
+      </div>`;}).join('')
+    :`<div style="padding:16px;font-size:11px;color:var(--t4);text-align:center">No announcements yet</div>`}
+  </div>`;
+}
+function _imeEdEvents(){
+  const evts=events||[];
+  return`<div class="card">
+    <div class="ch"><div class="ct">Events</div><button class="btn btn-p btn-sm" onclick="openModal('event-modal')">+ Add Event</button></div>
+    ${evts.length?evts.slice(0,15).map(e=>`<div class="ime-ed-item">
+      <div style="flex:1;min-width:0">
+        <div class="ime-ed-title">${e.name}</div>
+        <div class="ime-ed-sub">${e.date||'No date'} · ${e.loc||''}</div>
+      </div>
+      <button class="btn btn-g btn-sm" onclick="openEventDetail(${e.id})">Edit</button>
+    </div>`).join('')
+    :`<div style="padding:16px;font-size:11px;color:var(--t4);text-align:center">No events yet</div>`}
+  </div>`;
+}
+function _imeEdHighlights(){
+  return`<div class="card">
+    <div class="ch"><div class="ct">Season Highlights</div><button class="btn btn-p btn-sm" onclick="imeAddHighlight()">+ Add</button></div>
+    <div style="font-size:10px;color:var(--t3);padding:6px 16px 8px">These appear as the stat cards on the IM home page.</div>
+    ${(typeof highlights!=='undefined'?highlights:[]).map((h,i)=>`<div class="ime-ed-item">
+      <div style="width:32px;height:32px;border-radius:6px;background:${h.color};flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;color:#fff">${h.value}</div>
+      <div style="flex:1;min-width:0">
+        <div class="ime-ed-title">${h.label}</div>
+        <div class="ime-ed-sub">${h.sub}</div>
+      </div>
+      <div style="display:flex;gap:5px">
+        <button class="btn btn-g btn-sm" onclick="imeEditHighlight(${i})">Edit</button>
+        <button class="btn btn-g btn-sm" style="color:var(--cr)" onclick="imeDeleteHighlight(${i})">✕</button>
+      </div>
+    </div>`).join('')||'<div style="padding:16px;font-size:11px;color:var(--t4);text-align:center">No highlights</div>'}
+  </div>`;
+}
+function _imeEdLinks(){
+  return`<div class="card">
+    <div class="ch"><div class="ct">Quick Links</div><button class="btn btn-p btn-sm" onclick="imeAddLink()">+ Add Link</button></div>
+    <div style="font-size:10px;color:var(--t3);padding:6px 16px 8px">Shown on the IM home page for quick member access.</div>
+    ${(typeof quickLinks!=='undefined'?quickLinks:[]).map((l,i)=>`<div class="ime-ed-item">
+      <div style="width:30px;height:30px;border-radius:6px;background:${l.bg};color:${l.ic};font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0">${l.icon}</div>
+      <div style="flex:1;min-width:0">
+        <div class="ime-ed-title">${l.label}</div>
+        <div class="ime-ed-sub">${l.desc}</div>
+        <div style="font-size:10px;color:var(--blu);margin-top:2px">${l.url}</div>
+      </div>
+      <div style="display:flex;gap:5px">
+        <button class="btn btn-g btn-sm" onclick="imeEditLink(${i})">Edit</button>
+        <button class="btn btn-g btn-sm" style="color:var(--cr)" onclick="imeDeleteLink(${i})">✕</button>
+      </div>
+    </div>`).join('')||'<div style="padding:16px;font-size:11px;color:var(--t4);text-align:center">No links</div>'}
+  </div>`;
+}
+function _imeEdResources(){
+  const guides=(resources&&resources.guides)||[];
+  const templates=(resources&&resources.templates)||[];
+  const _list=(items,type,editFn,addFn)=>items.length?items.map((x,i)=>`<div class="ime-ed-item">
+    <div style="flex:1;min-width:0"><div class="ime-ed-title">${x.name}</div><div class="ime-ed-sub">${x.desc||''}</div></div>
+    <div style="display:flex;gap:5px">
+      <button class="btn btn-g btn-sm" onclick="${editFn}(${i})">Edit</button>
+      <button class="btn btn-g btn-sm" style="color:var(--cr)" onclick="deleteMCItem('${type}',${i});document.getElementById('ime-editor').innerHTML=_imeEdResources()">✕</button>
+    </div>
+  </div>`).join(''):`<div style="padding:10px 16px;font-size:11px;color:var(--t4)">None yet</div>`;
+  return`
+  <div class="card" style="margin-bottom:12px">
+    <div class="ch"><div class="ct">Member Guides</div><button class="btn btn-p btn-sm" onclick="addMCGuide()">+ Add</button></div>
+    ${_list(guides,'guides','editMCGuide','')}
+  </div>
+  <div class="card" style="margin-bottom:12px">
+    <div class="ch"><div class="ct">Templates</div><button class="btn btn-p btn-sm" onclick="addMCTemplate()">+ Add</button></div>
+    ${_list(templates,'templates','editMCTemplate','')}
+  </div>
+  <div class="card" style="margin-bottom:12px">
+    <div class="ch"><div class="ct">Event Slides</div><button class="btn btn-p btn-sm" onclick="addEventSlide()">+ Add</button></div>
+    ${eventSlides.length?eventSlides.map((s,i)=>`<div class="ime-ed-item">
+      <div style="flex:1;min-width:0"><div class="ime-ed-title">${s.name}</div><div class="ime-ed-sub">${s.event} · ${s.date}</div></div>
+      <div style="display:flex;gap:5px">
+        <button class="btn btn-g btn-sm" onclick="editEventSlide(${i})">Edit</button>
+        <button class="btn btn-g btn-sm" style="color:var(--cr)" onclick="deleteSlide('event',${i});imeSelect('resources')">✕</button>
+      </div>
+    </div>`).join(''):`<div style="padding:10px 16px;font-size:11px;color:var(--t4)">None yet</div>`}
+  </div>
+  <div class="card">
+    <div class="ch"><div class="ct">Lecture Slides</div><button class="btn btn-p btn-sm" onclick="addLectureSlide()">+ Add</button></div>
+    ${lectureSlides.length?lectureSlides.map((s,i)=>`<div class="ime-ed-item">
+      <div style="flex:1;min-width:0"><div class="ime-ed-title">${s.session} — ${s.topic}</div><div class="ime-ed-sub">${s.date} · ${s.desc}</div></div>
+      <div style="display:flex;gap:5px">
+        <button class="btn btn-g btn-sm" onclick="editLectureSlide(${i})">Edit</button>
+        <button class="btn btn-g btn-sm" style="color:var(--cr)" onclick="deleteSlide('lecture',${i});imeSelect('resources')">✕</button>
+      </div>
+    </div>`).join(''):`<div style="padding:10px 16px;font-size:11px;color:var(--t4)">None yet</div>`}
+  </div>`;
+}
+
+// ─── HIGHLIGHTS CRUD ─────────────────────────────────────────────────────────
+function imeAddHighlight(){
+  openDetail('Add Highlight','Add a stat card to the member home page',
+    row2(fld('Label',inp('hl-label','')),fld('Value',inp('hl-value','')))+
+    row2(fld('Subtitle',inp('hl-sub','')),fld('Color',sel('hl-color',['var(--cr)','var(--grn)','var(--blu)','var(--gold2)','#8B5CF6'],'var(--cr)')))+
+    `<button class="btn btn-p btn-sm" onclick="imeSaveNewHighlight(this)">Add</button>`);
+}
+function imeSaveNewHighlight(btn){
+  highlights.push({label:g('hl-label'),value:g('hl-value'),sub:g('hl-sub'),color:g('hl-color')});
+  localStorage.setItem('pbl_highlights',JSON.stringify(highlights));
+  _imePrevHighlights();closeDetail();imeSelect('highlights');
+}
+function imeEditHighlight(i){
+  const h=highlights[i];
+  openDetail('Edit Highlight','',
+    row2(fld('Label',inp('hl-label',h.label)),fld('Value',inp('hl-value',h.value)))+
+    row2(fld('Subtitle',inp('hl-sub',h.sub)),fld('Color',sel('hl-color',['var(--cr)','var(--grn)','var(--blu)','var(--gold2)','#8B5CF6'],h.color)))+
+    `<button class="btn btn-p btn-sm" onclick="imeSaveHighlight(${i},this)">Save</button>`);
+}
+function imeSaveHighlight(i,btn){
+  highlights[i]={label:g('hl-label'),value:g('hl-value'),sub:g('hl-sub'),color:g('hl-color')};
+  localStorage.setItem('pbl_highlights',JSON.stringify(highlights));
+  _imePrevHighlights();closeDetail();imeSelect('highlights');
+}
+function imeDeleteHighlight(i){highlights.splice(i,1);localStorage.setItem('pbl_highlights',JSON.stringify(highlights));_imePrevHighlights();imeSelect('highlights');}
+
+// ─── QUICK LINKS CRUD ─────────────────────────────────────────────────────────
+function imeAddLink(){
+  openDetail('Add Quick Link','Add a shortcut link to the member home page',
+    row2(fld('Label',inp('ql-label','')),fld('Icon Letter',inp('ql-icon','')))+
+    fld('Description',inp('ql-desc',''))+
+    fld('URL',inp('ql-url',''))+
+    row2(fld('Background Color',inp('ql-bg','rgba(139,26,26,.12)')),fld('Icon Color',inp('ql-ic','var(--cr)')))+
+    `<button class="btn btn-p btn-sm" onclick="imeSaveNewLink(this)">Add</button>`);
+}
+function imeSaveNewLink(btn){
+  quickLinks.push({label:g('ql-label'),icon:g('ql-icon'),desc:g('ql-desc'),url:g('ql-url'),bg:g('ql-bg'),ic:g('ql-ic')});
+  localStorage.setItem('pbl_quicklinks',JSON.stringify(quickLinks));
+  _imePrevLinks();closeDetail();imeSelect('links');
+}
+function imeEditLink(i){
+  const l=quickLinks[i];
+  openDetail('Edit Quick Link','',
+    row2(fld('Label',inp('ql-label',l.label)),fld('Icon Letter',inp('ql-icon',l.icon)))+
+    fld('Description',inp('ql-desc',l.desc))+
+    fld('URL',inp('ql-url',l.url))+
+    row2(fld('Background Color',inp('ql-bg',l.bg)),fld('Icon Color',inp('ql-ic',l.ic)))+
+    `<button class="btn btn-p btn-sm" onclick="imeSaveLink(${i},this)">Save</button>`);
+}
+function imeSaveLink(i,btn){
+  quickLinks[i]={label:g('ql-label'),icon:g('ql-icon'),desc:g('ql-desc'),url:g('ql-url'),bg:g('ql-bg'),ic:g('ql-ic')};
+  localStorage.setItem('pbl_quicklinks',JSON.stringify(quickLinks));
+  _imePrevLinks();closeDetail();imeSelect('links');
+}
+function imeDeleteLink(i){quickLinks.splice(i,1);localStorage.setItem('pbl_quicklinks',JSON.stringify(quickLinks));_imePrevLinks();imeSelect('links');}
+
 function addMCGuide(){
   resources.guides.push({name:'New Guide',desc:'',content:''});
   saveData();renderMemberContent();editMCGuide(resources.guides.length-1);
@@ -1381,7 +1638,7 @@ function renderMentorship(){
   const t=document.getElementById('mentor-table');
   if(t)t.innerHTML=mentorPairs.map(p=>{
     const sc=p.status==='Complete'?'bg':p.status==='Behind'?'br':'bo';
-    const pairKey=p.mentor+'â†’'+p.mentee;
+    const pairKey=p.mentor+'→'+p.mentee;
     const fsCheckins=_mentorCheckins[pairKey]||0;
     const totalCheckins=p.checkins+fsCheckins;
     return`<tr class="cr" onclick="openMentorPairDetail(${p.id})"><td class="nm">${p.mentor}</td><td class="nm">${p.mentee}</td><td>${totalCheckins}${fsCheckins>0?` <span style="font-size:9px;color:var(--grn)">(+${fsCheckins} live)</span>`:''}</td><td>${p.goal}</td><td><span class="badge ${sc}">${p.status}</span></td></tr>`;
@@ -1408,7 +1665,7 @@ function renderMentorship(){
 }
 function openMentorPairDetail(id){
   const p=mentorPairs.find(x=>x.id===id);
-  openDetail(p.mentor+' â†’ '+p.mentee,'Mentor Pair',
+  openDetail(p.mentor+' → '+p.mentee,'Mentor Pair',
     row2(fld('Mentor',inp('ed-mpmentor',p.mentor)),fld('Mentee',inp('ed-mpmentee',p.mentee)))+
     row2(fld('Check-ins Done',inp('ed-mpci',p.checkins,'number')),fld('Check-in Goal',inp('ed-mpgoal',p.goal,'number')))+
     fld('Status',sel('ed-mpstatus',['In Progress','Behind','Complete','Paused'],p.status))+
@@ -1421,7 +1678,7 @@ function saveMentorPair(id,btn){
   p.checkins=parseInt(g('ed-mpci'))||0;p.goal=parseInt(g('ed-mpgoal'))||4;
   p.status=g('ed-mpstatus');p.notes=g('ed-mpnotes');
   renderMentorship();saved(btn);
-  document.getElementById('d-title').textContent=p.mentor+' â†’ '+p.mentee;
+  document.getElementById('d-title').textContent=p.mentor+' → '+p.mentee;
 }
 function addMentorPair(){
   mentorPairs.push({id:nMP++,mentor:'',mentee:'',checkins:0,goal:4,status:'In Progress',notes:''});
@@ -1451,11 +1708,11 @@ function renderDashboard(){
   const atRisk=members.filter(m=>_attRate(m.att)<50);
   if(atRisk.length)alerts.push({color:'#E57373',text:`${atRisk.length} member${atRisk.length>1?'s':''} below 50% attendance: ${atRisk.map(m=>m.first+' '+m.last).join(', ')}`});
   const overdueTasks=[...tasks.ebod,...tasks.general].filter(t=>!t.done&&t.due&&t.due!=='TBD');
-  if(overdueTasks.length)alerts.push({color:'var(--gold2)',text:`${overdueTasks.length} open task${overdueTasks.length>1?'s':''} â€” oldest due: ${overdueTasks[0].due} (${overdueTasks[0].text})`});
+  if(overdueTasks.length)alerts.push({color:'var(--gold2)',text:`${overdueTasks.length} open task${overdueTasks.length>1?'s':''} — oldest due: ${overdueTasks[0].due} (${overdueTasks[0].text})`});
   const behindGoals=goals.filter(g2=>g2.status==='Behind');
   if(behindGoals.length)alerts.push({color:'var(--gold2)',text:`${behindGoals.length} goal${behindGoals.length>1?'s':''} behind: ${behindGoals.map(g2=>g2.title).join(', ')}`});
   const behindMentors=mentorPairs.filter(p=>p.status==='Behind');
-  if(behindMentors.length)alerts.push({color:'#E57373',text:`${behindMentors.length} mentor pair${behindMentors.length>1?'s':''} behind on check-ins: ${behindMentors.map(p=>p.mentor+' â†’ '+p.mentee).join(', ')}`});
+  if(behindMentors.length)alerts.push({color:'#E57373',text:`${behindMentors.length} mentor pair${behindMentors.length>1?'s':''} behind on check-ins: ${behindMentors.map(p=>p.mentor+' → '+p.mentee).join(', ')}`});
   const activeConsulting=consultingProjects.filter(p=>p.status==='Active');
   const overdueDelivs=deliverables.filter(d=>d.status!=='Complete');
   if(overdueDelivs.length&&activeConsulting.length)alerts.push({color:'var(--blu)',text:`${overdueDelivs.length} consulting deliverable${overdueDelivs.length>1?'s':''} pending across ${activeConsulting.length} active project${activeConsulting.length>1?'s':''}`});
@@ -1639,9 +1896,9 @@ function calcEventCost(){
     {l:'Invoice',v:'$'+invoice.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2}),s:'Total event cost',c:''},
     {l:'Sponsor Credits',v:'-$'+sponsor.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2}),s:'Applied to invoice',c:''},
     {l:'Net Cost',v:'$'+net.toFixed(2),s:'After credits & individual aid',c:''},
-    {l:'Share / Member',v:'$'+share.toFixed(2),s:count+' paying Â· '+((e?e.members.length:0)-count)+' on aid',c:''},
+    {l:'Share / Member',v:'$'+share.toFixed(2),s:count+' paying · '+((e?e.members.length:0)-count)+' on aid',c:''},
     {l:'Total Collected',v:'$'+totalPaid.toFixed(2),s:'Sum of member payments',c:''},
-    {l:'Balance',v:(balance>=0?'+ ':'')+'$'+Math.abs(balance).toFixed(2),s:balance>=0?'Surplus â€” available for aid':'Still owed',c:balance>=0?'var(--grn)':'#E57373'},
+    {l:'Balance',v:(balance>=0?'+ ':'')+'$'+Math.abs(balance).toFixed(2),s:balance>=0?'Surplus — available for aid':'Still owed',c:balance>=0?'var(--grn)':'#E57373'},
   ].map(s=>`<div class="sc"><div class="sl">${s.l}</div><div class="sv" style="font-size:16px${s.c?';color:'+s.c:''}">${s.v}</div><div class="sm">${s.s}</div></div>`).join('');
   renderEcMembers();
 }
@@ -1674,7 +1931,7 @@ function renderEcMembers(){
       <td>${inp(m.email,'email',i,'text','130px')}</td>
       <td>${inp(m.paid,'paid',i,'number','70px')}</td>
       <td>${inp(m.aid,'aid',i,'number','70px')}</td>
-      <td style="font-size:11px;color:${onAid?'var(--blu)':'var(--t2)'}">${onAid?'â€”':'$'+share.toFixed(2)}</td>
+      <td style="font-size:11px;color:${onAid?'var(--blu)':'var(--t2)'}">${onAid?'—':'$'+share.toFixed(2)}</td>
       <td style="font-size:11px">${diffStr}</td>
       <td><button class="rb" onclick="removeEcMember(${i})">&times;</button></td>
     </tr>`;
@@ -1704,8 +1961,8 @@ function renderEcRoster(e,baseShare,invoice,sponsor){
       <div style="flex:1;min-width:0">
         <div style="font-size:11px;font-weight:600;color:var(--t1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${m.name||'<em style="color:var(--t4)">No name</em>'}</div>
         <div style="font-size:10px;color:var(--t3);display:flex;gap:10px;flex-wrap:wrap;margin-top:1px">
-          ${m.phone?`<span>ðŸ“ž ${m.phone}</span>`:''}
-          ${m.email?`<span>âœ‰ï¸ ${m.email}</span>`:''}
+          ${m.phone?`<span>📞 ${m.phone}</span>`:''}
+          ${m.email?`<span>✉️ ${m.email}</span>`:''}
           ${!m.phone&&!m.email?'<span style="color:var(--t4)">No contact info</span>':''}
         </div>
       </div>
@@ -1719,7 +1976,7 @@ function renderEcRoster(e,baseShare,invoice,sponsor){
     <div class="ch" style="margin-bottom:10px">
       <div class="ct">Payment Roster</div>
       <div style="display:flex;gap:6px;align-items:center">
-        <span style="font-size:10px;color:var(--t3)">${e.members.length} total Â· ${paid.length} paid Â· ${unpaid.length} pending</span>
+        <span style="font-size:10px;color:var(--t3)">${e.members.length} total · ${paid.length} paid · ${unpaid.length} pending</span>
         <button class="btn btn-g btn-sm" onclick="exportRosterCSV()">Export CSV</button>
       </div>
     </div>
@@ -1785,7 +2042,7 @@ function renderReimbursements(){
   if(!reimbursements.length){t.innerHTML=`<tr><td colspan="7" style="font-size:11px;color:var(--t4);padding:12px">No reimbursement requests yet.</td></tr>`;return;}
   t.innerHTML=reimbursements.map(r=>{
     const sc=r.status==='Reimbursed'?'bg':r.status==='Approved'?'bo':'';
-    const rcpt=r.receipt?`<a href="${r.receipt}" target="_blank" style="font-size:10px;color:var(--grn);font-weight:600">View â†—</a>`:`<span style="color:var(--t4);font-size:10px">None</span>`;
+    const rcpt=r.receipt?`<a href="${r.receipt}" target="_blank" style="font-size:10px;color:var(--grn);font-weight:600">View ↗</a>`:`<span style="color:var(--t4);font-size:10px">None</span>`;
     return`<tr class="cr" onclick="openReimDetail(${r.id})">
       <td class="nm">${r.member}</td>
       <td>${r.item}</td>
@@ -1800,7 +2057,7 @@ function renderReimbursements(){
 function openReimDetail(id){
   const r=reimbursements.find(x=>x.id===id);if(!r)return;
   const statuses=['Pending','Approved','Reimbursed'];
-  openDetail(r.item,'$'+r.amount.toFixed(2)+' Â· '+r.member,
+  openDetail(r.item,'$'+r.amount.toFixed(2)+' · '+r.member,
     fld('Member',inp('ed-reim-member',r.member))+
     row2(fld('Item / Description',inp('ed-reim-item',r.item)),fld('Amount ($)',inp('ed-reim-amount',r.amount,'number')))+
     row2(fld('Date',inp('ed-reim-date',r.date)),fld('Status',sel('ed-reim-status',statuses,r.status)))+
@@ -1815,7 +2072,7 @@ function saveReim(id,btn){
   r.date=g('ed-reim-date');r.status=g('ed-reim-status');
   r.receipt=g('ed-reim-receipt');r.notes=g('ed-reim-notes');
   document.getElementById('d-title').textContent=r.item;
-  document.getElementById('d-sub').textContent='$'+r.amount.toFixed(2)+' Â· '+r.member;
+  document.getElementById('d-sub').textContent='$'+r.amount.toFixed(2)+' · '+r.member;
   renderReimbursements();saved(btn);
 }
 function addReimbursement(){
@@ -1846,7 +2103,7 @@ function renderVenues(){
 function openVenueDetail(id){
   const v=venues.find(x=>x.id===id);if(!v)return;
   const statuses=['Pending','Inquired','Confirmed','Unavailable'];
-  openDetail(v.name,v.status+' Â· Cap: '+v.capacity,
+  openDetail(v.name,v.status+' · Cap: '+v.capacity,
     row2(fld('Venue Name',inp('ed-ven-name',v.name)),fld('Status',sel('ed-ven-status',statuses,v.status)))+
     row2(fld('Contact',inp('ed-ven-contact',v.contact)),fld('Capacity',inp('ed-ven-cap',v.capacity,'number')))+
     fld('Cost',inp('ed-ven-cost',v.cost))+
@@ -1858,7 +2115,7 @@ function saveVenue(id,btn){
   v.name=g('ed-ven-name');v.status=g('ed-ven-status');v.contact=g('ed-ven-contact');
   v.capacity=g('ed-ven-cap');v.cost=g('ed-ven-cost');v.notes=g('ed-ven-notes');
   document.getElementById('d-title').textContent=v.name;
-  document.getElementById('d-sub').textContent=v.status+' Â· Cap: '+v.capacity;
+  document.getElementById('d-sub').textContent=v.status+' · Cap: '+v.capacity;
   renderVenues();saved(btn);
 }
 function addVenue(){
@@ -1908,7 +2165,7 @@ function renderCompPrep(){
   if(!compPrep.length){t.innerHTML=`<tr><td colspan="6" style="font-size:11px;color:var(--t4);padding:12px">No members tracked yet.</td></tr>`;return;}
   const rc={Ready:'bg','On Track':'bo','Needs Work':'br'};
   t.innerHTML=compPrep.map(p=>`<tr class="cr" onclick="openCompPrepDetail(${p.id})">
-    <td class="nm">${p.member||'<span style="color:var(--t4)">â€”</span>'}</td>
+    <td class="nm">${p.member||'<span style="color:var(--t4)">—</span>'}</td>
     <td>${p.event}</td>
     <td><span class="badge ${rc[p.readiness]||'bo'}">${p.readiness}</span></td>
     <td>${p.lastPractice||'<span style="color:var(--t4)">None</span>'}</td>
@@ -1972,68 +2229,68 @@ function addCurrSession(){
 // MARKETING PORTAL DATA
 let brandKit={
   colors:[
-    {id:1,name:'Maroon',hex:'#790000',usage:'Primary brand color â€” logo, headers, CTAs, buttons'},
-    {id:2,name:'Orange-Red',hex:'#FA4E1D',usage:'Secondary accent â€” tertiary color for posters & flyers'},
-    {id:3,name:'Orange',hex:'#FF983A',usage:'Tertiary accent â€” supporting elements, infographics'},
-    {id:4,name:'Light Gray',hex:'#C4C4C4',usage:'Supporting neutral â€” dividers, secondary backgrounds'},
+    {id:1,name:'Maroon',hex:'#790000',usage:'Primary brand color — logo, headers, CTAs, buttons'},
+    {id:2,name:'Orange-Red',hex:'#FA4E1D',usage:'Secondary accent — tertiary color for posters & flyers'},
+    {id:3,name:'Orange',hex:'#FF983A',usage:'Tertiary accent — supporting elements, infographics'},
+    {id:4,name:'Light Gray',hex:'#C4C4C4',usage:'Supporting neutral — dividers, secondary backgrounds'},
     {id:5,name:'Off White',hex:'#F9F8F6',usage:'Page & publication backgrounds'},
   ],
   fonts:[
-    {id:1,name:'Georgia Pro',role:'Headlines & Subheadings (Serif)',source:'System font â€” bold for headlines, regular for subheadings'},
-    {id:2,name:'Open Sauce',role:'Body / UI (Sans-serif)',source:'Google Fonts â€” bold for headings, regular for body text'},
-    {id:3,name:'Times New Roman',role:'Body text â€” Newsletters',source:'System font â€” classic serif for text-heavy publications'},
+    {id:1,name:'Georgia Pro',role:'Headlines & Subheadings (Serif)',source:'System font — bold for headlines, regular for subheadings'},
+    {id:2,name:'Open Sauce',role:'Body / UI (Sans-serif)',source:'Google Fonts — bold for headings, regular for body text'},
+    {id:3,name:'Times New Roman',role:'Body text — Newsletters',source:'System font — classic serif for text-heavy publications'},
   ],
-  handles:{instagram:'@deanzapbl',groupme:'De Anza PBL',email:'deanzapbl@gmail.com',linkedin:'Phi Beta Lambda â€” De Anza College'},
-  guidelines:`PHI BETA LAMBDA BRAND GUIDELINES v1.3 â€” May 2025
+  handles:{instagram:'@deanzapbl',groupme:'De Anza PBL',email:'deanzapbl@gmail.com',linkedin:'Phi Beta Lambda — De Anza College'},
+  guidelines:`PHI BETA LAMBDA BRAND GUIDELINES v1.3 — May 2025
 Authored by: Javin Ku, Nhi Tran, Addy Hu (President & Directors of Media)
 
-â•â•â• LOGOMARK â•â•â•
-The PBL logomark is the Greek letter Phi (Î¦) in a clean, solid design.
-â€¢ Never alter, distort, stretch, or rotate the logomark
-â€¢ Never add patterns, shadows, glows, or outlines
-â€¢ Never place inside a solid shape or box/frame
-â€¢ Never use a faded/screened version on any background
-â€¢ Always reproduce from approved official artwork only
+═══ LOGOMARK ═══
+The PBL logomark is the Greek letter Phi (Φ) in a clean, solid design.
+• Never alter, distort, stretch, or rotate the logomark
+• Never add patterns, shadows, glows, or outlines
+• Never place inside a solid shape or box/frame
+• Never use a faded/screened version on any background
+• Always reproduce from approved official artwork only
 
 COLOR USAGE BY BACKGROUND:
-â€¢ White background â†’ use Maroon + Black, Black only, or Maroon only
-â€¢ Very light background â†’ use Black for maximum clarity
-â€¢ Dark/Black background â†’ use White only (never Maroon on dark)
-â€¢ Maroon background â†’ use White only
-â€¢ Medium-value background â†’ use Black or White (best contrast) â€” never Maroon
+• White background → use Maroon + Black, Black only, or Maroon only
+• Very light background → use Black for maximum clarity
+• Dark/Black background → use White only (never Maroon on dark)
+• Maroon background → use White only
+• Medium-value background → use Black or White (best contrast) — never Maroon
 
-â•â•â• URSA MINOR BEAR â•â•â•
+═══ URSA MINOR BEAR ═══
 Official secondary symbol of PBL. Embodies: Inclusion, Integrity, Curiosity, Courage, Collaboration.
 Connected to the Ursa Minor constellation (home of the North Star / Polaris), reflecting PBL's mission to guide students toward professional success. Polaris Research Group resides within Phi Beta Lambda (Ursa Minor).
 Use in maroon on white, or white on maroon. Never alter proportions.
 
-â•â•â• PUBLICATIONS â•â•â•
+═══ PUBLICATIONS ═══
 Typography: Georgia Pro / Open Sauce for headlines & subheadings. Open Sauce / Times New Roman for body.
 Headlines: bold, clearly defined, consistent hierarchy with generous line spacing.
 Color: Maroon and white are the primary palette. Avoid pale/pastel colors.
 Format: Vertical format standard. High-quality non-absorbent paper for print.
-Logomark: Required on every publication â€” front, back, or last page.
+Logomark: Required on every publication — front, back, or last page.
 Illustration: Simple, professional, compositionally strong. Avoid clutter.
 
-INSTAGRAM â€” Limit to 2 fonts per cover. Include logomark + PBL identification. Bold headlines + minimal graphic noise.
-POSTERS/FLYERS â€” 2 fonts max. Always include logomark. QR codes acceptable. Orange tertiary color allowed when it enhances design.
-LINKEDIN â€” Bold, uncluttered banner. Maroon background with white Î¦ logo. Tagline: "Cultivating Industry Professionals at De Anza College." Posts emphasize text â€” professional, uplifting tone for external audiences.
-NEWSLETTER â€” Bold masthead. 1 typeface. Prominent logomark. Use Mailchimp. Bold headlines, bullet points, embedded hyperlinks.
+INSTAGRAM — Limit to 2 fonts per cover. Include logomark + PBL identification. Bold headlines + minimal graphic noise.
+POSTERS/FLYERS — 2 fonts max. Always include logomark. QR codes acceptable. Orange tertiary color allowed when it enhances design.
+LINKEDIN — Bold, uncluttered banner. Maroon background with white Φ logo. Tagline: "Cultivating Industry Professionals at De Anza College." Posts emphasize text — professional, uplifting tone for external audiences.
+NEWSLETTER — Bold masthead. 1 typeface. Prominent logomark. Use Mailchimp. Bold headlines, bullet points, embedded hyperlinks.
 
-â•â•â• STATIONERY / EMAIL â•â•â•
-Subject line prefixes (ALL CAPS): IM NEWSLETTER â€“ WEEK # | URGENT | REMINDER
+═══ STATIONERY / EMAIL ═══
+Subject line prefixes (ALL CAPS): IM NEWSLETTER – WEEK # | URGENT | REMINDER
 Opening: "Hello IMs, Make sure you read through this newsletter thoroughly."
 Body: flush-left, paragraphs separated by line spacing (no indents), flush-left alignment.
-Tone: professional, respectful, approachable â€” no slang, proper grammar/punctuation.
-Closing: "In Regards, [Name], [Position], De Anza Phi Beta Lambda Chapter" + Î¦PBL signature art.
+Tone: professional, respectful, approachable — no slang, proper grammar/punctuation.
+Closing: "In Regards, [Name], [Position], De Anza Phi Beta Lambda Chapter" + ΦPBL signature art.
 
-â•â•â• CERTIFICATES & AWARDS â•â•â•
-Required elements: Certificate title, recipient full name, award statement, event/reason, date, Advisor + Officer signatures, official Î¦ logomark centered.
+═══ CERTIFICATES & AWARDS ═══
+Required elements: Certificate title, recipient full name, award statement, event/reason, date, Advisor + Officer signatures, official Φ logomark centered.
 Templates may not be altered without prior approval.`,
 };let nBKC=6;let nBKF=4;
 let contentPosts=[
-  {id:1,date:'May 14',platform:'Instagram',type:'Event Promo',caption:'Spring General Meeting tonight at 6pm in MLC 105! Come through ðŸŽ‰',status:'Draft'},
-  {id:2,date:'May 20',platform:'GroupMe',type:'Announcement',caption:'SBLC results are up â€” check the website for placements!',status:'Sent'},
+  {id:1,date:'May 14',platform:'Instagram',type:'Event Promo',caption:'Spring General Meeting tonight at 6pm in MLC 105! Come through 🎉',status:'Draft'},
+  {id:2,date:'May 20',platform:'GroupMe',type:'Announcement',caption:'SBLC results are up — check the website for placements!',status:'Sent'},
 ];let nPost=3;
 
 function switchBrandKitTab(kit){
@@ -2044,7 +2301,7 @@ function switchBrandKitTab(kit){
   if(btnPbl){btnPbl.className=kit==='pbl'?'btn btn-p btn-sm':'btn btn-g btn-sm';btnPbl.style.cssText='font-size:11px'+(kit==='pbl'?'':';background:transparent;color:var(--t3);border-color:var(--bd)');}
   if(btnPol){btnPol.style.cssText='font-size:11px;background:'+(kit==='polaris'?'#011c43':'transparent')+';color:'+(kit==='polaris'?'#fff':'var(--t3)')+';border-color:'+(kit==='polaris'?'#011c43':'var(--bd)');}
 }
-// â”€â”€ BRAND KIT INLINE EDITING â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── BRAND KIT INLINE EDITING ──────────────────────────────────────────────────
 const _bkSections=['pbl-logo','pbl-bear','pbl-pub','pbl-stat','pol-about','pol-color','pol-typo','pol-vt','pol-drivers'];
 function toggleBKEdit(contentId,saveKey,btnId){
   const el=document.getElementById(contentId);
@@ -2058,7 +2315,7 @@ function toggleBKEdit(contentId,saveKey,btnId){
     el.style.borderRadius='';
     el.style.minHeight='';
     localStorage.setItem('pbl_bke_'+saveKey,el.innerHTML);
-    btn.textContent='âœŽ Edit';
+    btn.textContent='✎ Edit';
     btn.className='btn btn-g btn-sm';
   } else {
     // Enter edit mode
@@ -2067,7 +2324,7 @@ function toggleBKEdit(contentId,saveKey,btnId){
     el.style.borderRadius='4px';
     el.style.minHeight='40px';
     el.focus();
-    btn.textContent='âœ“ Save';
+    btn.textContent='✓ Save';
     btn.className='btn btn-p btn-sm';
   }
 }
@@ -2158,7 +2415,7 @@ function openPostDetail(id){
   const platforms=['Instagram','GroupMe','Email','LinkedIn','Twitter/X','Facebook'];
   const types=['Event Promo','Announcement','Recap','Recruitment','General'];
   const statuses=['Draft','Scheduled','Sent','Cancelled'];
-  openDetail(p.type,p.platform+' Â· '+p.date,
+  openDetail(p.type,p.platform+' · '+p.date,
     row2(fld('Date',inp('ed-post-date',p.date)),fld('Platform',sel('ed-post-platform',platforms,p.platform)))+
     row2(fld('Type',sel('ed-post-type',types,p.type)),fld('Status',sel('ed-post-status',statuses,p.status)))+
     fld('Caption / Copy',ta('ed-post-caption',p.caption,5))+
@@ -2169,7 +2426,7 @@ function savePost(id,btn){
   p.date=g('ed-post-date');p.platform=g('ed-post-platform');p.type=g('ed-post-type');
   p.status=g('ed-post-status');p.caption=g('ed-post-caption');
   document.getElementById('d-title').textContent=p.type;
-  document.getElementById('d-sub').textContent=p.platform+' Â· '+p.date;
+  document.getElementById('d-sub').textContent=p.platform+' · '+p.date;
   renderContentCalendar();saved(btn);
 }
 function addContentPost(){
@@ -2216,7 +2473,7 @@ function renderMemberCheckIns(){
 }
 function openCheckInDetail(id){
   const c=memberCheckIns.find(x=>x.id===id);if(!c)return;
-  openDetail(c.member,c.type+' Â· '+c.date,
+  openDetail(c.member,c.type+' · '+c.date,
     row2(fld('Member',inp('ed-ci-member',c.member)),fld('Type',sel('ed-ci-type',['Concern','Praise','Note'],c.type)))+
     fld('Note',ta('ed-ci-note',c.note,3))+
     row2(fld('Date',inp('ed-ci-date',c.date)),fld('Status',sel('ed-ci-status',['Open','Resolved'],c.status)))+
@@ -2228,10 +2485,11 @@ function saveCheckIn(id,btn){
   c.member=g('ed-ci-member');c.type=g('ed-ci-type');c.note=g('ed-ci-note');
   c.date=g('ed-ci-date');c.status=g('ed-ci-status');c.followup=g('ed-ci-followup');
   document.getElementById('d-title').textContent=c.member;
-  document.getElementById('d-sub').textContent=c.type+' Â· '+c.date;
+  document.getElementById('d-sub').textContent=c.type+' · '+c.date;
   renderMemberCheckIns();saved(btn);
 }
 function addMemberCheckIn(){
   memberCheckIns.push({id:nMCI++,member:'',type:'Note',note:'',date:'',followup:'',status:'Open'});
   renderMemberCheckIns();openCheckInDetail(memberCheckIns[memberCheckIns.length-1].id);
 }
+
