@@ -111,19 +111,21 @@ const checklistItems=[
   'Meet with your mentor before NLC prep',
 ];
 
-const highlights=[
+const _defaultHighlights=[
   {label:'SBLC 2026',value:'17',sub:'Total entries at state',color:'var(--cr)'},
   {label:'1st Place',value:'2',sub:'Community Service & Entrepreneurship',color:'var(--grn)'},
   {label:'Top 5 Finishes',value:'6',sub:'Members placed in top 5',color:'var(--gold2)'},
   {label:'NLC Bound',value:'8',sub:'Members competing nationally',color:'var(--blu)'},
 ];
+let highlights=JSON.parse(localStorage.getItem('pbl_highlights')||'null')||_defaultHighlights;
 
-const quickLinks=[
+const _defaultQuickLinks=[
   {label:'Member GroupMe',desc:'Main chapter chat — join here',icon:'G',bg:'rgba(0,186,52,.15)',ic:'#00BA34',url:'#'},
   {label:'@DeAnzaPBL',desc:'Follow us on Instagram',icon:'I',bg:'rgba(193,53,132,.12)',ic:'#C13584',url:'#'},
   {label:'FBLA-PBL.org',desc:'National organization website',icon:'F',bg:'rgba(139,26,26,.12)',ic:'var(--cr)',url:'https://www.fbla-pbl.org'},
   {label:'NLC Info Hub',desc:'National Leadership Conference details',icon:'N',bg:'rgba(21,88,160,.12)',ic:'var(--blu)',url:'https://www.fbla-pbl.org/pbl/conferences/nlc/'},
 ];
+let quickLinks=JSON.parse(localStorage.getItem('pbl_quicklinks')||'null')||_defaultQuickLinks;
 
 const mMentorPairs=[
   {mentor:'Christina Tran',mentee:'Amy Tran'},
@@ -167,7 +169,7 @@ const M_META={
   attendance:{title:'My Attendance',sub:'Bootcamp session tracker'},
   resources:{title:'Prep & Templates',sub:'Guides, frameworks, templates'},
   team:{title:'Exec Team',sub:'Spring 2026 leadership'},
-  finance:{title:'Finance & Office Hours',sub:'Reimbursements · Book a session'},
+  finance:{title:'Dues & Office Hours',sub:'What you owe · Book a session'},
   mentorship:{title:'Mentorship',sub:'Your mentor · Check-in log'},
 };
 
@@ -195,7 +197,7 @@ function mShowPage(id){
   else if(id==='competition')mRenderCompetition();
   else if(id==='resources')renderResources();
   else if(id==='team')renderTeam();
-  else if(id==='finance'){renderIMMyReimbs();renderIMConsulting();}
+  else if(id==='finance'){renderIMDues();renderIMConsulting();}
   else if(id==='mentorship')renderIMMyMentorship();
 }
 
@@ -361,7 +363,7 @@ function signOut(){
     selectedMember=null;_hwData={};_mySignups=new Set();
     localStorage.removeItem('_lastPortal');
     updateMemberUI();renderProfile();renderAttendance();showSignIn();
-    renderIMMyReimbs();renderIMConsulting();renderIMMyMentorship();
+    renderIMDues();renderIMConsulting();renderIMMyMentorship();
   });
 }
 function updateMemberUI(){
@@ -401,11 +403,11 @@ function renderHome(){
     </div>`;
   }
   // Stats
+  const _fblaEvts=JSON.parse(localStorage.getItem('pbl_fblaevents')||'[]');
   document.getElementById('home-stats').innerHTML=`
-    <div class="sc"><div class="sl">Members</div><div class="sv">${ebodMembers.length||memberCount}</div><div class="sm">Spring 2026</div></div>
     <div class="sc"><div class="sl">Upcoming Events</div><div class="sv">${mEventsData.upcoming.length}</div><div class="sm">This quarter</div></div>
     <div class="sc"><div class="sl">Bootcamp Sessions</div><div class="sv">${mBootcamps.length}</div><div class="sm">Scheduled</div></div>
-    <div class="sc"><div class="sl">NLC Events</div><div class="sv">${mCompEvents.length}</div><div class="sm">Registered 2026</div></div>`;
+    <div class="sc"><div class="sl">FBLA Events</div><div class="sv">${_fblaEvts.length||mCompEvents.length}</div><div class="sm">Registered 2026</div></div>`;
   // Announcements preview
   const annEl=document.getElementById('home-ann');
   annEl.innerHTML=mAnnouncements.slice(0,3).map(a=>`
@@ -455,16 +457,19 @@ function renderHome(){
       <div style="font-size:10px;color:var(--t4)">→</div>
     </a>`).join('');
 
-  // NLC roster preview
-  document.getElementById('home-nlc').innerHTML=`
-    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px">
-      ${mCompEvents.map(e=>`
+  // FBLA roster preview (EBOD-managed)
+  const _fblaRoster=JSON.parse(localStorage.getItem('pbl_fblaevents')||'[]');
+  const _rosterSrc=_fblaRoster.length?_fblaRoster:mCompEvents;
+  document.getElementById('home-nlc').innerHTML=_rosterSrc.length
+    ?`<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:8px">
+      ${_rosterSrc.map(e=>`
         <div style="padding:10px 12px;background:var(--s2);border:1px solid var(--bd);border-radius:6px">
           <div style="font-weight:600;font-size:11.5px;margin-bottom:3px">${e.name}</div>
-          <div style="font-size:10px;color:var(--t3)">${e.members}</div>
-          <div style="margin-top:5px"><span class="badge bb">${e.type}</span>${e.notes?` <span style="font-size:9px;color:var(--gold2);font-weight:600;margin-left:4px">${e.notes}</span>`:''}</div>
+          <div style="font-size:10px;color:var(--t3)">${e.members||''}</div>
+          <div style="margin-top:5px"><span class="badge bb">${e.type||''}</span>${e.notes?` <span style="font-size:9px;color:var(--gold2);font-weight:600;margin-left:4px">${e.notes}</span>`:''}</div>
         </div>`).join('')}
-    </div>`;
+    </div>`
+    :'<div style="padding:16px;font-size:11px;color:var(--t4);text-align:center">No FBLA events added yet — set them up in EBOD → Competition Prep.</div>';
 }
 
 // ============================================================
@@ -472,12 +477,22 @@ function renderHome(){
 // ============================================================
 function mRenderAnnouncements(){
   document.getElementById('ann-badge').textContent=mAnnouncements.length;
-  document.getElementById('ann-list').innerHTML=mAnnouncements.map(a=>`
-    <div class="ann-item">
+  const RECENT_COUNT=3;
+  const recent=mAnnouncements.slice(0,RECENT_COUNT);
+  const archive=mAnnouncements.slice(RECENT_COUNT);
+  const _annHtml=list=>list.length
+    ?list.map(a=>`<div class="ann-item">
       <div class="ann-title">${a.title}</div>
       <div class="ann-meta">${a.channel} &middot; ${a.date}</div>
       <div class="ann-body">${a.content}</div>
-    </div>`).join('');
+    </div>`).join('')
+    :'<div class="empty">Nothing here yet.</div>';
+  const elR=document.getElementById('ann-list-recent');
+  const elA=document.getElementById('ann-list-archive');
+  if(elR)elR.innerHTML=_annHtml(recent);
+  if(elA)elA.innerHTML=archive.length
+    ?_annHtml(archive)
+    :'<div class="empty" style="padding:20px 16px">No archived announcements yet.</div>';
 }
 
 // ============================================================
@@ -555,54 +570,107 @@ function mRenderBootcamps(){
 function renderHomework(){
   const el=document.getElementById('hw-content');
   if(!el)return;
-  const email=selectedMember?selectedMember.email:'';
+  const ebodHW=JSON.parse(localStorage.getItem('pblhub_hw_assignments')||'[]');
   const stored=_hwData;
+
+  // ── EBOD Assignments block ────────────────────────────────────────────────
+  const ebodBlock=!ebodHW.length?'<div class="empty">No assignments posted yet.</div>':
+    ebodHW.map((a,i)=>{
+      const key='ebod_'+i;
+      const sub=stored[key]||{};
+      const completed=sub.link&&sub.link.length>0;
+      return`<div style="border-bottom:1px solid var(--bd);padding:14px 0">
+        <div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:8px">
+          <div style="width:28px;height:28px;border-radius:6px;background:var(--cr);color:#fff;font-size:11px;font-weight:700;flex-shrink:0;display:flex;align-items:center;justify-content:center">${i+1}</div>
+          <div style="flex:1">
+            <div style="font-size:12px;font-weight:600;color:var(--t1)">${a.title}</div>
+            <div style="font-size:10px;color:var(--t3);margin-top:2px">${a.type||''}${a.type&&a.session?' · ':''}${a.session?'Session '+a.session:''}${a.due?' &nbsp;·&nbsp; Due '+a.due:''}</div>
+            ${a.desc?`<div style="font-size:11px;color:var(--t2);margin-top:4px;line-height:1.5">${a.desc}</div>`:''}
+          </div>
+          ${completed?`<span class="badge bg" style="flex-shrink:0">Submitted</span>`:`<span class="badge bb" style="flex-shrink:0">Due</span>`}
+        </div>
+        ${!selectedMember?'':`<div style="display:flex;gap:8px;align-items:flex-start;margin-left:38px">
+          <div style="flex:1">
+            <input id="ebod-hw-link-${i}" type="url" placeholder="Paste Google Drive link…"
+              value="${sub.link||''}"
+              style="width:100%;padding:7px 10px;border:1px solid var(--bd);border-radius:6px;background:var(--s2);color:var(--t1);font-family:var(--mono);font-size:11px;box-sizing:border-box">
+            <input id="ebod-hw-note-${i}" type="text" placeholder="Optional note"
+              value="${sub.note||''}"
+              style="width:100%;margin-top:5px;padding:7px 10px;border:1px solid var(--bd);border-radius:6px;background:var(--s2);color:var(--t1);font-size:11px;box-sizing:border-box">
+          </div>
+          <button onclick="submitEBODHW(${i})"
+            style="padding:7px 14px;background:var(--cr);color:#fff;border:none;border-radius:6px;font-size:11px;cursor:pointer;white-space:nowrap;flex-shrink:0">
+            ${completed?'Update':'Submit'}
+          </button>
+        </div>
+        ${completed&&sub.submittedAt?`<div style="margin-left:38px;margin-top:4px;font-size:10px;color:var(--t3)">Last saved ${sub.submittedAt}</div>`:''}`}
+        ${sub.grade?`<div style="margin-left:38px;margin-top:8px;padding:10px 12px;background:var(--s2);border-left:3px solid var(--grn);border-radius:0 6px 6px 0">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+            <span style="font-size:10px;font-weight:700;color:var(--grn)">GRADED</span>
+            <span style="font-size:13px;font-weight:700;color:var(--t1)">${sub.grade}</span>
+          </div>
+          ${sub.feedback?`<div style="font-size:11px;color:var(--t2);line-height:1.5">${sub.feedback}</div>`:''}
+        </div>`:''}
+      </div>`;
+    }).join('');
+
+  // ── Bootcamp session submissions block ────────────────────────────────────
+  const bcBlock=mBootcamps.map(b=>{
+    const sub=stored[b.id]||{};
+    const completed=sub.link&&sub.link.length>0;
+    return`<div style="border-bottom:1px solid var(--bd);padding:14px 0">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
+        <div class="bc-num" style="width:28px;height:28px;font-size:11px;flex-shrink:0">${b.id}</div>
+        <div style="flex:1">
+          <div style="font-size:12px;font-weight:600;color:var(--t1)">${b.name} — ${b.topic}</div>
+          <div style="font-size:10px;color:var(--t3)">${b.date}</div>
+        </div>
+        ${completed?`<span class="badge bg">Submitted</span>`:`<span class="badge bb">${b.att>0?'Due':'Upcoming'}</span>`}
+      </div>
+      ${!selectedMember?'':`<div style="display:flex;gap:8px;align-items:flex-start;margin-left:38px">
+        <div style="flex:1">
+          <input id="hw-link-${b.id}" type="url" placeholder="Paste Google Drive link…"
+            value="${sub.link||''}"
+            style="width:100%;padding:7px 10px;border:1px solid var(--bd);border-radius:6px;background:var(--s2);color:var(--t1);font-family:var(--mono);font-size:11px;box-sizing:border-box">
+          <input id="hw-note-${b.id}" type="text" placeholder="Optional note (e.g. 'Case 2 revised')"
+            value="${sub.note||''}"
+            style="width:100%;margin-top:5px;padding:7px 10px;border:1px solid var(--bd);border-radius:6px;background:var(--s2);color:var(--t1);font-size:11px;box-sizing:border-box">
+        </div>
+        <button onclick="submitHW(${b.id})"
+          style="padding:7px 14px;background:var(--cr);color:#fff;border:none;border-radius:6px;font-size:11px;cursor:pointer;white-space:nowrap;flex-shrink:0">
+          ${completed?'Update':'Submit'}
+        </button>
+      </div>
+      ${completed&&sub.submittedAt?`<div style="margin-left:38px;margin-top:4px;font-size:10px;color:var(--t3)">Last saved ${sub.submittedAt}</div>`:''}`}
+      ${sub.grade?`<div style="margin-left:38px;margin-top:8px;padding:10px 12px;background:var(--s2);border-left:3px solid var(--grn);border-radius:0 6px 6px 0">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+          <span style="font-size:10px;font-weight:700;color:var(--grn)">GRADED</span>
+          <span style="font-size:13px;font-weight:700;color:var(--t1)">${sub.grade}</span>
+          ${sub.gradeStatus&&sub.gradeStatus!=='Graded'?`<span style="font-size:9px;font-weight:600;padding:2px 7px;border-radius:10px;background:rgba(0,0,0,.08);color:var(--t2)">${sub.gradeStatus}</span>`:''}
+        </div>
+        ${sub.feedback?`<div style="font-size:11px;color:var(--t2);line-height:1.5">${sub.feedback}</div>`:''}
+        ${sub.gradedAt?`<div style="font-size:9px;color:var(--t4);margin-top:4px">Graded ${sub.gradedAt}</div>`:''}
+      </div>`:''}
+    </div>`;
+  }).join('');
+
   el.innerHTML=`
+    ${ebodHW.length?`<div class="card" style="margin-bottom:14px">
+      <div class="ch">
+        <div class="ct">Assignments</div>
+        <div style="font-size:10px;color:var(--t3)">${ebodHW.length} assignment${ebodHW.length!==1?'s':''} posted</div>
+      </div>
+      <div style="padding:0 16px 4px">
+        ${!selectedMember?'<div class="empty">Sign in to submit.</div>':ebodBlock}
+      </div>
+    </div>`:''}
     <div class="card" style="margin-bottom:14px">
       <div class="ch">
-        <div class="ct">Homework Submissions</div>
+        <div class="ct">Bootcamp Session Submissions</div>
         <div style="font-size:10px;color:var(--t3)">Paste your Google Drive link for each session</div>
       </div>
       <div style="padding:0 16px 4px">
-        ${!selectedMember?'<div class="empty">Sign in to submit homework.</div>':
-        mBootcamps.map(b=>{
-          const sub=stored[b.id]||{};
-          const completed=sub.link&&sub.link.length>0;
-          return`<div style="border-bottom:1px solid var(--bd);padding:14px 0">
-            <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">
-              <div class="bc-num" style="width:28px;height:28px;font-size:11px;flex-shrink:0">${b.id}</div>
-              <div style="flex:1">
-                <div style="font-size:12px;font-weight:600;color:var(--t1)">${b.name} — ${b.topic}</div>
-                <div style="font-size:10px;color:var(--t3)">${b.date}</div>
-              </div>
-              ${completed?`<span class="badge bg">Submitted</span>`:`<span class="badge bb">${b.att>0?'Due':'Upcoming'}</span>`}
-            </div>
-            <div style="display:flex;gap:8px;align-items:flex-start;margin-left:38px">
-              <div style="flex:1">
-                <input id="hw-link-${b.id}" type="url" placeholder="Paste Google Drive link…"
-                  value="${sub.link||''}"
-                  style="width:100%;padding:7px 10px;border:1px solid var(--bd);border-radius:6px;background:var(--s2);color:var(--t1);font-family:var(--mono);font-size:11px;box-sizing:border-box">
-                <input id="hw-note-${b.id}" type="text" placeholder="Optional note (e.g. 'Case 2 revised')"
-                  value="${sub.note||''}"
-                  style="width:100%;margin-top:5px;padding:7px 10px;border:1px solid var(--bd);border-radius:6px;background:var(--s2);color:var(--t1);font-size:11px;box-sizing:border-box">
-              </div>
-              <button onclick="submitHW(${b.id})"
-                style="padding:7px 14px;background:var(--cr);color:#fff;border:none;border-radius:6px;font-size:11px;cursor:pointer;white-space:nowrap;flex-shrink:0">
-                ${completed?'Update':'Submit'}
-              </button>
-            </div>
-            ${completed&&sub.submittedAt?`<div style="margin-left:38px;margin-top:4px;font-size:10px;color:var(--t3)">Last saved ${sub.submittedAt}</div>`:''}
-            ${sub.grade?`<div style="margin-left:38px;margin-top:8px;padding:10px 12px;background:var(--s2);border-left:3px solid var(--grn);border-radius:0 6px 6px 0">
-              <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
-                <span style="font-size:10px;font-weight:700;color:var(--grn)">GRADED</span>
-                <span style="font-size:13px;font-weight:700;color:var(--t1)">${sub.grade}</span>
-                ${sub.gradeStatus&&sub.gradeStatus!=='Graded'?`<span style="font-size:9px;font-weight:600;padding:2px 7px;border-radius:10px;background:rgba(0,0,0,.08);color:var(--t2)">${sub.gradeStatus}</span>`:''}
-              </div>
-              ${sub.feedback?`<div style="font-size:11px;color:var(--t2);line-height:1.5">${sub.feedback}</div>`:''}
-              ${sub.gradedAt?`<div style="font-size:9px;color:var(--t4);margin-top:4px">Graded ${sub.gradedAt}</div>`:''}
-            </div>`:''}
-          </div>`;
-        }).join('')}
+        ${!selectedMember?'<div class="empty">Sign in to submit homework.</div>':bcBlock}
       </div>
     </div>`;
 }
@@ -613,6 +681,15 @@ function submitHW(sessionId){
   const note=document.getElementById('hw-note-'+sessionId).value.trim();
   if(!link){alert('Please paste a link before submitting.');return;}
   _hwData[sessionId]={link,note,submittedAt:new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})};
+  _saveMemberData();
+  renderHomework();
+}
+function submitEBODHW(i){
+  if(!selectedMember){alert('Please sign in first.');return;}
+  const link=document.getElementById('ebod-hw-link-'+i).value.trim();
+  const note=document.getElementById('ebod-hw-note-'+i).value.trim();
+  if(!link){alert('Please paste a link before submitting.');return;}
+  _hwData['ebod_'+i]={link,note,submittedAt:new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'})};
   _saveMemberData();
   renderHomework();
 }
@@ -834,19 +911,46 @@ function renderAttendance(){
 }
 
 // ============================================================
+// DUES
+// ============================================================
+function renderIMDues(){
+  const el=document.getElementById('im-dues-list');if(!el)return;
+  const confEvents=JSON.parse(localStorage.getItem('pbl_confevents')||'[]');
+  if(!confEvents.length){
+    el.innerHTML='<div class="empty" style="padding:16px">No dues or fees posted yet.</div>';
+    return;
+  }
+  const memberName=selectedMember?selectedMember.name:'';
+  let totalOwed=0;
+  const rows=confEvents.map(c=>{
+    const paid=(c.paid||[]).some(n=>n.toLowerCase()===memberName.toLowerCase());
+    const dues=parseFloat(c.dues)||0;
+    if(!paid)totalOwed+=dues;
+    return`<div style="display:flex;align-items:center;gap:12px;padding:13px 16px;border-bottom:1px solid var(--bd)">
+      <div style="flex:1;min-width:0">
+        <div style="font-size:12px;font-weight:600;color:var(--t1)">${c.name}</div>
+        <div style="font-size:10px;color:var(--t3);margin-top:2px">${c.date||''} · $${dues.toFixed(2)} per member</div>
+      </div>
+      ${paid
+        ?`<span class="badge bg">Paid</span>`
+        :`<span class="badge br">$${dues.toFixed(2)} Due</span>`}
+    </div>`;
+  }).join('');
+  const summary=!selectedMember
+    ?'<div class="empty" style="padding:16px">Sign in to view your payment status.</div>'
+    :rows+`<div style="padding:13px 16px;display:flex;align-items:center;justify-content:space-between">
+        <div style="font-size:11px;font-weight:600;color:var(--t2)">Total Outstanding</div>
+        <div style="font-size:14px;font-weight:700;color:${totalOwed>0?'var(--cr)':'var(--grn)'}">${totalOwed>0?'$'+totalOwed.toFixed(2):'All Clear ✓'}</div>
+      </div>`;
+  el.innerHTML=summary;
+}
+
+// ============================================================
 // RESOURCES
 // ============================================================
 function renderResources(){
   document.getElementById('res-guides-list').innerHTML=resources.guides.map((r,i)=>`
     <div class="res-card" id="rg${i}" onclick="document.getElementById('rg${i}').classList.toggle('open')">
-      <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
-        <div><div class="res-name">${r.name}</div><div class="res-desc">${r.desc}</div></div>
-        ${r.link?`<a href="${r.link}" target="_blank" onclick="event.stopPropagation()" style="flex-shrink:0;padding:5px 10px;background:var(--s1);border:1px solid var(--bd);border-radius:5px;font-size:10px;color:var(--cr);text-decoration:none;white-space:nowrap">Open Doc ↗</a>`:''}
-      </div>
-      ${r.content?`<div class="res-preview">${r.content}</div>`:''}
-    </div>`).join('');
-  document.getElementById('res-templates-list').innerHTML=resources.templates.map((r,i)=>`
-    <div class="res-card" id="rt${i}" onclick="document.getElementById('rt${i}').classList.toggle('open')">
       <div style="display:flex;align-items:center;justify-content:space-between;gap:8px">
         <div><div class="res-name">${r.name}</div><div class="res-desc">${r.desc}</div></div>
         ${r.link?`<a href="${r.link}" target="_blank" onclick="event.stopPropagation()" style="flex-shrink:0;padding:5px 10px;background:var(--s1);border:1px solid var(--bd);border-radius:5px;font-size:10px;color:var(--cr);text-decoration:none;white-space:nowrap">Open Doc ↗</a>`:''}
@@ -859,12 +963,23 @@ function renderResources(){
 // TEAM
 // ============================================================
 function renderTeam(){
-  document.getElementById('exec-grid').innerHTML=mExecTeam.map(e=>`
-    <div class="exec-card">
+  const _ec=JSON.parse(localStorage.getItem('pbl_execcontacts')||'{}');
+  document.getElementById('exec-grid').innerHTML=mExecTeam.map(e=>{
+    const ct=_ec[e.name]||{};
+    return`<div class="exec-card">
       <div class="exec-av">${e.name.slice(0,2).toUpperCase()}</div>
       <div class="exec-name">${e.name}</div>
       <div class="exec-pos">${e.position}</div>
-    </div>`).join('');
+      ${(ct.email||ct.phone)?`<div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--bd);display:flex;flex-direction:column;gap:5px;align-items:center">
+        ${ct.email?`<a href="mailto:${ct.email}" style="display:flex;align-items:center;gap:5px;font-size:10px;color:var(--cr);text-decoration:none;font-weight:500">
+          <svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="4" width="12" height="9" rx="1"/><path d="M2 4l6 5 6-5"/></svg>${ct.email}
+        </a>`:''}
+        ${ct.phone?`<a href="tel:${ct.phone}" style="display:flex;align-items:center;gap:5px;font-size:10px;color:var(--t3);text-decoration:none">
+          <svg width="11" height="11" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 2h3l1 3-2 1a9 9 0 0 0 3 3l1-2 3 1v3a1 1 0 0 1-1 1A12 12 0 0 1 3 3a1 1 0 0 1 1-1z"/></svg>${ct.phone}
+        </a>`:''}
+      </div>`:''}
+    </div>`;
+  }).join('');
 }
 
 // ============================================================
@@ -898,7 +1013,7 @@ function initIM(){
   renderTeam();
   renderProfile();
   renderAttendance();
-  renderIMMyReimbs();
+  renderIMDues();
   renderIMConsulting();
   renderIMMyMentorship();
   updateMemberUI();
@@ -936,4 +1051,5 @@ function resetLanding(){
   document.getElementById('land-ebod-err').textContent='';
   document.getElementById('land-im-err').textContent='';
 }
+
 
