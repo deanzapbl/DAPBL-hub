@@ -1218,6 +1218,14 @@
           <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px" id="portal-marketing-links"></div>
         </div>
         <div class="sub" id="portal-marketing-brandkit">
+          <!-- Kit Switcher -->
+          <div style="display:flex;gap:8px;margin-bottom:14px">
+            <button id="bk-tab-pbl" class="btn btn-p btn-sm" onclick="switchBrandKitTab('pbl')" style="font-size:11px">Φ PBL</button>
+            <button id="bk-tab-polaris" class="btn btn-g btn-sm" onclick="switchBrandKitTab('polaris')" style="font-size:11px;background:#011c43;color:#fff;border-color:#011c43">⭐ Polaris</button>
+          </div>
+
+          <!-- ── PBL KIT ── -->
+          <div id="bk-pbl">
           <!-- Row 1: Colors + Fonts -->
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
             <div class="card">
@@ -1320,6 +1328,121 @@
             <div class="ch"><div class="ct">Full Brand Guidelines Text</div><button class="btn btn-g btn-sm" onclick="saveBrandNotes(this)">Save</button></div>
             <textarea id="brand-notes" rows="10" style="width:100%;box-sizing:border-box;font-size:11px;padding:8px;background:var(--s2);border:1px solid var(--brd);border-radius:4px;color:var(--t1);font-family:'IBM Plex Mono',monospace;resize:vertical;line-height:1.6"></textarea>
           </div>
+          </div><!-- end #bk-pbl -->
+
+          <!-- ── POLARIS KIT ── -->
+          <div id="bk-polaris" style="display:none">
+          <!-- Row 1: About + Colors -->
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+            <div class="card">
+              <div class="ch"><div class="ct">About the Brand</div></div>
+              <div style="padding:0 16px 12px">
+                <div style="font-size:11px;font-weight:700;color:#011c43;margin-bottom:6px">Polaris Research Group (PRG)</div>
+                <div style="font-size:11px;color:var(--t2);line-height:1.7;margin-bottom:12px">A selective cohort within Phi Beta Lambda designed to cultivate elite undergraduate talent through rigorous, high-impact research and strategic thought leadership.</div>
+                <div style="font-size:11px;color:var(--t2);line-height:1.7;margin-bottom:12px">Inspired by the North Star, Polaris represents our commitment to guiding students into the premier worlds of high finance, strategy, technology, and macroeconomics.</div>
+                <div style="font-size:10px;font-weight:600;color:var(--t3);margin-bottom:6px;text-transform:uppercase;letter-spacing:.5px">Brand Identity</div>
+                <div style="display:grid;grid-template-columns:80px 1fr;gap:4px;font-size:10px">
+                  <span style="color:var(--t3)">Name</span><span style="color:var(--t1);font-weight:600">Polaris Research Group (PRG)</span>
+                  <span style="color:var(--t3)">Symbol</span><span style="color:var(--t1);font-weight:600">North Star ⭐ — a guiding point and symbol of excellence</span>
+                  <span style="color:var(--t3)">Imagery</span><span style="color:var(--t1);font-weight:600">Clean · Minimal · Data-driven · Professional</span>
+                </div>
+                <div style="margin-top:12px;padding:10px;background:#011c43;border-radius:6px;color:#fff;font-size:11px;line-height:1.7;font-style:italic">"PRG is more than a student research division — it is a launchpad for tomorrow's leaders. Named after Polaris, the brightest star in the northern sky, PRG positions its members to lead with clarity, purpose, and insight."</div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="ch"><div class="ct">Color Palette</div></div>
+              <div style="font-size:10px;color:var(--t3);padding:0 16px 8px">Official colors — Polaris Research Group</div>
+              <div style="padding:0 16px 12px">
+                <div style="display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--bd)">
+                  <div style="width:28px;height:28px;border-radius:5px;background:#011c43;flex-shrink:0;border:1px solid var(--bd)"></div>
+                  <div><div style="font-size:11px;font-weight:600;color:var(--t1)">Navy</div><div style="font-size:10px;color:var(--t3)">#011c43 &middot; Primary — backgrounds, headers, official use</div></div>
+                </div>
+                <div style="display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--bd)">
+                  <div style="width:28px;height:28px;border-radius:5px;background:#ffffff;flex-shrink:0;border:1px solid var(--bd)"></div>
+                  <div><div style="font-size:11px;font-weight:600;color:var(--t1)">White</div><div style="font-size:10px;color:var(--t3)">#ffffff &middot; Primary — text on dark, clean backgrounds</div></div>
+                </div>
+                <div style="display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--bd)">
+                  <div style="width:28px;height:28px;border-radius:5px;background:#0000ff;flex-shrink:0;border:1px solid var(--bd)"></div>
+                  <div><div style="font-size:11px;font-weight:600;color:var(--t1)">Blue</div><div style="font-size:10px;color:var(--t3)">#0000ff &middot; Secondary accent — links, highlights</div></div>
+                </div>
+                <div style="display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--bd)">
+                  <div style="width:28px;height:28px;border-radius:5px;background:#baa9c2;flex-shrink:0;border:1px solid var(--bd)"></div>
+                  <div><div style="font-size:11px;font-weight:600;color:var(--t1)">Silver</div><div style="font-size:10px;color:var(--t3)">#baa9c2 &middot; Secondary — supporting elements, subtle accents</div></div>
+                </div>
+                <div style="display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--bd)">
+                  <div style="width:28px;height:28px;border-radius:5px;background:#e5e5e5;flex-shrink:0;border:1px solid var(--bd)"></div>
+                  <div><div style="font-size:11px;font-weight:600;color:var(--t1)">Grey</div><div style="font-size:10px;color:var(--t3)">#e5e5e5 &middot; Secondary — backgrounds, dividers</div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- Row 2: Typography + Voice & Tone -->
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px">
+            <div class="card">
+              <div class="ch"><div class="ct">Typography</div></div>
+              <div style="padding:0 16px 12px">
+                <div style="padding:8px 0;border-bottom:1px solid var(--bd)">
+                  <div style="font-size:13px;font-weight:700;color:var(--t1);font-family:Georgia,serif">Georgia Pro</div>
+                  <div style="font-size:10px;color:var(--t3)">Primary Typeface — Headlines, Subheadings (Serif)</div>
+                </div>
+                <div style="padding:8px 0;border-bottom:1px solid var(--bd)">
+                  <div style="font-size:13px;font-weight:600;color:var(--t1)">Avenir</div>
+                  <div style="font-size:10px;color:var(--t3)">Secondary Typeface — UI, Supporting text (Sans-serif)</div>
+                </div>
+                <div style="padding:8px 0;border-bottom:1px solid var(--bd)">
+                  <div style="font-size:13px;color:var(--t1)">Open Sauce</div>
+                  <div style="font-size:10px;color:var(--t3)">Sub Typeface — Body text, Captions (Sans-serif)</div>
+                </div>
+                <div style="margin-top:10px;font-size:10px;color:var(--t3);font-style:italic">Avoid over-embellishment. Speak directly. Be driven by data and insight.</div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="ch"><div class="ct">Voice &amp; Tone</div></div>
+              <div style="padding:0 16px 12px">
+                <div style="font-size:11px;font-weight:600;color:var(--t1);margin-bottom:6px">Voice</div>
+                <div style="display:inline-block;padding:3px 10px;background:#011c43;border-radius:12px;font-size:10px;font-weight:600;color:#fff;margin:2px 3px 2px 0">Confident</div>
+                <div style="display:inline-block;padding:3px 10px;background:#011c43;border-radius:12px;font-size:10px;font-weight:600;color:#fff;margin:2px 3px 2px 0">Intellectual</div>
+                <div style="display:inline-block;padding:3px 10px;background:#011c43;border-radius:12px;font-size:10px;font-weight:600;color:#fff;margin:2px 3px 2px 0">Focused</div>
+                <div style="font-size:11px;font-weight:600;color:var(--t1);margin:10px 0 6px">Tone</div>
+                <div style="display:inline-block;padding:3px 10px;border:1px solid #011c43;border-radius:12px;font-size:10px;font-weight:600;color:#011c43;margin:2px 3px 2px 0">Strategic</div>
+                <div style="display:inline-block;padding:3px 10px;border:1px solid #011c43;border-radius:12px;font-size:10px;font-weight:600;color:#011c43;margin:2px 3px 2px 0">Minimalist</div>
+                <div style="display:inline-block;padding:3px 10px;border:1px solid #011c43;border-radius:12px;font-size:10px;font-weight:600;color:#011c43;margin:2px 3px 2px 0">Authoritative</div>
+                <div style="margin-top:10px;padding:8px;background:var(--s2);border-radius:5px;font-size:10px;color:var(--t3);line-height:1.6">Avoid over-embellishment. Speak directly. Be driven by data and insight.</div>
+                <div style="font-size:11px;font-weight:600;color:var(--t1);margin:10px 0 6px">Logo Usage</div>
+                <div style="font-size:10px;color:var(--t3);padding:3px 0;border-bottom:1px solid var(--bd)">· Full name: <strong>Polaris Research Group</strong> or abbreviation <strong>POLARIS</strong></div>
+                <div style="font-size:10px;color:var(--t3);padding:3px 0;border-bottom:1px solid var(--bd)">· Navy on white, or white on navy — maintain clean contrast</div>
+                <div style="font-size:10px;color:var(--t3);padding:3px 0;border-bottom:1px solid var(--bd)">· Never distort, stretch, or add effects to the wordmark</div>
+                <div style="font-size:10px;color:var(--t3);padding:3px 0">· Seal/Icon may be used independently in confined spaces</div>
+              </div>
+            </div>
+          </div>
+          <!-- Row 3: Strategy Drivers -->
+          <div class="card" style="margin-top:14px">
+            <div class="ch"><div class="ct">Strategy Drivers</div></div>
+            <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;padding:0 16px 16px">
+              <div style="padding:12px;background:#011c43;border-radius:8px;color:#fff">
+                <div style="font-size:18px;margin-bottom:6px">🎯</div>
+                <div style="font-size:11px;font-weight:700;margin-bottom:5px">Elite Specialization</div>
+                <div style="font-size:10px;opacity:.8;line-height:1.5">PRG selects and develops students with exceptional talent and interest in finance, product/tech, marketing, strategy, innovation, and macroeconomics.</div>
+              </div>
+              <div style="padding:12px;background:#011c43;border-radius:8px;color:#fff">
+                <div style="font-size:18px;margin-bottom:6px">💡</div>
+                <div style="font-size:11px;font-weight:700;margin-bottom:5px">Thought Leadership</div>
+                <div style="font-size:10px;opacity:.8;line-height:1.5">PRG's goal is to create and share strategic, data-driven research that reflects professional quality.</div>
+              </div>
+              <div style="padding:12px;background:#011c43;border-radius:8px;color:#fff">
+                <div style="font-size:18px;margin-bottom:6px">🧭</div>
+                <div style="font-size:11px;font-weight:700;margin-bottom:5px">Career Navigation</div>
+                <div style="font-size:10px;opacity:.8;line-height:1.5">PRG serves as a compass, preparing members for internships, graduate school, and c-suite level careers.</div>
+              </div>
+              <div style="padding:12px;background:#011c43;border-radius:8px;color:#fff">
+                <div style="font-size:18px;margin-bottom:6px">🤝</div>
+                <div style="font-size:11px;font-weight:700;margin-bottom:5px">Collaborative Rigor</div>
+                <div style="font-size:10px;opacity:.8;line-height:1.5">Teams work in high-performance cohorts to publish reports and lead discussions within the larger PBL community.</div>
+              </div>
+            </div>
+          </div>
+          </div><!-- end #bk-polaris -->
         </div>
         <div class="sub" id="portal-marketing-content">
           <div class="card">
@@ -1588,6 +1711,20 @@
 
 
 <!-- MODALS -->
+<div class="overlay" id="quick-att-modal">
+  <div class="modal" style="max-width:440px;padding:20px">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+      <div style="font-size:14px;font-weight:700;color:var(--t1)">Take Attendance</div>
+      <button class="btn btn-g btn-sm" onclick="closeModals()">Done</button>
+    </div>
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid var(--bd)">
+      <label style="font-size:11px;font-weight:600;color:var(--t3)">Session:</label>
+      <select id="qa-sess-sel" style="font-size:11px;padding:4px 8px;border:1px solid var(--bd);border-radius:5px;background:var(--s2);color:var(--t1)" onchange="renderQuickAtt(+this.value)"></select>
+      <span id="qa-rate" style="font-size:11px;color:var(--t3);margin-left:auto"></span>
+    </div>
+    <div id="qa-list" style="max-height:420px;overflow-y:auto"></div>
+  </div>
+</div>
 <div class="overlay" id="bulk-add-modal">
   <div class="modal" style="max-width:400px">
     <div class="mt">Bulk Add Members</div>
