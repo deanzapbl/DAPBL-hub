@@ -232,12 +232,12 @@ textarea{resize:vertical;min-height:120px;}
 .polaris-tab-btn.active{background:var(--cr);border-color:var(--cr);color:#fff;font-weight:700;}
 /* MY ROLE CARD */
 @media print{
-  /* ── Normal page print ── */
+  /* â”€â”€ Normal page print â”€â”€ */
   .sb,.topbar,.dp,.detail-panel,.tb-right{display:none!important;}
   .ca{display:block;}
   .content{overflow:visible;padding:10px;}
   .page{display:block!important;}
-  /* ── Statement-of-Activities print (body gets .stmt-printing when overlay is open) ── */
+  /* â”€â”€ Statement-of-Activities print (body gets .stmt-printing when overlay is open) â”€â”€ */
   body.stmt-printing>*:not(#stmt-preview-overlay){display:none!important;}
   body.stmt-printing #stmt-preview-overlay{
     display:block!important;position:static!important;background:white!important;
@@ -265,7 +265,7 @@ textarea{resize:vertical;min-height:120px;}
 }
 
 
-/* ─── LANDING ─────────────────────────────── */
+/* â”€â”€â”€ LANDING â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 #landing{position:fixed;inset:0;z-index:500;display:flex;flex-direction:column;align-items:center;justify-content:center;background:var(--bg);}
 .land-header{text-align:center;margin-bottom:48px;}
 .land-phi{width:56px;height:56px;background:var(--cr);border-radius:12px;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;}
@@ -318,8 +318,8 @@ textarea{resize:vertical;min-height:120px;}
 .bc-notes{font-size:11px;color:var(--t2);margin-top:8px;line-height:1.55;white-space:pre-wrap;display:none;border-top:1px solid var(--bd);padding-top:8px;}
 .bc-notes{display:block;}
 .att-dot{width:22px;height:22px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#fff;}
-.exec-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;}
-.exec-card{background:var(--s1);border:1px solid var(--bd);border-radius:7px;padding:14px;text-align:center;}
+.exec-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px;}
+.exec-card{background:var(--s1);border:1px solid var(--bd);border-radius:7px;padding:14px;text-align:center;word-break:break-word;}
 .exec-av{width:38px;height:38px;border-radius:50%;background:var(--cr3);color:#fff;font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;margin:0 auto 8px;}
 .exec-name{font-weight:600;font-size:11.5px;}
 .exec-pos{font-size:9.5px;color:var(--t3);margin-top:2px;line-height:1.4;}
@@ -341,7 +341,7 @@ textarea{resize:vertical;min-height:120px;}
 .prof-name{font-size:17px;font-weight:700;}
 .prof-role{font-size:10px;color:var(--t3);margin-top:3px;letter-spacing:.5px;text-transform:uppercase;}
 .empty{text-align:center;padding:30px 20px;color:var(--t4);font-size:11px;}
-/* ── NESTED BUDGET TABS ─────────────────────────────────────────────────── */
+/* â”€â”€ NESTED BUDGET TABS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .bud-acct-tabs{display:flex;gap:4px;margin-bottom:14px;background:var(--s2);padding:4px;border-radius:7px;border:1px solid var(--bd);}
 .bud-acct-tab{flex:1;text-align:center;padding:7px 10px;font-size:11.5px;font-weight:600;border-radius:5px;cursor:pointer;color:var(--t3);font-family:'IBM Plex Sans',sans-serif;transition:all .12s;user-select:none;}
 .bud-acct-tab.active{background:#F7F5F2;color:var(--t1);box-shadow:0 1px 3px rgba(0,0,0,.08);}
@@ -357,7 +357,7 @@ textarea{resize:vertical;min-height:120px;}
 .imp-tab.active{background:var(--bg);color:var(--t1);box-shadow:0 1px 3px rgba(0,0,0,.08);}
 .imp-tab:hover:not(.active){background:var(--s3);color:var(--t2);}
 
-/* ─── MOBILE RESPONSIVENESS ─────────────────────────────────── */
+/* â”€â”€â”€ MOBILE RESPONSIVENESS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .mob-menu-btn{display:none;background:none;border:none;cursor:pointer;padding:6px 8px;color:var(--t2);flex-shrink:0;align-items:center;justify-content:center;border-radius:4px;}
 .mob-menu-btn:hover{background:var(--s3);}
 .sb-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:298;}
@@ -430,3 +430,15 @@ textarea{resize:vertical;min-height:120px;}
   .dph{padding:12px 14px;}
   .dpb{padding:12px;}
 }
+
+/* â”€â”€ IM REMOTE EDITOR â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+.ime-sec{border:2px solid transparent;border-radius:10px;margin-bottom:12px;cursor:pointer;transition:border-color .15s,box-shadow .15s;overflow:hidden;background:var(--bg)}
+.ime-sec:hover{border-color:var(--cr)}
+.ime-sec.ime-active{border-color:var(--cr);box-shadow:0 0 0 3px rgba(121,0,0,.1)}
+.ime-sec-lbl{font-size:10px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.06em;padding:6px 12px 5px;background:var(--s2);border-bottom:1px solid var(--bd);display:flex;align-items:center;justify-content:space-between}
+.ime-sec-lbl::after{content:'Click to edit â†’';font-size:9px;font-weight:400;color:var(--t4);text-transform:none;letter-spacing:0}
+.ime-active .ime-sec-lbl::after{content:'Editing âœ“';color:var(--cr)}
+.ime-ed-item{display:flex;align-items:flex-start;gap:10px;padding:9px 12px;border-bottom:1px solid var(--bd)}
+.ime-ed-item:last-child{border-bottom:none}
+.ime-ed-title{font-size:12px;font-weight:600;color:var(--t1);flex:1;min-width:0}
+.ime-ed-sub{font-size:10px;color:var(--t3);margin-top:2px}
