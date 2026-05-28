@@ -517,6 +517,7 @@ const META={
   recruitment:['Recruitment','Prospect pipeline & follow-ups'],
   goals:['Goals & OKRs','Quarter targets & progress tracking'],
   transition:['Officer Transition','Handoff docs by position'],
+  contacts:['Contacts','Vendors, leadership & key contacts'],
   announcements:['Announcements','Draft & log club communications'],
   'member-content':['Member Portal Content','Manage what members see: announcements, guides, slides'],
   dashboard:['Dashboard','Spring 2026 \u00b7 De Anza PBL'],
