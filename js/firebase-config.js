@@ -7,3 +7,4 @@
     appId:"1:1059697973377:web:223f9315410bd40a9b5580"
   });
   window._db=firebase.firestore();
+  window._storage=firebase.storage();
