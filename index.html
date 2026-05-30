@@ -532,49 +532,41 @@
 
       <!-- MEMBER PORTAL CONTENT -->
       <div class="page" id="page-member-content" style="padding:0;overflow:hidden">
-        <div style="display:flex;min-height:calc(100vh - 56px)">
+        <div style="display:flex;height:calc(100vh - 56px)">
 
-          <!-- LEFT: IM PREVIEW PANEL -->
-          <div style="flex:0 0 52%;border-right:2px solid var(--bd);overflow-y:auto;background:var(--bg)">
-            <div style="background:var(--cr);padding:10px 16px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:5">
-              <div style="display:flex;align-items:center;gap:8px">
-                <span style="font-size:12px;font-weight:700;color:#fff">📱 Member Portal</span>
-                <span style="font-size:10px;color:rgba(255,255,255,.65)">Live Preview</span>
-              </div>
-              <button style="background:rgba(255,255,255,.18);border:none;color:#fff;padding:4px 10px;border-radius:5px;font-size:10px;cursor:pointer;font-weight:600" onclick="renderIMPreview()">↻ Refresh</button>
+          <!-- LEFT: SIDEBAR NAV -->
+          <div style="width:200px;flex-shrink:0;border-right:1px solid var(--bd);background:var(--bg);display:flex;flex-direction:column;overflow:hidden">
+            <div style="background:var(--cr);padding:11px 14px;flex-shrink:0">
+              <div style="font-size:11px;font-weight:700;color:#fff">📱 Member Portal</div>
+              <div style="font-size:9px;color:rgba(255,255,255,.6);margin-top:1px">EBOD Editor</div>
             </div>
-            <div style="padding:14px">
-              <div class="ime-sec" id="ime-sec-announcements" onclick="imeSelect('announcements')">
-                <div class="ime-sec-lbl">📢 Announcements</div>
-                <div id="ime-prev-ann" style="pointer-events:none"></div>
+            <div class="sb-nav" style="flex:1;overflow-y:auto;padding-bottom:12px">
+              <div class="nav-group">
+                <div class="ngl">Overview</div>
+                <div class="ni" id="ime-ni-home" onclick="imeShowPage('home')">🏠 Home</div>
+                <div class="ni" id="ime-ni-announcements" onclick="imeShowPage('announcements')">📢 Announcements</div>
               </div>
-              <div class="ime-sec" id="ime-sec-events" onclick="imeSelect('events')">
-                <div class="ime-sec-lbl">📅 Upcoming Events</div>
-                <div id="ime-prev-events" style="pointer-events:none"></div>
+              <div class="nav-group">
+                <div class="ngl">Content</div>
+                <div class="ni" id="ime-ni-events" onclick="imeShowPage('events')">📅 Events</div>
+                <div class="ni" id="ime-ni-bootcamps" onclick="imeShowPage('bootcamps')">📓 Bootcamps</div>
+                <div class="ni" id="ime-ni-fbla" onclick="imeShowPage('fbla')">🏆 FBLA Events</div>
+                <div class="ni" id="ime-ni-resources" onclick="imeShowPage('resources')">📚 Resources</div>
               </div>
-              <div class="ime-sec" id="ime-sec-highlights" onclick="imeSelect('highlights')">
-                <div class="ime-sec-lbl">✨ Season Highlights</div>
-                <div id="ime-prev-highlights" style="pointer-events:none"></div>
-              </div>
-              <div class="ime-sec" id="ime-sec-links" onclick="imeSelect('links')">
-                <div class="ime-sec-lbl">🔗 Quick Links</div>
-                <div id="ime-prev-links" style="pointer-events:none"></div>
-              </div>
-              <div class="ime-sec" id="ime-sec-resources" onclick="imeSelect('resources')">
-                <div class="ime-sec-lbl">📚 Guides &amp; Templates</div>
-                <div id="ime-prev-resources" style="pointer-events:none"></div>
+              <div class="nav-group">
+                <div class="ngl">Member Info</div>
+                <div class="ni" id="ime-ni-execteam" onclick="imeShowPage('execteam')">👥 Exec Team</div>
+                <div class="ni" id="ime-ni-officehours" onclick="imeShowPage('officehours')">🕐 Office Hours</div>
               </div>
             </div>
           </div>
 
-          <!-- RIGHT: EDITOR PANEL -->
-          <div style="flex:1;overflow-y:auto;padding:16px;background:var(--s1)">
-            <div id="ime-editor">
-              <div style="text-align:center;padding:48px 24px;color:var(--t4)">
-                <div style="font-size:32px;margin-bottom:12px">👈</div>
-                <div style="font-size:13px;font-weight:600;color:var(--t2);margin-bottom:6px">Click any section in the preview</div>
-                <div style="font-size:11px;color:var(--t3)">The editor for that section will appear here</div>
-              </div>
+          <!-- RIGHT: CONTENT AREA -->
+          <div id="ime-content" style="flex:1;overflow-y:auto;padding:20px;background:var(--s1)">
+            <div style="text-align:center;padding:64px 24px;color:var(--t4)">
+              <div style="font-size:40px;margin-bottom:14px">📱</div>
+              <div style="font-size:14px;font-weight:600;color:var(--t2);margin-bottom:6px">Member Portal Editor</div>
+              <div style="font-size:11px;color:var(--t3)">Select a section from the sidebar to start editing</div>
             </div>
           </div>
 
