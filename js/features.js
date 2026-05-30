@@ -1,4 +1,4 @@
-// ── FBLA EVENTS (IM Dashboard) ───────────────────────────────────────────────
+// â”€â”€ FBLA EVENTS (IM Dashboard) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 let _fblaEvents=JSON.parse(localStorage.getItem('pbl_fblaevents')||JSON.stringify([
   {name:'Business Plan',members:'Arya Somu, Iker Jimenez',competition:'NLC 2026',type:'Team',notes:'Top 10 nationally last year'},
   {name:'Entrepreneurship',members:'Jordan Nguyen, Nhi Tran',competition:'NLC 2026',type:'Team',notes:''},
@@ -15,11 +15,11 @@ function renderFBLAEvents(){
     <div class="ime-ed-item">
       <div style="flex:1;min-width:0">
         <div class="ime-ed-title">${e.name} <span class="badge bb" style="font-size:9px">${e.type}</span>${e.notes?` <span style="font-size:9px;color:var(--gold2);font-weight:600">${e.notes}</span>`:''}</div>
-        <div class="ime-ed-sub">${e.members} · ${e.competition}</div>
+        <div class="ime-ed-sub">${e.members} Â· ${e.competition}</div>
       </div>
       <div style="display:flex;gap:5px">
         <button class="btn btn-g btn-sm" onclick="editFBLAEvent(${i})">Edit</button>
-        <button class="btn btn-g btn-sm" style="color:var(--cr)" onclick="deleteFBLAEvent(${i})">✕</button>
+        <button class="btn btn-g btn-sm" style="color:var(--cr)" onclick="deleteFBLAEvent(${i})">âœ•</button>
       </div>
     </div>`).join('');
 }
@@ -49,7 +49,7 @@ function saveFBLAEventEdit(i,btn){
 }
 function deleteFBLAEvent(i){_fblaEvents.splice(i,1);saveFBLAEvents();renderFBLAEvents();if(typeof imeRefresh==='function')imeRefresh();}
 
-// ── CONTACTS DIRECTORY ───────────────────────────────────────────────────────
+// â”€â”€ CONTACTS DIRECTORY â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 let _contacts=JSON.parse(localStorage.getItem('pbl_contacts')||JSON.stringify([
   {id:1,name:'Bus Driver / Charter Co.',org:'Charter Bus Company',cat:'Vendor',phone:'',email:'',notes:'Contact for transportation to SBLC/NLC. Book at least 6 weeks out.'},
   {id:2,name:'Embroidery / Merch',org:'Embroidery Vendor',cat:'Vendor',phone:'',email:'',notes:'Chapter shirts, jackets, name badges. Minimum order qty TBD.'},
@@ -99,14 +99,14 @@ function renderContacts(){
             <div style="font-size:12px;font-weight:600;color:var(--t1)">${c.name}</div>
             <div style="font-size:10px;color:var(--t3);margin-top:1px">${c.org||''}</div>
             <div style="display:flex;gap:12px;margin-top:5px;flex-wrap:wrap">
-              ${c.phone?`<a href="tel:${c.phone}" style="font-size:10px;color:var(--cr);text-decoration:none">📞 ${c.phone}</a>`:''}
-              ${c.email?`<a href="mailto:${c.email}" style="font-size:10px;color:var(--cr);text-decoration:none">✉ ${c.email}</a>`:''}
+              ${c.phone?`<a href="tel:${c.phone}" style="font-size:10px;color:var(--cr);text-decoration:none">ðŸ“ž ${c.phone}</a>`:''}
+              ${c.email?`<a href="mailto:${c.email}" style="font-size:10px;color:var(--cr);text-decoration:none">âœ‰ ${c.email}</a>`:''}
             </div>
             ${c.notes?`<div style="font-size:10px;color:var(--t4);margin-top:5px;line-height:1.5">${c.notes}</div>`:''}
           </div>
           <div style="display:flex;gap:5px;flex-shrink:0">
             <button class="btn btn-g btn-sm" onclick="editContact(${c.id})">Edit</button>
-            <button class="btn btn-g btn-sm" style="color:var(--cr)" onclick="deleteContact(${c.id})">✕</button>
+            <button class="btn btn-g btn-sm" style="color:var(--cr)" onclick="deleteContact(${c.id})">âœ•</button>
           </div>
         </div>`).join('')}
     </div>`).join('');
@@ -140,7 +140,7 @@ function saveContactEdit(id,btn){
 }
 function deleteContact(id){_contacts=_contacts.filter(x=>x.id!==id);saveContacts();renderContacts();if(typeof imeRefresh==='function')imeRefresh();}
 
-// ── HOMEWORK GRADING (EBOD) ──────────────────────────────────────────────────
+// â”€â”€ HOMEWORK GRADING (EBOD) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 let hwAssignments=JSON.parse(localStorage.getItem('pblhub_hw_assignments')||'[]');
 
 function saveHWAssignments(){localStorage.setItem('pblhub_hw_assignments',JSON.stringify(hwAssignments));if(typeof saveData==='function')saveData();}
@@ -149,7 +149,7 @@ function renderEBODHomework(){
   // populate session filter
   const sel=document.getElementById('hw-filter-session');
   if(sel&&sel.options.length<=1){
-    mBootcamps.forEach(b=>{const o=document.createElement('option');o.value=b.id;o.textContent='Session '+b.id+' — '+b.topic;sel.appendChild(o);});
+    mBootcamps.forEach(b=>{const o=document.createElement('option');o.value=b.id;o.textContent='Session '+b.id+' â€” '+b.topic;sel.appendChild(o);});
   }
   const filterSession=document.getElementById('hw-filter-session')?document.getElementById('hw-filter-session').value:'';
   const filterStatus=document.getElementById('hw-filter-status')?document.getElementById('hw-filter-status').value:'';
@@ -191,12 +191,12 @@ function renderEBODHomework(){
       const statusColor=r.sub.gradeStatus==='Resubmit'?'var(--gold)':r.sub.gradeStatus==='Late'?'#E57373':r.isGraded?'var(--grn)':'var(--t4)';
       return`<tr class="cr" onclick="openHWGrade('${r.uid}','${r.sid}')">
         <td><strong>${r.name}</strong></td>
-        <td style="font-size:10px;color:var(--t3)">${r.session?'S'+r.session.id+' — '+r.session.topic:'Session '+r.sid}</td>
-        <td style="font-size:10px;color:var(--t3)">${r.sub.submittedAt||'—'}</td>
-        <td style="font-size:10px;color:var(--t2);max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${r.sub.note||'—'}</td>
-        <td style="font-weight:600;color:var(--t1)">${r.sub.grade||'—'}</td>
+        <td style="font-size:10px;color:var(--t3)">${r.session?'S'+r.session.id+' â€” '+r.session.topic:'Session '+r.sid}</td>
+        <td style="font-size:10px;color:var(--t3)">${r.sub.submittedAt||'â€”'}</td>
+        <td style="font-size:10px;color:var(--t2);max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${r.sub.note||'â€”'}</td>
+        <td style="font-weight:600;color:var(--t1)">${r.sub.grade||'â€”'}</td>
         <td><span style="font-size:9px;font-weight:600;padding:2px 7px;border-radius:10px;background:rgba(0,0,0,.06);color:${statusColor}">${r.sub.gradeStatus||(r.isGraded?'Graded':'Pending')}</span></td>
-        <td><a href="${r.sub.link}" target="_blank" onclick="event.stopPropagation()" style="font-size:10px;color:var(--cr2);text-decoration:none;font-weight:600">View →</a></td>
+        <td><a href="${r.sub.link}" target="_blank" onclick="event.stopPropagation()" style="font-size:10px;color:var(--cr2);text-decoration:none;font-weight:600">View â†’</a></td>
       </tr>`;
     }).join('')
   }</tbody></table>`;
@@ -216,7 +216,7 @@ function openHWGrade(uid,sid){
   document.getElementById('hw-grade-status').value=sub.gradeStatus||'Graded';
   document.getElementById('hw-grade-feedback').value=sub.feedback||'';
   document.getElementById('hw-grade-preview').innerHTML=
-    `<strong>${mdata.name||uid}</strong> &nbsp;·&nbsp; ${session?'Session '+session.id+' — '+session.topic:'Session '+sid}<br>`+
+    `<strong>${mdata.name||uid}</strong> &nbsp;Â·&nbsp; ${session?'Session '+session.id+' â€” '+session.topic:'Session '+sid}<br>`+
     `<span style="color:var(--t3);font-size:10px">Submitted: ${sub.submittedAt||'unknown'}</span><br>`+
     `<a href="${sub.link||''}" target="_blank" style="font-size:11px;color:var(--cr2);word-break:break-all">${sub.link||'(no link)'}</a>`+
     (sub.note?`<div style="margin-top:4px;font-size:10px;color:var(--t2)">Note: ${sub.note}</div>`:'');
@@ -263,7 +263,7 @@ function renderHWAssignments(){
       <div style="width:32px;height:32px;border-radius:6px;background:var(--cr);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0">S${a.session||'?'}</div>
       <div style="flex:1;min-width:0">
         <div style="font-size:12px;font-weight:600;color:var(--t1)">${a.title}</div>
-        <div style="font-size:10px;color:var(--t3);margin-top:2px">Due: ${a.due||'—'} &nbsp;·&nbsp; Session ${a.session||'—'}</div>
+        <div style="font-size:10px;color:var(--t3);margin-top:2px">Due: ${a.due||'â€”'} &nbsp;Â·&nbsp; Session ${a.session||'â€”'}</div>
         ${a.desc?`<div style="font-size:11px;color:var(--t2);margin-top:5px;line-height:1.5">${a.desc}</div>`:''}
       </div>
       <button onclick="deleteHWAssignment(${i})" style="background:none;border:none;color:#E57373;cursor:pointer;font-size:13px;padding:0 4px;flex-shrink:0">&times;</button>
@@ -293,7 +293,7 @@ function deleteHWAssignment(i){
   saveHWAssignments();
   renderHWAssignments();
 }
-// ────────────────────────────────────────────────────────────────────────────
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 function _enterEBOD(){
   currentApp='ebod';
@@ -311,7 +311,7 @@ function loginEBOD(){
   const pass=document.getElementById('land-ebod-pass').value.trim();
   const err=document.getElementById('land-ebod-err');
   if(!email||!pass){err.textContent='Please enter your email and password.';return;}
-  err.textContent='Signing in…';
+  err.textContent='Signing inâ€¦';
   firebase.auth().signInWithEmailAndPassword(email,pass)
     .then(()=>{err.textContent='';_enterEBOD();})
     .catch(e=>{
@@ -327,13 +327,11 @@ function logoutEBOD(){
     document.getElementById('landing').style.display='flex';
   });
 }
-// Auto-restore session on page refresh — check which portal was last used
+// Auto-restore session on page refresh â€” check which portal was last used
 firebase.auth().onAuthStateChanged(user=>{
   if(user&&currentApp!=='ebod'&&currentApp!=='im'){
     const last=localStorage.getItem('_lastPortal');
-    if(last==='ebod'){
-      _enterEBOD();
-    } else if(last==='im'){
+    if(last==='im'){
       syncFromEBOD();
       const match=ebodMembers.find(m=>m.email&&m.email.toLowerCase()===user.email.toLowerCase());
       selectedMember=match
@@ -354,7 +352,7 @@ function findEBODMember(name){
   const q=name.toLowerCase().trim();
   return ebodMembers.find(m=>(m.first+' '+m.last).toLowerCase().trim()===q);
 }
-// ── BULK ADD MEMBERS (Refund Tab) ─────────────────────────────────────────
+// â”€â”€ BULK ADD MEMBERS (Refund Tab) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function openBulkAddModal(){
   const id=document.getElementById('ec-select').value;
   if(!id){alert('Select an event first.');return;}
@@ -432,7 +430,7 @@ function deleteEventCost(){
   renderEcSelect();loadEventCost('');saveData();
 }
 
-// ── IMPORT FROM SHEETS (Paste / URL / Excel / CSV) ────────────────────────
+// â”€â”€ IMPORT FROM SHEETS (Paste / URL / Excel / CSV) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 let _importCtx='';let _importRows=[];
 const _IMP_LABELS={
   members:'Member Roster',exec:'Executive Board',mentors:'Mentor Pairs',
@@ -486,10 +484,10 @@ function _parseTextToRows(text){
 function _getField(row,...aliases){
   for(const a of aliases){if(row[a]!==undefined&&row[a]!=='')return row[a];}return'';
 }
-// Smarter column lookup: exact → suffix/prefix → substring contains
+// Smarter column lookup: exact â†’ suffix/prefix â†’ substring contains
 // Rule: the ROW KEY is the compound form (e.g. "studentname" for alias "name")
 //       OR the ALIAS is the compound form (e.g. alias "studentname" for key "student")
-//       NEVER: alias-ends-with-key — that causes "firstname" to match a "name" column
+//       NEVER: alias-ends-with-key â€” that causes "firstname" to match a "name" column
 function _impCol(row,...aliases){
   const exact=col(row,...aliases);
   if(exact!=='')return exact;
@@ -514,11 +512,11 @@ function _showImportPreview(rows){
   _importRows=rows;
   const pv=document.getElementById('imp-preview');if(pv)pv.style.display='';
   const info=document.getElementById('imp-preview-info');
-  if(info)info.textContent='✓ '+rows.length+' row'+(rows.length===1?'':'s')+' ready to import';
+  if(info)info.textContent='âœ“ '+rows.length+' row'+(rows.length===1?'':'s')+' ready to import';
   const cols=document.getElementById('imp-preview-cols');
   if(cols&&rows.length){
     const keys=Object.keys(rows[0]);
-    cols.textContent='Columns found ('+keys.length+'): '+keys.join(' · ');
+    cols.textContent='Columns found ('+keys.length+'): '+keys.join(' Â· ');
   }
   const eb=document.getElementById('imp-execute-btn');if(eb)eb.style.display='';
 }
@@ -544,30 +542,30 @@ async function _proxyFetch(targetUrl){
       if(t&&t.trim()&&!t.includes('"error"'))return t;
     }catch(e){/* try next */}
   }
-  throw new Error('All proxies failed — make sure the sheet is shared as "Anyone with the link can view"');
+  throw new Error('All proxies failed â€” make sure the sheet is shared as "Anyone with the link can view"');
 }
 async function fetchSheetsUrl(){
   const raw=(document.getElementById('imp-url-input').value||'').trim();
   const status=document.getElementById('imp-url-status');
-  status.textContent='Fetching…';
+  status.textContent='Fetchingâ€¦';
   try{
     const idMatch=raw.match(/\/spreadsheets\/d\/([a-zA-Z0-9_-]+)/);
-    if(!idMatch)throw new Error('Not a valid Google Sheets URL — paste the link from File → Share');
+    if(!idMatch)throw new Error('Not a valid Google Sheets URL â€” paste the link from File â†’ Share');
     const gidMatch=raw.match(/[#&?]gid=(\d+)/);
     const exportUrl='https://docs.google.com/spreadsheets/d/'+idMatch[1]+'/export?format=csv'+(gidMatch?'&gid='+gidMatch[1]:'');
     const text=await _proxyFetch(exportUrl);
     const rows=_parseTextToRows(text);
-    if(!rows.length)throw new Error('Sheet fetched but no data rows found — does the sheet have a header row?');
-    status.textContent='✓ '+rows.length+' rows fetched';
+    if(!rows.length)throw new Error('Sheet fetched but no data rows found â€” does the sheet have a header row?');
+    status.textContent='âœ“ '+rows.length+' rows fetched';
     _showImportPreview(rows);
-  }catch(err){status.textContent='✗ '+err.message;}
+  }catch(err){status.textContent='âœ— '+err.message;}
 }
 function readExcelFile(){
   const file=(document.getElementById('imp-excel-file').files||[])[0];
   if(!file){alert('Select a file first.');return;}
   const status=document.getElementById('imp-excel-status');
   if(typeof XLSX==='undefined'){
-    status.textContent='Loading library…';
+    status.textContent='Loading libraryâ€¦';
     const s=document.createElement('script');
     s.src='https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js';
     s.onload=()=>{status.textContent='';readExcelFile();};
@@ -586,7 +584,7 @@ function readExcelFile(){
         Object.entries(r).forEach(([k,v])=>norm[_normalizeKey(k)]=String(v).trim());
         return norm;
       });
-      status.textContent='✓ Read '+rows.length+' rows from "'+wb.SheetNames[0]+'"';
+      status.textContent='âœ“ Read '+rows.length+' rows from "'+wb.SheetNames[0]+'"';
       _showImportPreview(rows);
     }catch(err){alert('Could not read file: '+err.message);}
   };
@@ -601,16 +599,16 @@ function readCsvFile(){
     try{
       const rows=parseCsv(ev.target.result);
       if(!rows.length){alert('No data found in the file.');return;}
-      status.textContent='✓ '+rows.length+' rows read';
+      status.textContent='âœ“ '+rows.length+' rows read';
       _showImportPreview(rows);
-    }catch(err){status.textContent='✗ '+err.message;}
+    }catch(err){status.textContent='âœ— '+err.message;}
   };
   reader.readAsText(file);
 }
 function executeImportData(){
   if(!_importRows.length){alert('No data loaded yet.');return;}
   const t=_importCtx;
-  if(!t){alert('Import context lost — close and reopen the modal.');return;}
+  if(!t){alert('Import context lost â€” close and reopen the modal.');return;}
   let added=0;
   const r=_importRows;
   const c=_impCol;
@@ -639,15 +637,15 @@ if(first&&first.includes(' ')&&!last){last=first.split(' ').slice(1).join(' ');f
   }
   if(!added){
     const detectedCols=_importRows.length?Object.keys(_importRows[0]).join(', '):'none';
-    alert('⚠️ 0 rows were imported.\n\nColumns detected in your data:\n'+detectedCols+'\n\nTip: Make sure your sheet has a header row with column names the app can recognize (e.g. Name, Email, Phone, Paid).');
+    alert('âš ï¸ 0 rows were imported.\n\nColumns detected in your data:\n'+detectedCols+'\n\nTip: Make sure your sheet has a header row with column names the app can recognize (e.g. Name, Email, Phone, Paid).');
     return; // keep modal open so they can try again
   }
   renderDashboard();saveData();
   closeModals();
-  alert('✓ Imported '+added+' row'+(added!==1?'s':'')+' into '+(_IMP_LABELS[t]||t)+'.');
+  alert('âœ“ Imported '+added+' row'+(added!==1?'s':'')+' into '+(_IMP_LABELS[t]||t)+'.');
 }
 
-// ── MERCH SALES ──────────────────────────────────────────────────────────
+// â”€â”€ MERCH SALES â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function renderMerch(){
   const totalRev=merchSales.reduce((s,m)=>s+m.price*m.qty,0);
   const totalQty=merchSales.reduce((s,m)=>s+m.qty,0);
@@ -657,11 +655,11 @@ function renderMerch(){
     {l:'Total Revenue',v:'$'+totalRev.toFixed(2),s:'All items'},
     {l:'Units Sold',v:totalQty,s:'Across all items'},
     {l:'Items Listed',v:merchSales.length,s:'SKUs'},
-    {l:'Top Item',v:top?top.item:'—',s:top?'$'+(top.price*top.qty).toFixed(2)+' revenue':''},
+    {l:'Top Item',v:top?top.item:'â€”',s:top?'$'+(top.price*top.qty).toFixed(2)+' revenue':''},
   ].map(s=>`<div class="sc"><div class="sl">${s.l}</div><div class="sv">${s.v}</div><div class="sm">${s.s}</div></div>`).join('');
   const t=document.getElementById('merch-table');if(!t)return;
   if(!merchSales.length){t.innerHTML=`<tr><td colspan="6" style="font-size:11px;color:var(--t4);padding:12px">No merch items yet. Click + Add Item to start.</td></tr>`;return;}
-  t.innerHTML=merchSales.map(m=>`<tr class="cr" onclick="openMerchDetail(${m.id})"><td class="nm">${m.item}</td><td>$${parseFloat(m.price).toFixed(2)}</td><td>${m.qty}</td><td style="color:var(--gold2);font-weight:600">$${(m.price*m.qty).toFixed(2)}</td><td style="color:var(--t3);font-size:10px">${m.notes||'—'}</td><td><button class="rb" onclick="event.stopPropagation();merchSales=merchSales.filter(x=>x.id!==${m.id});renderMerch()">&times;</button></td></tr>`).join('');
+  t.innerHTML=merchSales.map(m=>`<tr class="cr" onclick="openMerchDetail(${m.id})"><td class="nm">${m.item}</td><td>$${parseFloat(m.price).toFixed(2)}</td><td>${m.qty}</td><td style="color:var(--gold2);font-weight:600">$${(m.price*m.qty).toFixed(2)}</td><td style="color:var(--t3);font-size:10px">${m.notes||'â€”'}</td><td><button class="rb" onclick="event.stopPropagation();merchSales=merchSales.filter(x=>x.id!==${m.id});renderMerch()">&times;</button></td></tr>`).join('');
 }
 function addMerchItem(){
   merchSales.push({id:nMerch++,item:'New Item',price:0,qty:0,notes:''});
@@ -686,7 +684,7 @@ function exportMerchCSV(){
   const a=document.createElement('a');a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(csv);a.download='merch-sales.csv';a.click();
 }
 
-// ── FINANCE PORTAL BUDGET ─────────────────────────────────────────────────
+// â”€â”€ FINANCE PORTAL BUDGET â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function saveBudgetTarget(val){
   budgetTarget=parseFloat(val)||0;
   localStorage.setItem('dapbl_budget_target',budgetTarget);
@@ -808,7 +806,7 @@ function openPblTransactionDetail(id,type){
   const t=pblTransactions[type].find(x=>x.id===id);if(!t)return;
   const incCats=['Sponsorship','Dues','Event','Fundraiser','Grant','Other'];
   const expCats=['Travel','Competition','Education','Events','Marketing','Design','Operations','Admin','Other'];
-  openDetail(t.desc,'PBL Bank — '+(type==='income'?'Income':'Expense'),
+  openDetail(t.desc,'PBL Bank â€” '+(type==='income'?'Income':'Expense'),
     fld('Description',inp('ed-ptrdesc',t.desc))+
     row2(fld('Category',sel('ed-ptrcat',type==='income'?incCats:expCats,t.cat)),fld('Date',inp('ed-ptrdate',t.date)))+
     fld('Amount ($)',inp('ed-ptramt',t.amount,'number'))+
@@ -832,7 +830,7 @@ function exportFinBudgetCSV(){
   const a=document.createElement('a');a.href='data:text/csv;charset=utf-8,'+encodeURIComponent(csv);a.download='personal-budget.csv';a.click();
 }
 
-// ── GOOGLE CALENDAR iCAL IMPORT ────────────────────────────────────────────
+// â”€â”€ GOOGLE CALENDAR iCAL IMPORT â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 async function importIcal(){
   const url=document.getElementById('ical-url').value.trim();
   if(!url){alert('Please paste an iCal URL first.');return;}
@@ -870,7 +868,7 @@ function parseIcalText(text){
   importedCalEvents=events;
   renderCalendar();
   const status=document.getElementById('ical-status');
-  if(status)status.textContent='✓ '+events.length+' events imported';
+  if(status)status.textContent='âœ“ '+events.length+' events imported';
   saveData();
 }
 function clearImportedCal(){
@@ -884,7 +882,7 @@ function clearImportedCal(){
 // loginIM() is now defined in the IM AUTH section above (Firebase Auth)
 
 // ============================================================
-// ── IM REIMBURSEMENTS ────────────────────────────────────────
+// â”€â”€ IM REIMBURSEMENTS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 // ============================================================
 function submitImReimb(){
   const uid=firebase.auth().currentUser?.uid;
@@ -896,14 +894,14 @@ function submitImReimb(){
   const notes=(document.getElementById('imr-notes')||{}).value?.trim()||'';
   if(!item){if(errEl){errEl.style.color='#E57373';errEl.textContent='Item description is required.';}return;}
   if(!amount){if(errEl){errEl.style.color='#E57373';errEl.textContent='Amount is required.';}return;}
-  if(errEl)errEl.textContent='Submitting…';
+  if(errEl)errEl.textContent='Submittingâ€¦';
   _db.collection('im-reimbursements').add({
     uid,memberName:selectedMember?.name||'',memberEmail:selectedMember?.email||'',
     item,amount,receipt,notes,
     submittedAt:new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}),
     status:'Pending'
   }).then(()=>{
-    if(errEl){errEl.style.color='var(--grn)';errEl.textContent='✓ Request submitted!';}
+    if(errEl){errEl.style.color='var(--grn)';errEl.textContent='âœ“ Request submitted!';}
     ['imr-item','imr-amount','imr-receipt','imr-notes'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
     setTimeout(()=>{if(errEl){errEl.textContent='';errEl.style.color='#E57373';}},3000);
   }).catch(e=>{if(errEl){errEl.style.color='#E57373';errEl.textContent='Error: '+e.message;}});
@@ -918,9 +916,9 @@ function renderIMMyReimbs(){
     const sc=r.status==='Approved'||r.status==='Reimbursed'?'bg':r.status==='Denied'?'br':'bo';
     return`<div style="display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--bd)">
       <div style="flex:1"><div style="font-size:12px;font-weight:600">${r.item}</div>
-      <div style="font-size:10px;color:var(--t3);margin-top:2px">$${(r.amount||0).toFixed(2)} &nbsp;·&nbsp; ${r.submittedAt||'—'}</div>
+      <div style="font-size:10px;color:var(--t3);margin-top:2px">$${(r.amount||0).toFixed(2)} &nbsp;Â·&nbsp; ${r.submittedAt||'â€”'}</div>
       ${r.notes?`<div style="font-size:10px;color:var(--t4);margin-top:2px">${r.notes}</div>`:''}</div>
-      ${r.receipt?`<a href="${r.receipt}" target="_blank" style="font-size:10px;color:var(--grn);font-weight:600;flex-shrink:0">Receipt ↗</a>`:''}
+      ${r.receipt?`<a href="${r.receipt}" target="_blank" style="font-size:10px;color:var(--grn);font-weight:600;flex-shrink:0">Receipt â†—</a>`:''}
       <span class="badge ${sc}" style="flex-shrink:0">${r.status}</span></div>`;
   }).join('');
 }
@@ -934,9 +932,9 @@ function renderEBODImReimbs(){
   el.innerHTML=`<table><thead><tr><th>Member</th><th>Item</th><th>Amount</th><th>Submitted</th><th>Receipt</th><th>Status</th><th></th></tr></thead><tbody>${
     _imReimbs.map(r=>{
       const sc=r.status==='Approved'||r.status==='Reimbursed'?'bg':r.status==='Denied'?'br':'bo';
-      return`<tr><td class="nm">${r.memberName||r.memberEmail||'—'}</td><td>${r.item}</td><td>$${(r.amount||0).toFixed(2)}</td>
-      <td style="font-size:10px;color:var(--t3)">${r.submittedAt||'—'}</td>
-      <td>${r.receipt?`<a href="${r.receipt}" target="_blank" style="font-size:10px;color:var(--grn);font-weight:600">View ↗</a>`:'<span style="color:var(--t4);font-size:10px">None</span>'}</td>
+      return`<tr><td class="nm">${r.memberName||r.memberEmail||'â€”'}</td><td>${r.item}</td><td>$${(r.amount||0).toFixed(2)}</td>
+      <td style="font-size:10px;color:var(--t3)">${r.submittedAt||'â€”'}</td>
+      <td>${r.receipt?`<a href="${r.receipt}" target="_blank" style="font-size:10px;color:var(--grn);font-weight:600">View â†—</a>`:'<span style="color:var(--t4);font-size:10px">None</span>'}</td>
       <td><span class="badge ${sc}">${r.status}</span></td>
       <td style="white-space:nowrap">${r.status==='Pending'
         ?`<button onclick="updateImReimb('${r._id}','Approved')" style="font-size:9px;padding:3px 7px;background:var(--grn);color:#fff;border:none;border-radius:4px;cursor:pointer;margin-right:3px">Approve</button><button onclick="updateImReimb('${r._id}','Denied')" style="font-size:9px;padding:3px 7px;background:#E57373;color:#fff;border:none;border-radius:4px;cursor:pointer">Deny</button>`
@@ -951,7 +949,7 @@ function updateImReimb(id,status){
 }
 
 // ============================================================
-// ── OFFICE HOURS ─────────────────────────────────────────────
+// â”€â”€ OFFICE HOURS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 // ============================================================
 let _ohSlots=JSON.parse(localStorage.getItem('pbl_ohslots')||'[]');
 function saveOHSlots(){localStorage.setItem('pbl_ohslots',JSON.stringify(_ohSlots));if(typeof saveData==='function')saveData();}
@@ -967,11 +965,11 @@ function renderOHSlots(){
     <div class="ime-ed-item">
       <div style="flex:1;min-width:0">
         <div class="ime-ed-title">${s.officer} <span class="badge ${s.available?'bg':'br'}" style="font-size:9px;cursor:pointer" onclick="toggleOHSlot(${i})">${s.available?'Open':'Closed'}</span></div>
-        <div class="ime-ed-sub">${s.day} &nbsp;·&nbsp; ${s.time}${s.note?' &nbsp;·&nbsp; '+s.note:''}</div>
+        <div class="ime-ed-sub">${s.day} &nbsp;Â·&nbsp; ${s.time}${s.note?' &nbsp;Â·&nbsp; '+s.note:''}</div>
       </div>
       <div style="display:flex;gap:5px">
         <button class="btn btn-g btn-sm" onclick="editOHSlot(${i})">Edit</button>
-        <button class="btn btn-g btn-sm" style="color:var(--cr)" onclick="deleteOHSlot(${i})">✕</button>
+        <button class="btn btn-g btn-sm" style="color:var(--cr)" onclick="deleteOHSlot(${i})">âœ•</button>
       </div>
     </div>`).join('');
 }
@@ -1009,14 +1007,14 @@ function renderIMConsulting(){
   const slots=JSON.parse(localStorage.getItem('pbl_ohslots')||'[]');
   const openSlots=slots.filter(s=>s.available);
 
-  // ── Slots view (when EBOD has set availability) ─────────────
+  // â”€â”€ Slots view (when EBOD has set availability) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   const slotsHtml=openSlots.length
     ?openSlots.map((s,i)=>{
       const alreadyBooked=myReqs.some(r=>r.slotId===s.id&&r.status!=='Denied');
       return`<div style="display:flex;align-items:center;gap:12px;padding:11px 16px;border-bottom:1px solid var(--bd)">
         <div style="flex:1;min-width:0">
           <div style="font-size:12px;font-weight:600;color:var(--t1)">${s.officer}</div>
-          <div style="font-size:10px;color:var(--t3);margin-top:2px">${s.day} &nbsp;·&nbsp; ${s.time}</div>
+          <div style="font-size:10px;color:var(--t3);margin-top:2px">${s.day} &nbsp;Â·&nbsp; ${s.time}</div>
           ${s.note?`<div style="font-size:10px;color:var(--t2);margin-top:1px">${s.note}</div>`:''}
         </div>
         ${alreadyBooked
@@ -1024,14 +1022,14 @@ function renderIMConsulting(){
           :`<button onclick="bookOHSlot(${s.id})" style="padding:6px 14px;background:var(--cr);color:#fff;border:none;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;white-space:nowrap">Book</button>`}
       </div>`;
     }).join('')
-    :'<div style="padding:14px 16px;font-size:11px;color:var(--t4)">No open slots right now — check back soon.</div>';
+    :'<div style="padding:14px 16px;font-size:11px;color:var(--t4)">No open slots right now â€” check back soon.</div>';
 
-  // ── Fallback free-form (no slots set by EBOD) ───────────────
+  // â”€â”€ Fallback free-form (no slots set by EBOD) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   const freeformHtml=`<div style="padding:0 4px">
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
       <div><div style="font-size:10px;color:var(--t3);margin-bottom:4px">Exec Officer</div>
         <select id="oh-exec" style="width:100%;box-sizing:border-box;padding:7px 10px;border:1px solid var(--bd);border-radius:6px;background:var(--s2);color:var(--t1);font-size:11px;outline:none">
-          ${mExecTeam.map(e=>`<option value="${e.name}">${e.name} — ${e.position}</option>`).join('')}
+          ${mExecTeam.map(e=>`<option value="${e.name}">${e.name} â€” ${e.position}</option>`).join('')}
         </select></div>
       <div><div style="font-size:10px;color:var(--t3);margin-bottom:4px">Topic *</div>
         <input id="oh-topic" type="text" placeholder="e.g. NLC competition prep" style="width:100%;box-sizing:border-box;padding:7px 10px;border:1px solid var(--bd);border-radius:6px;background:var(--s2);color:var(--t1);font-size:11px;outline:none"></div>
@@ -1042,14 +1040,14 @@ function renderIMConsulting(){
     <button onclick="submitOfficeHour()" style="padding:7px 16px;background:var(--cr);color:#fff;border:none;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer">Request Session</button>
   </div>`;
 
-  // ── My past requests ────────────────────────────────────────
+  // â”€â”€ My past requests â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   const myReqsHtml=myReqs.length?`<div style="margin-top:16px;padding-top:14px;border-top:1px solid var(--bd)">
     <div style="font-size:10px;font-weight:600;color:var(--t3);letter-spacing:1px;text-transform:uppercase;margin-bottom:8px">My Requests</div>
     ${myReqs.map(r=>{
       const sc=r.status==='Confirmed'?'bg':r.status==='Denied'?'br':'bo';
       return`<div style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid var(--bd)">
         <div style="flex:1"><div style="font-size:11px;font-weight:600">${r.exec}</div>
-        <div style="font-size:10px;color:var(--t3)">${r.topic} · ${r.submittedAt}</div>
+        <div style="font-size:10px;color:var(--t3)">${r.topic} Â· ${r.submittedAt}</div>
         ${r.preferredTime?`<div style="font-size:10px;color:var(--t4)">${r.preferredTime}</div>`:''}</div>
         <span class="badge ${sc}">${r.status}</span></div>`;
     }).join('')}
@@ -1065,7 +1063,7 @@ function bookOHSlot(slotId){
   if(!window._db)return;
   _db.collection('office-hours').add({
     uid,memberName:selectedMember?.name||'',memberEmail:selectedMember?.email||'',
-    exec:slot.officer,topic:slot.day+' · '+slot.time+(slot.note?' — '+slot.note:''),
+    exec:slot.officer,topic:slot.day+' Â· '+slot.time+(slot.note?' â€” '+slot.note:''),
     preferredTime:slot.day+' '+slot.time,slotId,
     submittedAt:new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}),
     status:'Pending'
@@ -1080,14 +1078,14 @@ function submitOfficeHour(){
   const topic=(document.getElementById('oh-topic')||{}).value?.trim()||'';
   const time=(document.getElementById('oh-time')||{}).value?.trim()||'';
   if(!topic){if(errEl){errEl.style.color='#E57373';errEl.textContent='Please describe the topic.';}return;}
-  if(errEl)errEl.textContent='Submitting…';
+  if(errEl)errEl.textContent='Submittingâ€¦';
   _db.collection('office-hours').add({
     uid,memberName:selectedMember?.name||'',memberEmail:selectedMember?.email||'',
     exec,topic,preferredTime:time,
     submittedAt:new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}),
     status:'Pending'
   }).then(()=>{
-    if(errEl){errEl.style.color='var(--grn)';errEl.textContent='✓ Request sent!';}
+    if(errEl){errEl.style.color='var(--grn)';errEl.textContent='âœ“ Request sent!';}
     const t=document.getElementById('oh-topic');if(t)t.value='';
     const ti=document.getElementById('oh-time');if(ti)ti.value='';
     setTimeout(()=>{if(errEl){errEl.textContent='';errEl.style.color='#E57373';}},3000);
@@ -1103,9 +1101,9 @@ function renderEBODOfficeHours(){
   el.innerHTML=`<table><thead><tr><th>Member</th><th>Exec</th><th>Topic</th><th>Preferred Time</th><th>Submitted</th><th>Status</th><th></th></tr></thead><tbody>${
     _officeHourReqs.map(r=>{
       const sc=r.status==='Confirmed'?'bg':r.status==='Denied'?'br':'bo';
-      return`<tr><td class="nm">${r.memberName||r.memberEmail||'—'}</td><td>${r.exec}</td><td>${r.topic}</td>
-      <td style="font-size:10px;color:var(--t3)">${r.preferredTime||'—'}</td>
-      <td style="font-size:10px;color:var(--t3)">${r.submittedAt||'—'}</td>
+      return`<tr><td class="nm">${r.memberName||r.memberEmail||'â€”'}</td><td>${r.exec}</td><td>${r.topic}</td>
+      <td style="font-size:10px;color:var(--t3)">${r.preferredTime||'â€”'}</td>
+      <td style="font-size:10px;color:var(--t3)">${r.submittedAt||'â€”'}</td>
       <td><span class="badge ${sc}">${r.status}</span></td>
       <td style="white-space:nowrap">${r.status==='Pending'
         ?`<button onclick="updateOfficeHour('${r._id}','Confirmed')" style="font-size:9px;padding:3px 7px;background:var(--grn);color:#fff;border:none;border-radius:4px;cursor:pointer;margin-right:3px">Confirm</button><button onclick="updateOfficeHour('${r._id}','Denied')" style="font-size:9px;padding:3px 7px;background:#E57373;color:#fff;border:none;border-radius:4px;cursor:pointer">Deny</button>`
@@ -1120,7 +1118,7 @@ function updateOfficeHour(id,status){
 }
 
 // ============================================================
-// ── COMPETITION SIGN-UPS ─────────────────────────────────────
+// â”€â”€ COMPETITION SIGN-UPS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 // ============================================================
 function toggleSignup(eventId){
   const uid=firebase.auth().currentUser?.uid;
@@ -1136,7 +1134,7 @@ function toggleSignup(eventId){
 }
 
 // ============================================================
-// ── MENTOR CHECK-INS ─────────────────────────────────────────
+// â”€â”€ MENTOR CHECK-INS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 // ============================================================
 function renderIMMyMentorship(){
   const el=document.getElementById('im-mentor-content');if(!el)return;
@@ -1160,7 +1158,7 @@ function renderIMMyMentorship(){
     html+=`<div class="card" style="margin-bottom:14px">
       <div class="ch"><div class="ct">My Mentees</div><span class="badge bb">${myMentees.length}</span></div>
       ${myMentees.map(p=>{
-        const pairKey=p.mentor+'→'+p.mentee;
+        const pairKey=p.mentor+'â†’'+p.mentee;
         const ci=_mentorCheckins[pairKey]||0;
         return`<div style="display:flex;align-items:center;gap:10px;padding:11px 0;border-bottom:1px solid var(--bd)">
           <div style="width:34px;height:34px;border-radius:50%;background:var(--cr3);color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0">${p.mentee.slice(0,2).toUpperCase()}</div>
@@ -1173,7 +1171,7 @@ function renderIMMyMentorship(){
     <div class="card"><div class="ch"><div class="ct">Recent Check-ins</div></div><div id="im-checkin-log"></div></div>`;
   }
   if(!myMentor&&!myMentees.length){
-    html='<div class="card"><div style="padding:20px;text-align:center"><div style="font-size:24px;margin-bottom:8px">👥</div><div style="font-size:13px;font-weight:600;margin-bottom:4px">Not in mentorship program</div><div style="font-size:11px;color:var(--t3)">Talk to your VP of Club Affairs to get matched with a mentor.</div></div></div>';
+    html='<div class="card"><div style="padding:20px;text-align:center"><div style="font-size:24px;margin-bottom:8px">ðŸ‘¥</div><div style="font-size:13px;font-weight:600;margin-bottom:4px">Not in mentorship program</div><div style="font-size:11px;color:var(--t3)">Talk to your VP of Club Affairs to get matched with a mentor.</div></div></div>';
   }
   el.innerHTML=html;
   renderIMCheckinLog();
@@ -1184,8 +1182,8 @@ function renderIMCheckinLog(){
   const logs=_mentorCheckinsList.filter(c=>c.mentorName===fullName||c.menteeName===fullName).slice(0,10);
   if(!logs.length){el.innerHTML='<div style="font-size:11px;color:var(--t4);padding:10px 0">No check-ins logged yet.</div>';return;}
   el.innerHTML=logs.map(c=>`<div style="padding:9px 0;border-bottom:1px solid var(--bd)">
-    <div style="font-size:11px;font-weight:600">${c.mentorName} → ${c.menteeName}</div>
-    <div style="font-size:10px;color:var(--t3);margin-top:2px">${c.date||'—'}${c.notes?' · '+c.notes:''}</div>
+    <div style="font-size:11px;font-weight:600">${c.mentorName} â†’ ${c.menteeName}</div>
+    <div style="font-size:10px;color:var(--t3);margin-top:2px">${c.date||'â€”'}${c.notes?' Â· '+c.notes:''}</div>
   </div>`).join('');
 }
 function logCheckin(mentorName,menteeName,btn){
@@ -1193,8 +1191,8 @@ function logCheckin(mentorName,menteeName,btn){
   if(!uid){showSignIn();return;}
   const notes=prompt('Add a note for this check-in (optional):')||'';
   const date=new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'});
-  const pairKey=mentorName+'→'+menteeName;
-  if(btn){btn.textContent='Saving…';btn.disabled=true;}
+  const pairKey=mentorName+'â†’'+menteeName;
+  if(btn){btn.textContent='Savingâ€¦';btn.disabled=true;}
   _db.collection('mentorCheckins').add({
     mentorName,menteeName,pairKey,date,notes,loggedBy:uid,loggedAt:Date.now()
   }).then(()=>{
@@ -1217,9 +1215,9 @@ function switchToLanding(){
 
 function saveRoleData(key,val){localStorage.setItem('pbl_'+key,JSON.stringify(val));}
 
-// ── HELPERS ──
+// â”€â”€ HELPERS â”€â”€
 function roleRow(cells,delFn){
-  return`<tr>${cells.map(c=>`<td>${c}</td>`).join('')}<td><button class="btn btn-g btn-sm" style="color:var(--cr)" onclick="${delFn}">✕</button></td></tr>`;
+  return`<tr>${cells.map(c=>`<td>${c}</td>`).join('')}<td><button class="btn btn-g btn-sm" style="color:var(--cr)" onclick="${delFn}">âœ•</button></td></tr>`;
 }
 function statusBadge(s){
   const map={Pending:'var(--gold)',Active:'var(--blu)',Confirmed:'var(--grn)',Completed:'var(--grn)',Denied:'var(--cr)',Draft:'var(--t4)',Sent:'var(--grn)',Approved:'var(--grn)',Done:'var(--grn)','In Progress':'var(--blu)',Open:'var(--gold)',Resolved:'var(--grn)'};
@@ -1228,7 +1226,7 @@ function statusBadge(s){
 }
 function priorityBadge(p){const map={High:'var(--cr)',Medium:'var(--gold)',Low:'var(--grn)'};const c=map[p]||'var(--t3)';return`<span style="display:inline-block;padding:2px 8px;border-radius:10px;background:${c}22;color:${c};font-size:9.5px;font-weight:700">${p}</span>`;}
 
-// ── VP OF FINANCE: ROI ──
+// â”€â”€ VP OF FINANCE: ROI â”€â”€
 function calcROIPreview(){
   const rev=parseFloat(document.getElementById('roi-rev').value)||0;
   const exp=parseFloat(document.getElementById('roi-exp').value)||0;
@@ -1260,18 +1258,18 @@ function addROIEntry(){
 function renderROITable(){
   const t=document.getElementById('roi-table');
   if(!t)return;
-  if(!_roiEntries.length){t.innerHTML='<tr><td colspan="8" style="text-align:center;color:var(--t4);padding:20px;font-size:11px">No ROI entries yet — add your first event above.</td></tr>';return;}
+  if(!_roiEntries.length){t.innerHTML='<tr><td colspan="8" style="text-align:center;color:var(--t4);padding:20px;font-size:11px">No ROI entries yet â€” add your first event above.</td></tr>';return;}
   t.innerHTML=_roiEntries.map((e,i)=>{
     const net=e.rev-e.exp;
-    const roi=e.exp>0?((net/e.exp)*100).toFixed(1):'—';
-    const cpa=e.att>0?(e.exp/e.att).toFixed(2):'—';
-    const rating=parseFloat(roi)>=50?'🟢 Excellent':parseFloat(roi)>=0?'🟡 Positive':'🔴 Loss';
-    return roleRow([e.name,`$${e.rev.toFixed(2)}`,`$${e.exp.toFixed(2)}`,`<span style="color:${net>=0?'var(--grn)':'var(--cr)'}">${net>=0?'+':''}$${net.toFixed(2)}</span>`,roi==='—'?'—':roi+'%',cpa==='—'?'—':'$'+cpa,rating],`deleteROI(${i})`);
+    const roi=e.exp>0?((net/e.exp)*100).toFixed(1):'â€”';
+    const cpa=e.att>0?(e.exp/e.att).toFixed(2):'â€”';
+    const rating=parseFloat(roi)>=50?'ðŸŸ¢ Excellent':parseFloat(roi)>=0?'ðŸŸ¡ Positive':'ðŸ”´ Loss';
+    return roleRow([e.name,`$${e.rev.toFixed(2)}`,`$${e.exp.toFixed(2)}`,`<span style="color:${net>=0?'var(--grn)':'var(--cr)'}">${net>=0?'+':''}$${net.toFixed(2)}</span>`,roi==='â€”'?'â€”':roi+'%',cpa==='â€”'?'â€”':'$'+cpa,rating],`deleteROI(${i})`);
   }).join('');
 }
 function deleteROI(i){_roiEntries.splice(i,1);saveRoleData('roi',_roiEntries);renderROITable();}
 
-// ── ICC FORMS ──
+// â”€â”€ ICC FORMS â”€â”€
 function addICCForm(){openModal('iccform-modal');}
 function submitICCForm(){
   const type=document.getElementById('iccf-type').value;
@@ -1286,11 +1284,11 @@ function submitICCForm(){
 function renderICCForms(){
   const t=document.getElementById('icc-forms-table');if(!t)return;
   if(!_iccForms.length){t.innerHTML='<tr><td colspan="7" style="text-align:center;color:var(--t4);padding:20px;font-size:11px">No ICC forms logged yet.</td></tr>';return;}
-  t.innerHTML=_iccForms.map((f,i)=>roleRow([f.type,'$'+f.amount.toFixed(2),f.purpose,f.submitted,statusBadge(f.status),f.notes||'—'],`deleteICCForm(${i})`)).join('');
+  t.innerHTML=_iccForms.map((f,i)=>roleRow([f.type,'$'+f.amount.toFixed(2),f.purpose,f.submitted,statusBadge(f.status),f.notes||'â€”'],`deleteICCForm(${i})`)).join('');
 }
 function deleteICCForm(i){_iccForms.splice(i,1);saveRoleData('iccforms',_iccForms);renderICCForms();}
 
-// ── FINANCIAL REPORTS ──
+// â”€â”€ FINANCIAL REPORTS â”€â”€
 function addFinReport(){openModal('finreport-modal');}
 function submitFinReport(){
   const quarter=document.getElementById('fr-quarter').value.trim();if(!quarter)return;
@@ -1305,12 +1303,12 @@ function renderFinReports(){
   el.innerHTML=_finReports.map((r,i)=>`
     <div style="padding:12px 0;border-bottom:1px solid var(--bd);display:flex;justify-content:space-between;align-items:flex-start">
       <div><div style="font-size:12px;font-weight:700;color:var(--t1);margin-bottom:3px">${r.quarter}</div><div style="font-size:11px;color:var(--t3)">${r.summary||'No summary.'}</div><div style="font-size:10px;color:var(--t4);margin-top:3px">Created ${r.created}</div></div>
-      <button class="btn btn-g btn-sm" style="color:var(--cr);flex-shrink:0" onclick="deleteFinReport(${i})">✕</button>
+      <button class="btn btn-g btn-sm" style="color:var(--cr);flex-shrink:0" onclick="deleteFinReport(${i})">âœ•</button>
     </div>`).join('');
 }
 function deleteFinReport(i){_finReports.splice(i,1);saveRoleData('finreports',_finReports);renderFinReports();}
 
-// ── VP OF OPERATIONS: CONFERENCE LOGISTICS ──
+// â”€â”€ VP OF OPERATIONS: CONFERENCE LOGISTICS â”€â”€
 function addConfLogistic(){openModal('conflogistic-modal');}
 function submitConfLogistic(){
   const name=document.getElementById('cl-name').value.trim();if(!name)return;
@@ -1327,11 +1325,11 @@ function submitConfLogistic(){
 function renderConfLogistics(){
   const t=document.getElementById('conf-logistics-table');if(!t)return;
   if(!_confLogistics.length){t.innerHTML='<tr><td colspan="8" style="text-align:center;color:var(--t4);padding:20px;font-size:11px">No conferences logged yet.</td></tr>';return;}
-  t.innerHTML=_confLogistics.map((c,i)=>roleRow([c.name,c.date||'—',c.hotel||'—',c.catering||'—',c.transport||'—',statusBadge(c.regStatus),c.members||'—'],`deleteConfLogistic(${i})`)).join('');
+  t.innerHTML=_confLogistics.map((c,i)=>roleRow([c.name,c.date||'â€”',c.hotel||'â€”',c.catering||'â€”',c.transport||'â€”',statusBadge(c.regStatus),c.members||'â€”'],`deleteConfLogistic(${i})`)).join('');
 }
 function deleteConfLogistic(i){_confLogistics.splice(i,1);saveRoleData('conflogistics',_confLogistics);renderConfLogistics();}
 
-// ── KPI DASHBOARD ──
+// â”€â”€ KPI DASHBOARD â”€â”€
 function addKPIEntry(){openModal('kpi-modal');}
 function submitKPI(){
   const period=document.getElementById('kpi-period').value.trim();if(!period)return;
@@ -1357,11 +1355,11 @@ function renderKPIs(){
   }else if(statsRow){statsRow.innerHTML='';}
   const t=document.getElementById('kpi-table');if(!t)return;
   if(!_kpiEntries.length){t.innerHTML='<tr><td colspan="7" style="text-align:center;color:var(--t4);padding:20px;font-size:11px">No KPI entries yet.</td></tr>';return;}
-  t.innerHTML=_kpiEntries.map((k,i)=>roleRow([k.period,k.budEff+'%',k.attRate+'%',k.vendorScore+'/10',k.events,k.notes||'—'],`deleteKPI(${i})`)).join('');
+  t.innerHTML=_kpiEntries.map((k,i)=>roleRow([k.period,k.budEff+'%',k.attRate+'%',k.vendorScore+'/10',k.events,k.notes||'â€”'],`deleteKPI(${i})`)).join('');
 }
 function deleteKPI(i){_kpiEntries.splice(i,1);saveRoleData('kpis',_kpiEntries);renderKPIs();}
 
-// ── ICC EXCURSIONS ──
+// â”€â”€ ICC EXCURSIONS â”€â”€
 function addICCExcursion(){openModal('iccexcursion-modal');}
 function submitICCExcursion(){
   const trip=document.getElementById('iccex-trip').value.trim();if(!trip)return;
@@ -1378,11 +1376,11 @@ function submitICCExcursion(){
 function renderICCExcursions(){
   const t=document.getElementById('icc-excursions-table');if(!t)return;
   if(!_iccExcursions.length){t.innerHTML='<tr><td colspan="8" style="text-align:center;color:var(--t4);padding:20px;font-size:11px">No ICC excursions logged yet.</td></tr>';return;}
-  t.innerHTML=_iccExcursions.map((e,i)=>roleRow([e.trip,e.date||'—',e.dest||'—',e.mems||'—',statusBadge(e.form),statusBadge(e.approval),e.notes||'—'],`deleteICCExcursion(${i})`)).join('');
+  t.innerHTML=_iccExcursions.map((e,i)=>roleRow([e.trip,e.date||'â€”',e.dest||'â€”',e.mems||'â€”',statusBadge(e.form),statusBadge(e.approval),e.notes||'â€”'],`deleteICCExcursion(${i})`)).join('');
 }
 function deleteICCExcursion(i){_iccExcursions.splice(i,1);saveRoleData('iccexcursions',_iccExcursions);renderICCExcursions();}
 
-// ── VP OF STRATEGY: PRG ──
+// â”€â”€ VP OF STRATEGY: PRG â”€â”€
 function addPRGMember(){openModal('prgmember-modal');}
 function submitPRGMember(){
   const name=document.getElementById('prg-mname').value.trim();if(!name)return;
@@ -1407,18 +1405,18 @@ function renderPRG(){
   const rt=document.getElementById('prg-roster-table');
   if(rt){
     if(!_prgRoster.length){rt.innerHTML='<tr><td colspan="5" style="text-align:center;color:var(--t4);padding:16px;font-size:11px">No PRG members yet.</td></tr>';}
-    else rt.innerHTML=_prgRoster.map((m,i)=>roleRow([m.name,m.focus||'—',statusBadge(m.status),m.joined||'—'],`deletePRGMember(${i})`)).join('');
+    else rt.innerHTML=_prgRoster.map((m,i)=>roleRow([m.name,m.focus||'â€”',statusBadge(m.status),m.joined||'â€”'],`deletePRGMember(${i})`)).join('');
   }
   const it=document.getElementById('prg-initiatives-table');
   if(it){
     if(!_prgInitiatives.length){it.innerHTML='<tr><td colspan="5" style="text-align:center;color:var(--t4);padding:16px;font-size:11px">No initiatives yet.</td></tr>';}
-    else it.innerHTML=_prgInitiatives.map((p,i)=>roleRow([p.name,p.lead||'—',p.target||'—',statusBadge(p.status)],`deletePRGInitiative(${i})`)).join('');
+    else it.innerHTML=_prgInitiatives.map((p,i)=>roleRow([p.name,p.lead||'â€”',p.target||'â€”',statusBadge(p.status)],`deletePRGInitiative(${i})`)).join('');
   }
 }
 function deletePRGMember(i){_prgRoster.splice(i,1);saveRoleData('prg_roster',_prgRoster);renderPRG();}
 function deletePRGInitiative(i){_prgInitiatives.splice(i,1);saveRoleData('prg_initiatives',_prgInitiatives);renderPRG();}
 
-// ── ONBOARDING PIPELINE ──
+// â”€â”€ ONBOARDING PIPELINE â”€â”€
 function addOnboardee(){openModal('onboardee-modal');}
 function submitOnboardee(){
   const name=document.getElementById('ob-name').value.trim();if(!name)return;
@@ -1441,8 +1439,8 @@ function renderOnboarding(){
         <div style="font-size:11px;font-weight:600;color:var(--t1)">${p.name}</div>
         ${p.email?`<div style="font-size:10px;color:var(--t3)">${p.email}</div>`:''}
         <div style="display:flex;gap:4px;margin-top:6px;flex-wrap:wrap">
-          ${stage!=='Active'?`<button class="btn btn-p btn-sm" style="font-size:9px;padding:2px 6px" onclick="advanceOnboardee(${_onboardees.indexOf(p)})">→ Next</button>`:''}
-          <button class="btn btn-g btn-sm" style="color:var(--cr);font-size:9px;padding:2px 6px" onclick="deleteOnboardee(${_onboardees.indexOf(p)})">✕</button>
+          ${stage!=='Active'?`<button class="btn btn-p btn-sm" style="font-size:9px;padding:2px 6px" onclick="advanceOnboardee(${_onboardees.indexOf(p)})">â†’ Next</button>`:''}
+          <button class="btn btn-g btn-sm" style="color:var(--cr);font-size:9px;padding:2px 6px" onclick="deleteOnboardee(${_onboardees.indexOf(p)})">âœ•</button>
         </div>
       </div>`).join('');
   });
@@ -1454,7 +1452,7 @@ function advanceOnboardee(i){
 }
 function deleteOnboardee(i){_onboardees.splice(i,1);saveRoleData('onboardees',_onboardees);renderOnboarding();}
 
-// ── DEV GOALS ──
+// â”€â”€ DEV GOALS â”€â”€
 function addDevGoal(){openModal('devgoal-modal');}
 function submitDevGoal(){
   const member=document.getElementById('dg-member').value.trim();if(!member)return;
@@ -1472,12 +1470,12 @@ function renderDevGoals(){
   if(!_devGoals.length){t.innerHTML='<tr><td colspan="7" style="text-align:center;color:var(--t4);padding:20px;font-size:11px">No development goals yet.</td></tr>';return;}
   t.innerHTML=_devGoals.map((g,i)=>{
     const bar=`<div style="height:6px;background:var(--bd);border-radius:3px;width:80px;display:inline-block;vertical-align:middle"><div style="height:6px;background:var(--grn);border-radius:3px;width:${g.progress}%"></div></div> ${g.progress}%`;
-    return roleRow([g.member,g.goal,g.category,g.target||'—',bar,statusBadge(g.status)],`deleteDevGoal(${i})`);
+    return roleRow([g.member,g.goal,g.category,g.target||'â€”',bar,statusBadge(g.status)],`deleteDevGoal(${i})`);
   }).join('');
 }
 function deleteDevGoal(i){_devGoals.splice(i,1);saveRoleData('devgoals',_devGoals);renderDevGoals();}
 
-// ── VP OF MARKETING: CAMPAIGNS ──
+// â”€â”€ VP OF MARKETING: CAMPAIGNS â”€â”€
 function addCampaign(){openModal('campaign-modal');}
 function submitCampaign(){
   const name=document.getElementById('camp-name').value.trim();if(!name)return;
@@ -1495,26 +1493,26 @@ function submitCampaign(){
 function renderCampaigns(){
   const t=document.getElementById('campaigns-table');if(!t)return;
   if(!_campaigns.length){t.innerHTML='<tr><td colspan="9" style="text-align:center;color:var(--t4);padding:20px;font-size:11px">No campaigns yet.</td></tr>';return;}
-  t.innerHTML=_campaigns.map((c,i)=>roleRow([c.name,c.platforms||'—',c.goal||'—',c.start||'—',c.end||'—',c.reach.toLocaleString(),c.eng.toLocaleString(),statusBadge(c.status)],`deleteCampaign(${i})`)).join('');
+  t.innerHTML=_campaigns.map((c,i)=>roleRow([c.name,c.platforms||'â€”',c.goal||'â€”',c.start||'â€”',c.end||'â€”',c.reach.toLocaleString(),c.eng.toLocaleString(),statusBadge(c.status)],`deleteCampaign(${i})`)).join('');
 }
 function deleteCampaign(i){_campaigns.splice(i,1);saveRoleData('campaigns',_campaigns);renderCampaigns();}
 
-// ── ANALYTICS ──
+// â”€â”€ ANALYTICS â”€â”€
 function addAnalyticsEntry(){} // kept for backward compat
 function renderAnalytics(){_renderWebMetrics();_renderSocialMetrics();}
 function deleteAnalytics(){}
 
-// ── ANALYTICS: WEBSITE ────────────────────────────────────────────────────────
+// â”€â”€ ANALYTICS: WEBSITE â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 let _webMetrics=JSON.parse(localStorage.getItem('pbl_webmetrics')||'{}');
 function _renderWebMetrics(){
   const el=document.getElementById('web-metrics-display');if(!el)return;
   const m=_webMetrics;
   const updated=m.updated||'';
   if(!m.sessions&&!m.pageviews&&!m.bounceRate){
-    el.innerHTML=`<div style="padding:16px;text-align:center;color:var(--t4);font-size:11px">No data yet — click ✎ Update to enter your website stats.</div>`;return;
+    el.innerHTML=`<div style="padding:16px;text-align:center;color:var(--t4);font-size:11px">No data yet â€” click âœŽ Update to enter your website stats.</div>`;return;
   }
   const stat=(label,val,sub)=>`<div style="text-align:center;padding:12px 8px;background:var(--s2);border-radius:8px">
-    <div style="font-size:18px;font-weight:700;color:var(--t1)">${val||'—'}</div>
+    <div style="font-size:18px;font-weight:700;color:var(--t1)">${val||'â€”'}</div>
     <div style="font-size:10px;font-weight:600;color:var(--t2);margin-top:3px">${label}</div>
     ${sub?`<div style="font-size:9px;color:var(--t4);margin-top:2px">${sub}</div>`:''}
   </div>`;
@@ -1559,23 +1557,23 @@ function saveWebMetrics(btn){
   _renderWebMetrics();closeDetail();saved(btn);
 }
 
-// ── ANALYTICS: SOCIAL MEDIA ───────────────────────────────────────────────────
+// â”€â”€ ANALYTICS: SOCIAL MEDIA â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const _smPlatforms=[
-  {key:'instagram',label:'Instagram',icon:'📸'},
-  {key:'tiktok',label:'TikTok',icon:'🎵'},
-  {key:'linkedin',label:'LinkedIn',icon:'💼'},
-  {key:'facebook',label:'Facebook',icon:'👥'},
-  {key:'twitter',label:'Twitter / X',icon:'🐦'},
-  {key:'youtube',label:'YouTube',icon:'▶️'},
-  {key:'threads',label:'Threads',icon:'🧵'},
-  {key:'groupme',label:'GroupMe',icon:'💬'},
+  {key:'instagram',label:'Instagram',icon:'ðŸ“¸'},
+  {key:'tiktok',label:'TikTok',icon:'ðŸŽµ'},
+  {key:'linkedin',label:'LinkedIn',icon:'ðŸ’¼'},
+  {key:'facebook',label:'Facebook',icon:'ðŸ‘¥'},
+  {key:'twitter',label:'Twitter / X',icon:'ðŸ¦'},
+  {key:'youtube',label:'YouTube',icon:'â–¶ï¸'},
+  {key:'threads',label:'Threads',icon:'ðŸ§µ'},
+  {key:'groupme',label:'GroupMe',icon:'ðŸ’¬'},
 ];
 let _socialMetrics=JSON.parse(localStorage.getItem('pbl_socialmetrics')||'{}');
 function _renderSocialMetrics(){
   const el=document.getElementById('social-metrics-display');if(!el)return;
   const active=_smPlatforms.filter(p=>_socialMetrics[p.key]);
   if(!active.length){
-    el.innerHTML=`<div style="padding:16px;text-align:center;color:var(--t4);font-size:11px">No data yet — click ✎ Update to enter your social media stats.</div>`;return;
+    el.innerHTML=`<div style="padding:16px;text-align:center;color:var(--t4);font-size:11px">No data yet â€” click âœŽ Update to enter your social media stats.</div>`;return;
   }
   el.innerHTML=`<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px;margin-top:4px">`+
     active.map(p=>{
@@ -1632,7 +1630,7 @@ function saveSocialMetrics(btn){
   _renderSocialMetrics();closeDetail();saved(btn);
 }
 
-// ── OUTREACH LOG ──
+// â”€â”€ OUTREACH LOG â”€â”€
 function addOutreach(){openModal('outreach-modal');}
 function submitOutreach(){
   const name=document.getElementById('or-name').value.trim();if(!name)return;
@@ -1649,11 +1647,11 @@ function submitOutreach(){
 function renderOutreach(){
   const t=document.getElementById('outreach-table');if(!t)return;
   if(!_outreachLog.length){t.innerHTML='<tr><td colspan="8" style="text-align:center;color:var(--t4);padding:20px;font-size:11px">No outreach initiatives logged yet.</td></tr>';return;}
-  t.innerHTML=_outreachLog.map((o,i)=>roleRow([o.name,o.date||'—',o.location||'—',o.lead||'—',o.contacts,o.followup||'—',o.notes||'—'],`deleteOutreach(${i})`)).join('');
+  t.innerHTML=_outreachLog.map((o,i)=>roleRow([o.name,o.date||'â€”',o.location||'â€”',o.lead||'â€”',o.contacts,o.followup||'â€”',o.notes||'â€”'],`deleteOutreach(${i})`)).join('');
 }
 function deleteOutreach(i){_outreachLog.splice(i,1);saveRoleData('outreach',_outreachLog);renderOutreach();}
 
-// ── VP OF CLUB AFFAIRS: PARTNERSHIPS ──
+// â”€â”€ VP OF CLUB AFFAIRS: PARTNERSHIPS â”€â”€
 function addPartner(){openModal('partner-modal');}
 function submitPartner(){
   const name=document.getElementById('part-name').value.trim();if(!name)return;
@@ -1669,11 +1667,11 @@ function submitPartner(){
 function renderPartners(){
   const t=document.getElementById('partners-table');if(!t)return;
   if(!_partners.length){t.innerHTML='<tr><td colspan="7" style="text-align:center;color:var(--t4);padding:20px;font-size:11px">No partners logged yet.</td></tr>';return;}
-  t.innerHTML=_partners.map((p,i)=>roleRow([p.name,p.type||'—',p.contact||'—',p.since||'—',p.lastTouch||'—',p.notes||'—'],`deletePartner(${i})`)).join('');
+  t.innerHTML=_partners.map((p,i)=>roleRow([p.name,p.type||'â€”',p.contact||'â€”',p.since||'â€”',p.lastTouch||'â€”',p.notes||'â€”'],`deletePartner(${i})`)).join('');
 }
 function deletePartner(i){_partners.splice(i,1);saveRoleData('partners',_partners);renderPartners();}
 
-// ── COMPLIANCE / HR ──
+// â”€â”€ COMPLIANCE / HR â”€â”€
 function addComplianceTicket(){openModal('compliance-modal');}
 function submitCompliance(){
   const type=document.getElementById('comp-type').value;
@@ -1689,11 +1687,11 @@ function submitCompliance(){
 function renderCompliance(){
   const t=document.getElementById('compliance-table');if(!t)return;
   if(!_complianceLog.length){t.innerHTML='<tr><td colspan="8" style="text-align:center;color:var(--t4);padding:20px;font-size:11px">No compliance issues logged. That\'s a good sign!</td></tr>';return;}
-  t.innerHTML=_complianceLog.map((c,i)=>roleRow([c.type,c.members||'—',c.desc||'—',c.logged,priorityBadge(c.severity),statusBadge(c.status),c.resolution||'Pending'],`deleteCompliance(${i})`)).join('');
+  t.innerHTML=_complianceLog.map((c,i)=>roleRow([c.type,c.members||'â€”',c.desc||'â€”',c.logged,priorityBadge(c.severity),statusBadge(c.status),c.resolution||'Pending'],`deleteCompliance(${i})`)).join('');
 }
 function deleteCompliance(i){_complianceLog.splice(i,1);saveRoleData('compliance',_complianceLog);renderCompliance();}
 
-// ── ROOM BOOKINGS ──
+// â”€â”€ ROOM BOOKINGS â”€â”€
 function addRoomBooking(){openModal('roombooking-modal');}
 function submitRoomBooking(){
   const room=document.getElementById('rb-room').value.trim();if(!room)return;
@@ -1709,11 +1707,11 @@ function submitRoomBooking(){
 function renderRoomBookings(){
   const t=document.getElementById('room-bookings-table');if(!t)return;
   if(!_roomBookings.length){t.innerHTML='<tr><td colspan="7" style="text-align:center;color:var(--t4);padding:20px;font-size:11px">No room bookings yet.</td></tr>';return;}
-  t.innerHTML=_roomBookings.map((b,i)=>roleRow([b.room,b.date||'—',b.time||'—',b.purpose||'—',b.reqBy||'—',statusBadge(b.status)],`deleteRoomBooking(${i})`)).join('');
+  t.innerHTML=_roomBookings.map((b,i)=>roleRow([b.room,b.date||'â€”',b.time||'â€”',b.purpose||'â€”',b.reqBy||'â€”',statusBadge(b.status)],`deleteRoomBooking(${i})`)).join('');
 }
 function deleteRoomBooking(i){_roomBookings.splice(i,1);saveRoleData('roombookings',_roomBookings);renderRoomBookings();}
 
-// ── ICC MINUTES & BLUE PANDA ──
+// â”€â”€ ICC MINUTES & BLUE PANDA â”€â”€
 function addICCMinutes(){openModal('iccminute-modal');}
 function submitICCMinute(){
   const date=document.getElementById('iccm-date').value;if(!date)return;
@@ -1741,21 +1739,21 @@ function renderICCBluePanda(){
     else ml.innerHTML=_iccMinutes.map((m,i)=>`
       <div style="padding:12px 0;border-bottom:1px solid var(--bd);display:flex;justify-content:space-between;align-items:flex-start">
         <div>
-          <div style="font-size:11px;font-weight:700;color:var(--t1)">${m.date} — ICC Meeting</div>
+          <div style="font-size:11px;font-weight:700;color:var(--t1)">${m.date} â€” ICC Meeting</div>
           <div style="font-size:10.5px;color:var(--t2);margin-top:3px">${m.summary||'No summary.'}</div>
           ${m.actions?`<div style="font-size:10px;color:var(--t4);margin-top:3px">Action items: ${m.actions}</div>`:''}
         </div>
-        <button class="btn btn-g btn-sm" style="color:var(--cr);flex-shrink:0" onclick="deleteICCMinutes(${i})">✕</button>
+        <button class="btn btn-g btn-sm" style="color:var(--cr);flex-shrink:0" onclick="deleteICCMinutes(${i})">âœ•</button>
       </div>`).join('');
   }
   const t=document.getElementById('blue-panda-table');if(!t)return;
   if(!_bluePandaRegs.length){t.innerHTML='<tr><td colspan="6" style="text-align:center;color:var(--t4);padding:16px;font-size:11px">No Blue Panda registrations yet.</td></tr>';return;}
-  t.innerHTML=_bluePandaRegs.map((r,i)=>roleRow([r.member,r.event||'—',r.conf||'—',r.registered,statusBadge(r.status)],`deleteBluePanda(${i})`)).join('');
+  t.innerHTML=_bluePandaRegs.map((r,i)=>roleRow([r.member,r.event||'â€”',r.conf||'â€”',r.registered,statusBadge(r.status)],`deleteBluePanda(${i})`)).join('');
 }
 function deleteICCMinutes(i){_iccMinutes.splice(i,1);saveRoleData('iccminutes',_iccMinutes);renderICCBluePanda();}
 function deleteBluePanda(i){_bluePandaRegs.splice(i,1);saveRoleData('bluepanda',_bluePandaRegs);renderICCBluePanda();}
 
-// ── PRESIDENT'S HUB ──
+// â”€â”€ PRESIDENT'S HUB â”€â”€
 function renderConfDues(){
   const el=document.getElementById('conf-dues-list');if(!el)return;
   if(!_confEvents.length){el.innerHTML='<div style="padding:20px;text-align:center;color:var(--t4);font-size:11px">No conferences set up yet.</div>';return;}
@@ -1768,11 +1766,11 @@ function renderConfDues(){
       <div class="ch">
         <div>
           <div class="ct">${c.name}</div>
-          <div style="font-size:10px;color:var(--t3)">${c.date||''} · $${c.dues} per member</div>
+          <div style="font-size:10px;color:var(--t3)">${c.date||''} Â· $${c.dues} per member</div>
         </div>
         <div style="display:flex;gap:6px">
           <button class="btn btn-p btn-sm" onclick="markDuesPaid(${ci})">+ Mark Paid</button>
-          <button class="btn btn-g btn-sm" onclick="deleteConfEvent(${ci})">✕ Remove</button>
+          <button class="btn btn-g btn-sm" onclick="deleteConfEvent(${ci})">âœ• Remove</button>
         </div>
       </div>
       <div style="padding:0 16px 14px">
@@ -1793,7 +1791,7 @@ function renderConfDues(){
         <div style="height:6px;background:var(--bd);border-radius:3px;margin-bottom:6px">
           <div style="height:6px;background:var(--grn);border-radius:3px;width:${pct}%;transition:width .3s"></div>
         </div>
-        <div style="font-size:10px;color:var(--t3)">${pct}% collection rate · ${paid.join(', ')||'No paid members yet'}</div>
+        <div style="font-size:10px;color:var(--t3)">${pct}% collection rate Â· ${paid.join(', ')||'No paid members yet'}</div>
       </div>
     </div>`;
   }).join('');
@@ -1831,7 +1829,7 @@ function renderPresAgendas(){
           <span style="font-size:9px;font-weight:700;text-transform:uppercase;padding:2px 8px;border-radius:10px;background:var(--cr)22;color:var(--cr);margin-right:6px">${a.type}</span>
           <span style="font-size:12px;font-weight:700;color:var(--t1)">${a.date}</span>
         </div>
-        <button class="btn btn-g btn-sm" style="color:var(--cr)" onclick="deletePresAgenda(${i})">✕</button>
+        <button class="btn btn-g btn-sm" style="color:var(--cr)" onclick="deletePresAgenda(${i})">âœ•</button>
       </div>
       <div style="padding:10px 14px;font-size:11px;white-space:pre-wrap;color:var(--t2);line-height:1.6">${a.items||'(No items)'}</div>
     </div>`).join('');
@@ -1850,7 +1848,7 @@ function deletePresAgenda(i){_presAgendas.splice(i,1);saveRoleData('agendas',_pr
 function renderDelegation(){
   const t=document.getElementById('delegation-table');if(!t)return;
   if(!_delegations.length){t.innerHTML='<tr><td colspan="7" style="text-align:center;color:var(--t4);padding:20px;font-size:11px">No deliverables assigned yet.</td></tr>';return;}
-  t.innerHTML=_delegations.map((d,i)=>roleRow([d.task,d.assignee,d.portal||'—',d.due||'—',priorityBadge(d.priority),statusBadge(d.status)],`deleteDelegation(${i})`)).join('');
+  t.innerHTML=_delegations.map((d,i)=>roleRow([d.task,d.assignee,d.portal||'â€”',d.due||'â€”',priorityBadge(d.priority),statusBadge(d.status)],`deleteDelegation(${i})`)).join('');
 }
 function addDelegation(){openModal('delegation-modal');}
 function submitDelegation(){
@@ -1881,7 +1879,7 @@ document.addEventListener('click',function(e){
   }
 });
 
-// ── VP DASHBOARD ─────────────────────────────────────────────────────────────
+// â”€â”€ VP DASHBOARD â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function renderVPDash(){
   // gather all outstanding + refund-pending members across all conferences
   let outstanding=[];let refundPending=[];
@@ -1910,7 +1908,7 @@ function renderVPDash(){
   // Outstanding list
   const ol=document.getElementById('vp-outstanding-list');
   if(ol){
-    if(!outstanding.length){ol.innerHTML='<div style="font-size:11px;color:var(--t4);padding:10px 16px">All members fully paid ✓</div>';}
+    if(!outstanding.length){ol.innerHTML='<div style="font-size:11px;color:var(--t4);padding:10px 16px">All members fully paid âœ“</div>';}
     else{ol.innerHTML='<div style="padding:0 16px 10px">'+outstanding.map(m=>{
       const missing=[];
       if(m.deposit==='Not Yet')missing.push('$250 Deposit');
@@ -1925,7 +1923,7 @@ function renderVPDash(){
   // Refunds pending list
   const rl=document.getElementById('vp-refunds-list');
   if(rl){
-    if(!refundPending.length){rl.innerHTML='<div style="font-size:11px;color:var(--t4);padding:10px 16px">No pending refunds ✓</div>';}
+    if(!refundPending.length){rl.innerHTML='<div style="font-size:11px;color:var(--t4);padding:10px 16px">No pending refunds âœ“</div>';}
     else{rl.innerHTML='<div style="padding:0 16px 10px">'+refundPending.map(m=>`
       <div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--bd)">
         <div><div style="font-size:11px;font-weight:600;color:var(--t1)">${m.name}</div><div style="font-size:10px;color:var(--t3)">${m.conf}</div></div>
@@ -1946,14 +1944,14 @@ function renderVPDash(){
     cl.innerHTML=items.map(item=>`
       <div style="display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--bd)">
         <div style="width:18px;height:18px;border-radius:4px;background:${item.done?'var(--grn)':'var(--s3)'};display:flex;align-items:center;justify-content:center;flex-shrink:0">
-          <span style="font-size:11px;color:${item.done?'#fff':'var(--t4)'}">${item.done?'✓':''}</span>
+          <span style="font-size:11px;color:${item.done?'#fff':'var(--t4)'}">${item.done?'âœ“':''}</span>
         </div>
         <span style="font-size:11px;color:${item.done?'var(--t2)':'var(--t1)'}${item.done?';text-decoration:line-through':''}">${item.text}</span>
       </div>`).join('');
   }
 }
 
-// ── CONF. PAYMENT LEDGER ──────────────────────────────────────────────────────
+// â”€â”€ CONF. PAYMENT LEDGER â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function renderConfPayLedger(){
   const conf=_confPayLedger[_cplActiveConf];
   // populate select
@@ -1961,7 +1959,7 @@ function renderConfPayLedger(){
   if(sel){sel.innerHTML=_confPayLedger.map((c,i)=>`<option value="${i}"${i===_cplActiveConf?' selected':''}>${c.name}</option>`).join('');}
   if(!conf)return;
   document.getElementById('cpl-conf-subtitle')&&(document.getElementById('cpl-conf-subtitle').textContent=
-    `$${conf.depositAmt} deposit + $${conf.fee1Amt} fee + $${conf.fee2Amt} final = $${conf.depositAmt+conf.fee1Amt+conf.fee2Amt} total · Refund: $${conf.refundPerPerson}/person`);
+    `$${conf.depositAmt} deposit + $${conf.fee1Amt} fee + $${conf.fee2Amt} final = $${conf.depositAmt+conf.fee1Amt+conf.fee2Amt} total Â· Refund: $${conf.refundPerPerson}/person`);
   const members=conf.members||[];
   // filter
   const filter=(document.getElementById('cpl-filter')||{}).value||'';
@@ -1998,13 +1996,13 @@ function renderConfPayLedger(){
       <td style="text-align:center"><span class="badge ${mc[m.deposit]||'bo'}">${m.deposit}</span></td>
       <td style="text-align:center"><span class="badge ${mc[m.fee1]||'bo'}">${m.fee1}</span></td>
       <td style="text-align:center"><span class="badge ${mc[m.fee2]||'bo'}">${m.fee2}</span></td>
-      <td style="font-size:10px">${m.method||'—'}</td>
+      <td style="font-size:10px">${m.method||'â€”'}</td>
       <td style="font-weight:600;color:var(--grn)">$${(m.totalReceived||0).toFixed(2)}</td>
       <td><span class="badge ${rc[m.refund]||'bo'}">${m.refund}</span></td>
-      <td style="font-size:10px;color:var(--t3);max-width:160px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${m.notes||'—'}</td>
+      <td style="font-size:10px;color:var(--t3);max-width:160px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${m.notes||'â€”'}</td>
       <td style="display:flex;gap:4px">
         <button class="btn btn-g btn-sm" onclick="editConfPayMember(${realIdx})">Edit</button>
-        <button class="btn btn-g btn-sm" style="color:var(--cr)" onclick="deleteConfPayMember(${realIdx})">✕</button>
+        <button class="btn btn-g btn-sm" style="color:var(--cr)" onclick="deleteConfPayMember(${realIdx})">âœ•</button>
       </td>
     </tr>`;
   }).join('');
@@ -2133,17 +2131,17 @@ function exportConfPayCSV(){
   a.download=(conf.name||'payments').replace(/[^a-z0-9]/gi,'_')+'.csv';a.click();
 }
 
-// ── OFFICER CHECK-INS ────────────────────────────────────────────────────────
+// â”€â”€ OFFICER CHECK-INS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function addOfficerCheckin(){openModal('officer-checkin-modal');document.getElementById('oc-date').value=new Date().toISOString().slice(0,10);}
 function renderOfficerCheckins(){
   const t=document.getElementById('officer-checkins-table');if(!t)return;
   if(!_officerCheckins.length){t.innerHTML='<tr><td colspan="7" style="font-size:11px;color:var(--t4);padding:12px">No check-ins logged yet.</td></tr>';return;}
   const ac={Present:'bg',Late:'bo',['Absent - Excused']:'bo',['Absent - Unexcused']:'br'};
   t.innerHTML=_officerCheckins.map((c,i)=>`<tr>
-    <td>${c.officer}</td><td>${c.role}</td><td>${c.date||'—'}</td><td>${c.type}</td>
+    <td>${c.officer}</td><td>${c.role}</td><td>${c.date||'â€”'}</td><td>${c.type}</td>
     <td><span class="badge ${ac[c.attendance]||'bo'}">${c.attendance}</span></td>
-    <td style="max-width:200px;font-size:10px;color:var(--t3)">${c.notes||'—'}</td>
-    <td><button class="btn btn-g btn-sm" style="color:var(--cr)" onclick="deleteOfficerCheckin(${i})">✕</button></td>
+    <td style="max-width:200px;font-size:10px;color:var(--t3)">${c.notes||'â€”'}</td>
+    <td><button class="btn btn-g btn-sm" style="color:var(--cr)" onclick="deleteOfficerCheckin(${i})">âœ•</button></td>
   </tr>`).join('');
 }
 function submitOfficerCheckin(){
@@ -2159,7 +2157,7 @@ function submitOfficerCheckin(){
 }
 function deleteOfficerCheckin(i){_officerCheckins.splice(i,1);saveRoleData('officercheckins',_officerCheckins);renderOfficerCheckins();}
 
-// ── DECISION LOG ─────────────────────────────────────────────────────────────
+// â”€â”€ DECISION LOG â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function addDecision(){openModal('decision-log-modal');document.getElementById('dec-date').value=new Date().toISOString().slice(0,10);}
 function renderDecisionLog(){
   const t=document.getElementById('decision-log-table');if(!t)return;
@@ -2167,11 +2165,11 @@ function renderDecisionLog(){
   const ic={High:'br',Medium:'bo',Low:'bg'};
   const sc={Active:'bg',['Under Review']:'bo',Reversed:'br',Completed:'bg'};
   t.innerHTML=_decisionLog.map((d,i)=>`<tr>
-    <td style="font-weight:600">${d.decision}</td><td>${d.by}</td><td>${d.date||'—'}</td>
-    <td style="max-width:160px;font-size:10px;color:var(--t3)">${d.rationale||'—'}</td>
+    <td style="font-weight:600">${d.decision}</td><td>${d.by}</td><td>${d.date||'â€”'}</td>
+    <td style="max-width:160px;font-size:10px;color:var(--t3)">${d.rationale||'â€”'}</td>
     <td><span class="badge ${ic[d.impact]||'bo'}">${d.impact}</span></td>
     <td><span class="badge ${sc[d.status]||'bo'}">${d.status}</span></td>
-    <td><button class="btn btn-g btn-sm" style="color:var(--cr)" onclick="deleteDecision(${i})">✕</button></td>
+    <td><button class="btn btn-g btn-sm" style="color:var(--cr)" onclick="deleteDecision(${i})">âœ•</button></td>
   </tr>`).join('');
 }
 function submitDecision(){
@@ -2187,7 +2185,7 @@ function submitDecision(){
 }
 function deleteDecision(i){_decisionLog.splice(i,1);saveRoleData('decisionlog',_decisionLog);renderDecisionLog();}
 
-// ── MEMBER POINTS ─────────────────────────────────────────────────────────────
+// â”€â”€ MEMBER POINTS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function addMemberPointsEntry(){openModal('member-points-modal');document.getElementById('mp-lastactive').value=new Date().toISOString().slice(0,10);}
 function renderMemberPoints(){
   const t=document.getElementById('member-points-table');if(!t)return;
@@ -2197,10 +2195,10 @@ function renderMemberPoints(){
   t.innerHTML=sorted.map((m,i)=>`<tr>
     <td><span style="font-size:10px;color:var(--t4);margin-right:6px">#${i+1}</span><b>${m.name}</b></td>
     <td style="font-weight:700;color:var(--grn)">${m.points}</td>
-    <td>${m.events||0}</td><td>${m.lastactive||'—'}</td>
+    <td>${m.events||0}</td><td>${m.lastactive||'â€”'}</td>
     <td><span class="badge ${tc[m.tier]||'bo'}">${m.tier}</span></td>
-    <td style="font-size:10px;color:var(--t3)">${m.notes||'—'}</td>
-    <td><button class="btn btn-g btn-sm" style="color:var(--cr)" onclick="deleteMemberPoints('${m.name}')">✕</button></td>
+    <td style="font-size:10px;color:var(--t3)">${m.notes||'â€”'}</td>
+    <td><button class="btn btn-g btn-sm" style="color:var(--cr)" onclick="deleteMemberPoints('${m.name}')">âœ•</button></td>
   </tr>`).join('');
 }
 function submitMemberPoints(){
@@ -2218,19 +2216,19 @@ function submitMemberPoints(){
 }
 function deleteMemberPoints(name){const i=_memberPoints.findIndex(m=>m.name===name);if(i>=0){_memberPoints.splice(i,1);saveRoleData('memberpoints',_memberPoints);renderMemberPoints();}}
 
-// ── EVENT CHECKLISTS ──────────────────────────────────────────────────────────
+// â”€â”€ EVENT CHECKLISTS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function addEventChecklist(){openModal('event-checklist-modal');document.getElementById('ec-date').value=new Date().toISOString().slice(0,10);}
 function renderEventChecklists(){
   const t=document.getElementById('event-checklist-table');if(!t)return;
   if(!_eventChecklists.length){t.innerHTML='<tr><td colspan="7" style="font-size:11px;color:var(--t4);padding:12px">No event checklists yet.</td></tr>';return;}
   const sc={['Pre-Event']:'bo',['In Progress']:'bo',['Post-Event']:'bo',Completed:'bg'};
   t.innerHTML=_eventChecklists.map((e,i)=>`<tr>
-    <td style="font-weight:600">${e.event}</td><td>${e.date||'—'}</td>
-    <td style="font-size:10px;color:var(--t3);max-width:140px">${e.pre||'—'}</td>
-    <td style="font-size:10px;color:var(--t3);max-width:140px">${e.post||'—'}</td>
-    <td>${e.owner||'—'}</td>
+    <td style="font-weight:600">${e.event}</td><td>${e.date||'â€”'}</td>
+    <td style="font-size:10px;color:var(--t3);max-width:140px">${e.pre||'â€”'}</td>
+    <td style="font-size:10px;color:var(--t3);max-width:140px">${e.post||'â€”'}</td>
+    <td>${e.owner||'â€”'}</td>
     <td><span class="badge ${sc[e.status]||'bo'}">${e.status}</span></td>
-    <td><button class="btn btn-g btn-sm" style="color:var(--cr)" onclick="deleteEventChecklist(${i})">✕</button></td>
+    <td><button class="btn btn-g btn-sm" style="color:var(--cr)" onclick="deleteEventChecklist(${i})">âœ•</button></td>
   </tr>`).join('');
 }
 function submitEventChecklist(){
@@ -2246,7 +2244,7 @@ function submitEventChecklist(){
 }
 function deleteEventChecklist(i){_eventChecklists.splice(i,1);saveRoleData('eventchecklists',_eventChecklists);renderEventChecklists();}
 
-// ── VENDOR DIRECTORY ──────────────────────────────────────────────────────────
+// â”€â”€ VENDOR DIRECTORY â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function addVendorEntry(){openModal('vendor-modal');}
 function renderVendors(){
   const t=document.getElementById('vendors-directory-table');if(!t)return;
@@ -2254,12 +2252,12 @@ function renderVendors(){
   t.innerHTML=_vendors.map((v,i)=>`<tr>
     <td style="font-weight:600">${v.name}</td>
     <td><span class="badge bo">${v.category}</span></td>
-    <td>${v.contact||'—'}</td>
-    <td style="font-size:10px;color:var(--t3)">${v.reach||'—'}</td>
-    <td>${v.lastused||'—'}</td>
-    <td>${v.rating||'—'}</td>
-    <td style="font-size:10px;color:var(--t3);max-width:140px">${v.notes||'—'}</td>
-    <td><button class="btn btn-g btn-sm" style="color:var(--cr)" onclick="deleteVendor(${i})">✕</button></td>
+    <td>${v.contact||'â€”'}</td>
+    <td style="font-size:10px;color:var(--t3)">${v.reach||'â€”'}</td>
+    <td>${v.lastused||'â€”'}</td>
+    <td>${v.rating||'â€”'}</td>
+    <td style="font-size:10px;color:var(--t3);max-width:140px">${v.notes||'â€”'}</td>
+    <td><button class="btn btn-g btn-sm" style="color:var(--cr)" onclick="deleteVendor(${i})">âœ•</button></td>
   </tr>`).join('');
 }
 function submitVendor(){
@@ -2276,7 +2274,7 @@ function submitVendor(){
 }
 function deleteVendor(i){_vendors.splice(i,1);saveRoleData('vendors',_vendors);renderVendors();}
 
-// ── COMMS LOG ─────────────────────────────────────────────────────────────────
+// â”€â”€ COMMS LOG â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function addCommsEntry(){openModal('comms-log-modal');document.getElementById('comms-date').value=new Date().toISOString().slice(0,10);}
 function renderCommsLog(){
   const t=document.getElementById('comms-log-table');if(!t)return;
@@ -2284,11 +2282,11 @@ function renderCommsLog(){
   t.innerHTML=_commsLog.map((c,i)=>`<tr>
     <td style="font-weight:600">${c.subject}</td>
     <td><span class="badge bo">${c.type}</span></td>
-    <td>${c.sentto||'—'}</td>
-    <td>${c.date||'—'}</td>
-    <td style="font-weight:600;color:var(--grn)">${c.openrate||'—'}</td>
-    <td style="font-size:10px;color:var(--t3);max-width:160px">${c.notes||'—'}</td>
-    <td><button class="btn btn-g btn-sm" style="color:var(--cr)" onclick="deleteCommsLog(${i})">✕</button></td>
+    <td>${c.sentto||'â€”'}</td>
+    <td>${c.date||'â€”'}</td>
+    <td style="font-weight:600;color:var(--grn)">${c.openrate||'â€”'}</td>
+    <td style="font-size:10px;color:var(--t3);max-width:160px">${c.notes||'â€”'}</td>
+    <td><button class="btn btn-g btn-sm" style="color:var(--cr)" onclick="deleteCommsLog(${i})">âœ•</button></td>
   </tr>`).join('');
 }
 function submitCommsLog(){
@@ -2304,7 +2302,7 @@ function submitCommsLog(){
 }
 function deleteCommsLog(i){_commsLog.splice(i,1);saveRoleData('commslog',_commsLog);renderCommsLog();}
 
-// ── GRAPHIC REQUESTS ──────────────────────────────────────────────────────────
+// â”€â”€ GRAPHIC REQUESTS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function addGraphicRequest(){openModal('graphic-request-modal');document.getElementById('gr-due').value='';}
 function renderGraphicRequests(){
   const t=document.getElementById('graphic-requests-table');if(!t)return;
@@ -2312,13 +2310,13 @@ function renderGraphicRequests(){
   const sc={Requested:'bo',['In Progress']:'bo',Review:'bo',Approved:'bg',Delivered:'bg'};
   t.innerHTML=_graphicRequests.map((r,i)=>`<tr>
     <td style="font-weight:600">${r.project}</td>
-    <td>${r.requestedby||'—'}</td>
+    <td>${r.requestedby||'â€”'}</td>
     <td><span class="badge bo">${r.type}</span></td>
-    <td>${r.due||'—'}</td>
-    <td>${r.designer||'—'}</td>
+    <td>${r.due||'â€”'}</td>
+    <td>${r.designer||'â€”'}</td>
     <td><span class="badge ${sc[r.status]||'bo'}">${r.status}</span></td>
-    <td>${r.link?`<a href="${r.link}" target="_blank" style="color:var(--blu);font-size:10px">Open ↗</a>`:'—'}</td>
-    <td><button class="btn btn-g btn-sm" style="color:var(--cr)" onclick="deleteGraphicRequest(${i})">✕</button></td>
+    <td>${r.link?`<a href="${r.link}" target="_blank" style="color:var(--blu);font-size:10px">Open â†—</a>`:'â€”'}</td>
+    <td><button class="btn btn-g btn-sm" style="color:var(--cr)" onclick="deleteGraphicRequest(${i})">âœ•</button></td>
   </tr>`).join('');
 }
 function submitGraphicRequest(){
@@ -2335,7 +2333,7 @@ function submitGraphicRequest(){
 }
 function deleteGraphicRequest(i){_graphicRequests.splice(i,1);saveRoleData('graphicrequests',_graphicRequests);renderGraphicRequests();}
 
-// ── MARKETING: CONTACTS ───────────────────────────────────────────────────────
+// â”€â”€ MARKETING: CONTACTS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 let _mktgContacts=JSON.parse(localStorage.getItem('pbl_mktgcontacts')||'[]');
 function renderMktgContacts(){
   const t=document.getElementById('mktg-contacts-table');if(!t)return;
@@ -2343,13 +2341,13 @@ function renderMktgContacts(){
   const tc={Club:'bg',Sponsor:'bo',Vendor:'br',Media:'bo',Other:'bo'};
   t.innerHTML=_mktgContacts.map((c,i)=>`<tr>
     <td style="font-weight:600;font-size:11px">${c.name}</td>
-    <td style="font-size:11px">${c.role||'—'}</td>
-    <td style="font-size:11px">${c.org||'—'}</td>
-    <td style="font-size:11px">${c.email?`<a href="mailto:${c.email}" style="color:var(--blu)">${c.email}</a>`:'—'}</td>
-    <td style="font-size:11px">${c.phone||'—'}</td>
+    <td style="font-size:11px">${c.role||'â€”'}</td>
+    <td style="font-size:11px">${c.org||'â€”'}</td>
+    <td style="font-size:11px">${c.email?`<a href="mailto:${c.email}" style="color:var(--blu)">${c.email}</a>`:'â€”'}</td>
+    <td style="font-size:11px">${c.phone||'â€”'}</td>
     <td><span class="badge ${tc[c.type]||'bo'}">${c.type||'Other'}</span></td>
-    <td style="font-size:10px;color:var(--t3);max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${c.notes||'—'}</td>
-    <td><button class="btn btn-g btn-sm" style="color:var(--cr)" onclick="deleteMktgContact(${i})">✕</button></td>
+    <td style="font-size:10px;color:var(--t3);max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${c.notes||'â€”'}</td>
+    <td><button class="btn btn-g btn-sm" style="color:var(--cr)" onclick="deleteMktgContact(${i})">âœ•</button></td>
   </tr>`).join('');
 }
 function addMktgContact(){
@@ -2368,15 +2366,15 @@ function saveMktgContact(btn){
 }
 function deleteMktgContact(i){_mktgContacts.splice(i,1);saveRoleData('mktgcontacts',_mktgContacts);renderMktgContacts();}
 
-// ── MARKETING: EMAIL MARKETING ────────────────────────────────────────────────
+// â”€â”€ MARKETING: EMAIL MARKETING â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 let _emailLists=JSON.parse(localStorage.getItem('pbl_emaillists')||'[]');
 let _emailCampaigns=JSON.parse(localStorage.getItem('pbl_emailcampaigns')||'[]');
 let _emailMktgTemplates=JSON.parse(localStorage.getItem('pbl_emailmktgtemplates')||'[]');
 function renderEmailMktg(){
   _renderEmailLists();_renderEmailCampaigns();_renderEmailMktgTemplates();
   const totalSubs=_emailLists.reduce((s,l)=>s+(+l.count||0),0);
-  const el=document.getElementById('em-total-subs');if(el)el.textContent=totalSubs||'—';
-  const el2=document.getElementById('em-campaigns-sent');if(el2)el2.textContent=_emailCampaigns.filter(c=>c.status==='Sent').length||'—';
+  const el=document.getElementById('em-total-subs');if(el)el.textContent=totalSubs||'â€”';
+  const el2=document.getElementById('em-campaigns-sent');if(el2)el2.textContent=_emailCampaigns.filter(c=>c.status==='Sent').length||'â€”';
 }
 function _renderEmailLists(){
   const el=document.getElementById('email-lists-container');if(!el)return;
@@ -2385,10 +2383,10 @@ function _renderEmailLists(){
     <div style="display:flex;align-items:center;gap:10px;padding:8px 16px;border-bottom:1px solid var(--bd)">
       <div style="flex:1">
         <div style="font-size:11px;font-weight:600;color:var(--t1)">${l.name}</div>
-        <div style="font-size:10px;color:var(--t3)">${l.platform||'—'} &middot; ${l.count||0} subscribers</div>
+        <div style="font-size:10px;color:var(--t3)">${l.platform||'â€”'} &middot; ${l.count||0} subscribers</div>
         ${l.notes?`<div style="font-size:10px;color:var(--t4)">${l.notes}</div>`:''}
       </div>
-      <button class="btn btn-g btn-sm" style="color:var(--cr)" onclick="deleteEmailList(${i})">✕</button>
+      <button class="btn btn-g btn-sm" style="color:var(--cr)" onclick="deleteEmailList(${i})">âœ•</button>
     </div>`).join('');
 }
 function addEmailList(){
@@ -2410,14 +2408,14 @@ function _renderEmailCampaigns(){
   const sc={Draft:'bo',Scheduled:'bo',Sent:'bg',Cancelled:'br'};
   t.innerHTML=_emailCampaigns.map((c,i)=>`<tr>
     <td style="font-weight:600;font-size:11px">${c.name}</td>
-    <td style="font-size:11px">${c.list||'—'}</td>
-    <td style="font-size:11px;max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${c.subject||'—'}</td>
-    <td style="font-size:11px">${c.platform||'—'}</td>
-    <td style="font-size:11px">${c.date||'—'}</td>
-    <td style="font-size:11px">${c.recipients||'—'}</td>
-    <td style="font-size:11px">${c.openrate?c.openrate+'%':'—'}</td>
+    <td style="font-size:11px">${c.list||'â€”'}</td>
+    <td style="font-size:11px;max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${c.subject||'â€”'}</td>
+    <td style="font-size:11px">${c.platform||'â€”'}</td>
+    <td style="font-size:11px">${c.date||'â€”'}</td>
+    <td style="font-size:11px">${c.recipients||'â€”'}</td>
+    <td style="font-size:11px">${c.openrate?c.openrate+'%':'â€”'}</td>
     <td><span class="badge ${sc[c.status]||'bo'}">${c.status}</span></td>
-    <td><button class="btn btn-g btn-sm" style="color:var(--cr)" onclick="deleteEmailCampaign(${i})">✕</button></td>
+    <td><button class="btn btn-g btn-sm" style="color:var(--cr)" onclick="deleteEmailCampaign(${i})">âœ•</button></td>
   </tr>`).join('');
 }
 function addEmailCampaign(){
@@ -2442,9 +2440,9 @@ function _renderEmailMktgTemplates(){
     <div style="padding:10px 16px;border-bottom:1px solid var(--bd)">
       <div style="display:flex;justify-content:space-between;align-items:center">
         <div><div style="font-size:11px;font-weight:600;color:var(--t1)">${t.name}</div><div style="font-size:10px;color:var(--t3)">${t.type||'General'}</div></div>
-        <button class="btn btn-g btn-sm" style="color:var(--cr)" onclick="deleteEmailMktgTemplate(${i})">✕</button>
+        <button class="btn btn-g btn-sm" style="color:var(--cr)" onclick="deleteEmailMktgTemplate(${i})">âœ•</button>
       </div>
-      ${t.body?`<div style="font-size:10px;color:var(--t2);margin-top:6px;white-space:pre-wrap;line-height:1.6;max-height:60px;overflow:hidden">${t.body.slice(0,200)}${t.body.length>200?'…':''}</div>`:''}
+      ${t.body?`<div style="font-size:10px;color:var(--t2);margin-top:6px;white-space:pre-wrap;line-height:1.6;max-height:60px;overflow:hidden">${t.body.slice(0,200)}${t.body.length>200?'â€¦':''}</div>`:''}
     </div>`).join('');
 }
 function addEmailMktgTemplate(){
@@ -2460,7 +2458,7 @@ function saveEmailMktgTemplate(btn){
 }
 function deleteEmailMktgTemplate(i){_emailMktgTemplates.splice(i,1);saveRoleData('emailmktgtemplates',_emailMktgTemplates);renderEmailMktg();}
 
-// ── MARKETING: SPONSORS ───────────────────────────────────────────────────────
+// â”€â”€ MARKETING: SPONSORS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 let _mktgSponsors=JSON.parse(localStorage.getItem('pbl_mktgsponsors')||'[]');
 let _sponsorPosts=JSON.parse(localStorage.getItem('pbl_sponsorposts')||'[]');
 function renderMktgSponsors(){
@@ -2472,13 +2470,13 @@ function _renderMktgSponsorTable(){
   const sc={Active:'bg',Inactive:'bo',Pending:'br'};
   t.innerHTML=_mktgSponsors.map((s,i)=>`<tr>
     <td style="font-weight:600;font-size:11px">${s.company}</td>
-    <td style="font-size:11px">${s.assets?`<a href="${s.assets}" target="_blank" style="color:var(--blu);font-size:10px">Assets ↗</a>`:'—'}</td>
-    <td style="font-size:11px">${s.social||'—'}</td>
-    <td style="font-size:11px">${s.contact||'—'}</td>
-    <td style="font-size:10px;color:var(--t3);max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${s.cobrand||'—'}</td>
-    <td style="font-size:10px;color:var(--t3);max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${s.deliverables||'—'}</td>
+    <td style="font-size:11px">${s.assets?`<a href="${s.assets}" target="_blank" style="color:var(--blu);font-size:10px">Assets â†—</a>`:'â€”'}</td>
+    <td style="font-size:11px">${s.social||'â€”'}</td>
+    <td style="font-size:11px">${s.contact||'â€”'}</td>
+    <td style="font-size:10px;color:var(--t3);max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${s.cobrand||'â€”'}</td>
+    <td style="font-size:10px;color:var(--t3);max-width:100px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${s.deliverables||'â€”'}</td>
     <td><span class="badge ${sc[s.status]||'bo'}">${s.status||'Active'}</span></td>
-    <td><button class="btn btn-g btn-sm" style="color:var(--cr)" onclick="deleteMktgSponsor(${i})">✕</button></td>
+    <td><button class="btn btn-g btn-sm" style="color:var(--cr)" onclick="deleteMktgSponsor(${i})">âœ•</button></td>
   </tr>`).join('');
 }
 function addMktgSponsor(){
@@ -2503,13 +2501,13 @@ function _renderSponsorContentTable(){
   const sc={Planned:'bo',['In Progress']:'bo',Approved:'bg',Posted:'bg',Cancelled:'br'};
   t.innerHTML=_sponsorPosts.map((p,i)=>`<tr>
     <td style="font-size:11px;font-weight:600">${p.sponsor}</td>
-    <td style="font-size:11px">${p.platform||'—'}</td>
-    <td style="font-size:11px">${p.type||'—'}</td>
-    <td style="font-size:11px">${p.due||'—'}</td>
-    <td style="font-size:11px">${p.assigned||'—'}</td>
+    <td style="font-size:11px">${p.platform||'â€”'}</td>
+    <td style="font-size:11px">${p.type||'â€”'}</td>
+    <td style="font-size:11px">${p.due||'â€”'}</td>
+    <td style="font-size:11px">${p.assigned||'â€”'}</td>
     <td><span class="badge ${sc[p.status]||'bo'}">${p.status}</span></td>
-    <td>${p.link?`<a href="${p.link}" target="_blank" style="color:var(--blu);font-size:10px">View ↗</a>`:'—'}</td>
-    <td><button class="btn btn-g btn-sm" style="color:var(--cr)" onclick="deleteSponsorPost(${i})">✕</button></td>
+    <td>${p.link?`<a href="${p.link}" target="_blank" style="color:var(--blu);font-size:10px">View â†—</a>`:'â€”'}</td>
+    <td><button class="btn btn-g btn-sm" style="color:var(--cr)" onclick="deleteSponsorPost(${i})">âœ•</button></td>
   </tr>`).join('');
 }
 function addSponsorPost(){
@@ -2527,20 +2525,20 @@ function saveSponsorPost(btn){
 }
 function deleteSponsorPost(i){_sponsorPosts.splice(i,1);saveRoleData('sponsorposts',_sponsorPosts);renderMktgSponsors();}
 
-// ── COMPETITION HISTORY ───────────────────────────────────────────────────────
+// â”€â”€ COMPETITION HISTORY â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function logCompResult(){openModal('comp-history-modal');document.getElementById('ch-date').value=new Date().toISOString().slice(0,10);}
 function renderCompHistory(){
   const t=document.getElementById('portal-comp-log-table');if(!t)return;
   if(!_compResults.length){t.innerHTML='<tr><td colspan="7" style="font-size:11px;color:var(--t4);padding:12px">No competition results logged yet.</td></tr>';return;}
-  const medal=(p)=>{const l=p.toLowerCase();return l.includes('1st')||l.includes('first')?'🥇':l.includes('2nd')||l.includes('second')?'🥈':l.includes('3rd')||l.includes('third')?'🥉':'';};
+  const medal=(p)=>{const l=p.toLowerCase();return l.includes('1st')||l.includes('first')?'ðŸ¥‡':l.includes('2nd')||l.includes('second')?'ðŸ¥ˆ':l.includes('3rd')||l.includes('third')?'ðŸ¥‰':'';};
   t.innerHTML=_compResults.map((r,i)=>`<tr>
     <td style="font-weight:600">${r.member}</td>
     <td>${r.event}</td>
-    <td>${r.conf||'—'}</td>
-    <td style="font-weight:600">${medal(r.placement||'')} ${r.placement||'—'}</td>
-    <td>${r.date||'—'}</td>
-    <td style="font-size:10px;color:var(--t3);max-width:160px">${r.notes||'—'}</td>
-    <td><button class="btn btn-g btn-sm" style="color:var(--cr)" onclick="deleteCompResult(${i})">✕</button></td>
+    <td>${r.conf||'â€”'}</td>
+    <td style="font-weight:600">${medal(r.placement||'')} ${r.placement||'â€”'}</td>
+    <td>${r.date||'â€”'}</td>
+    <td style="font-size:10px;color:var(--t3);max-width:160px">${r.notes||'â€”'}</td>
+    <td><button class="btn btn-g btn-sm" style="color:var(--cr)" onclick="deleteCompResult(${i})">âœ•</button></td>
   </tr>`).join('');
 }
 function submitCompResult(){
@@ -2555,4 +2553,3 @@ function submitCompResult(){
   ['ch-member','ch-event','ch-conf','ch-placement','ch-notes'].forEach(id=>document.getElementById(id).value='');
 }
 function deleteCompResult(i){_compResults.splice(i,1);saveRoleData('compresults',_compResults);renderCompHistory();}
-
