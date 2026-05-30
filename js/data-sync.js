@@ -1,4 +1,4 @@
-// ─── ROLE-BASED PORTAL DATA ──────────────────────────────────────────────────
+// â”€â”€â”€ ROLE-BASED PORTAL DATA â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 let _statementData=JSON.parse(localStorage.getItem('pbl_statementdata')||JSON.stringify({
   chapterName:'De Anza Phi Beta Lambda',
   period:'For Year ended 6/29/25',
@@ -79,12 +79,12 @@ let _confPayLedger=JSON.parse(localStorage.getItem('pbl_confpayledger')||JSON.st
     {name:'Philemon Wong',gender:'Male',deposit:'Paid',fee1:'Paid',fee2:'Not Yet',method:'Online',totalReceived:265,refund:'Pending',notes:'Final $235 not yet received'},
     {name:'Vinh Nguyen',gender:'Male',deposit:'Paid',fee1:'Paid',fee2:'Paid',method:'Cash',totalReceived:500,refund:'Refunded',notes:'$265 cash'},
     {name:'VJ Lukka',gender:'Male',deposit:'Paid',fee1:'Paid',fee2:'Paid',method:'Online',totalReceived:500,refund:'Refunded',notes:''},
-    {name:'Iker Amox Jimenez',gender:'Male',deposit:'Paid',fee1:'Paid',fee2:'Paid',method:'Online',totalReceived:500,refund:'Refunded',notes:'Paid $265 in final deposit — must refund extra'},
+    {name:'Iker Amox Jimenez',gender:'Male',deposit:'Paid',fee1:'Paid',fee2:'Paid',method:'Online',totalReceived:500,refund:'Refunded',notes:'Paid $265 in final deposit â€” must refund extra'},
     {name:'Jun Kim',gender:'Male',deposit:'Paid',fee1:'Paid',fee2:'Paid',method:'Online',totalReceived:500,refund:'Refunded',notes:''},
     {name:'Cyrus Nakar',gender:'Male',deposit:'Paid',fee1:'Paid',fee2:'Paid',method:'Online',totalReceived:500,refund:'Refunded',notes:''},
     {name:'Sterling Williams',gender:'Male',deposit:'Paid',fee1:'Paid',fee2:'Paid',method:'Online',totalReceived:500,refund:'Refunded',notes:''},
     {name:'Jacob Chen',gender:'Male',deposit:'Paid',fee1:'Paid',fee2:'Paid',method:'Cash',totalReceived:500,refund:'Refunded',notes:'Cash Deposit'},
-    {name:'Lucas Ávila',gender:'Male',deposit:'Paid',fee1:'Paid',fee2:'Paid',method:'Online',totalReceived:500,refund:'Refunded',notes:''},
+    {name:'Lucas Ãvila',gender:'Male',deposit:'Paid',fee1:'Paid',fee2:'Paid',method:'Online',totalReceived:500,refund:'Refunded',notes:''},
     {name:'Rushil Vaswani',gender:'Male',deposit:'Paid',fee1:'Paid',fee2:'Paid',method:'Cash',totalReceived:500,refund:'Refunded',notes:'Cash Deposit, $15 cash'},
     {name:'Chi (Fun) Hsun Lee',gender:'Male',deposit:'Paid',fee1:'Paid',fee2:'Paid',method:'Online',totalReceived:500,refund:'Refunded',notes:''},
     {name:'Suyash Jevaria',gender:'Male',deposit:'Paid',fee1:'Paid',fee2:'Paid',method:'Online',totalReceived:500,refund:'Refunded',notes:''},
@@ -94,7 +94,7 @@ let _confPayLedger=JSON.parse(localStorage.getItem('pbl_confpayledger')||JSON.st
     {name:'Dianne Johnson',gender:'Female',deposit:'Paid',fee1:'Paid',fee2:'Paid',method:'Mixed',totalReceived:500,refund:'Refunded',notes:'$260 cash, $5 Zelle'},
     {name:'Javin Ku',gender:'Male',deposit:'N/A',fee1:'N/A',fee2:'N/A',method:'Online',totalReceived:245,refund:'Refunded',notes:'Trio Room'},
     {name:'Zain Darwish',gender:'Male',deposit:'N/A',fee1:'N/A',fee2:'N/A',method:'Online',totalReceived:245,refund:'Refunded',notes:'Trio Room'},
-    {name:'Van Loc Nguyen',gender:'Male',deposit:'N/A',fee1:'N/A',fee2:'N/A',method:'Online',totalReceived:120,refund:'Not Yet',notes:'Trio Room — no comp registration'},
+    {name:'Van Loc Nguyen',gender:'Male',deposit:'N/A',fee1:'N/A',fee2:'N/A',method:'Online',totalReceived:120,refund:'Not Yet',notes:'Trio Room â€” no comp registration'},
     {name:'Alan Dang',gender:'Male',deposit:'N/A',fee1:'N/A',fee2:'N/A',method:'Online',totalReceived:439.44,refund:'Refunded',notes:'Trio Room + Bus Cost'},
   ]}
 ]));
@@ -108,7 +108,7 @@ let _roiEntries=JSON.parse(localStorage.getItem('pbl_roi')||JSON.stringify([
 ]));
 let _iccForms=JSON.parse(localStorage.getItem('pbl_iccforms')||'[]');
 let _finReports=JSON.parse(localStorage.getItem('pbl_finreports')||JSON.stringify([
-  {quarter:'Full Year 2024–2025',summary:'Total Revenue: $60,474 | Total Expenses: $57,708 | Net Surplus: $2,766\n\nRevenue breakdown: Fall Conf. Payments $6,200 · State Conf. Payments $25,814 · National Conf. Payments $17,176 · Sponsorships $7,000 (Key Point x2, Moss Adams, Star One) · Donations $2,000 · ICC Awards $650 · Merch Sales $1,190 · Club Budget $444\n\nExpense breakdown: Fall Conf. $6,200 · State Conf. $28,814 (Hotel/Reg, Transport, Reimb, Food) · Nationals $20,674 (Hotel/Reg, Aid Refunds, Aquarium, PayPal Fees) · DABC $672 · Merch $678 · Banquet $374 · Advisor Gift $187 · Beach Social $18 · Business Olympics $92\n\nNet Assets Beginning of Year: $225 → End of Year: $2,991',created:'6/29/2025'}
+  {quarter:'Full Year 2024â€“2025',summary:'Total Revenue: $60,474 | Total Expenses: $57,708 | Net Surplus: $2,766\n\nRevenue breakdown: Fall Conf. Payments $6,200 Â· State Conf. Payments $25,814 Â· National Conf. Payments $17,176 Â· Sponsorships $7,000 (Key Point x2, Moss Adams, Star One) Â· Donations $2,000 Â· ICC Awards $650 Â· Merch Sales $1,190 Â· Club Budget $444\n\nExpense breakdown: Fall Conf. $6,200 Â· State Conf. $28,814 (Hotel/Reg, Transport, Reimb, Food) Â· Nationals $20,674 (Hotel/Reg, Aid Refunds, Aquarium, PayPal Fees) Â· DABC $672 Â· Merch $678 Â· Banquet $374 Â· Advisor Gift $187 Â· Beach Social $18 Â· Business Olympics $92\n\nNet Assets Beginning of Year: $225 â†’ End of Year: $2,991',created:'6/29/2025'}
 ]));
 let _confLogistics=JSON.parse(localStorage.getItem('pbl_conflogistics')||'[]');
 let _kpiEntries=JSON.parse(localStorage.getItem('pbl_kpis')||'[]');
@@ -139,11 +139,11 @@ let _compResults=JSON.parse(localStorage.getItem('pbl_compresults')||'[]');
 let _polarisAssignments=JSON.parse(localStorage.getItem('pbl_polarisassignments')||'[]');
 let _polarisLessons=JSON.parse(localStorage.getItem('pbl_polarislessons')||'[]');
 let _polarisGuides=JSON.parse(localStorage.getItem('pbl_polarisguides')||JSON.stringify([
-  {title:'How to Write a Report',category:'Writing',icon:'📝',pinned:true,open:false,content:`STRUCTURE\n1. Title Page — club name, report title, author, date\n2. Executive Summary — 1–2 paragraphs: what, why, key findings, recommendation (write this LAST)\n3. Introduction — background, purpose, scope of the report\n4. Body — clear sections with headings; each paragraph = one idea + evidence + analysis\n5. Conclusion — summarize findings and restate the recommendation\n6. References — cite all sources (see APA/MLA guide)\n7. Appendix — charts, raw data, supporting documents\n\nTIPS\n• Use headers and subheaders to make the report scannable\n• Aim for concise language — cut filler like "it is important to note that"\n• Number pages and include a table of contents for longer reports\n• Proofread for grammar, consistency, and professional tone\n\nCOMMON MISTAKES\n• Opening with "In this report I will..." — state the purpose directly instead\n• No clear thesis or recommendation anywhere in the report\n• Mixing citation styles without consistency\n• Forgetting an executive summary (judges read it first)`},
-  {title:'How to Make a Project Display / Model',category:'Presentation',icon:'🏗️',pinned:true,open:false,content:`PLANNING\n1. Define the purpose — what does your display or model communicate?\n2. Sketch a layout before building — plan sections, visuals, and flow\n3. Gather materials — display board, markers, printed visuals, labels\n\nTRI-FOLD BOARD LAYOUT\nLeft Panel:   Background, Research Question, Hypothesis\nCenter Panel: Procedure/Method, Data, Charts\nRight Panel:  Results, Conclusion, References\n\nPHYSICAL MODEL TIPS\n• Label every component clearly\n• Include a legend or scale notation\n• Test structural integrity before presentation day\n• Provide a 1-page written summary to accompany the model\n\nVISUAL DESIGN RULES\n• 2–3 colors max — use a consistent palette\n• Font hierarchy: Title 24pt+, Headings 16–18pt, Body 11–12pt\n• Leave whitespace — don't crowd every inch with text\n• Print images at high resolution (300 DPI)\n• Use real data charts, not clip art\n\nDAY-OF CHECKLIST\n□ Model is stable and easy to transport\n□ All labels are legible from arm's length\n□ Supporting 1-pager printed\n□ You can explain every component without looking at the board`},
-  {title:'How to Cite Sources — APA & MLA',category:'Writing',icon:'📚',pinned:true,open:false,content:`APA 7th EDITION\n\nBook:\n  Author, A. (Year). Title in sentence case. Publisher.\n\nJournal Article:\n  Author, A., & Author, B. (Year). Article title. Journal Name, Volume(Issue), pp–pp. https://doi.org/...\n\nWebsite:\n  Author, A. (Year, Month Day). Page title. Site Name. URL\n\nIn-text: (Author, Year)  |  Direct quote: (Author, Year, p. #)\n\n─────────────────────────────────\nMLA 9th EDITION\n\nBook:\n  Author Last, First. Title of Book. Publisher, Year.\n\nWebsite:\n  Author Last, First. "Page Title." Site Name, Day Mon. Year, URL.\n\nIn-text: (Author Page#)  e.g. (Smith 14)\n\n─────────────────────────────────\nGENERAL RULES\n• Alphabetize your reference list by author's last name\n• Hanging indent on every entry (first line flush, rest indented)\n• Use ONE citation style throughout — don't mix APA and MLA\n• When in doubt, over-cite rather than risk plagiarism\n• Free tools: Zotero, Cite This For Me, Purdue OWL (verify output)`},
-  {title:'Business Presentation Tips',category:'Presentation',icon:'🎤',pinned:true,open:false,content:`STRUCTURE — the PREP Formula\n  Point   — state your main point upfront\n  Reason  — explain why it matters\n  Example — support with data, story, or demo\n  Point   — restate and issue a call to action\n\nSLIDE DESIGN RULES\n• 1 idea per slide\n• Max 6 bullets; max 6 words per bullet (the "6×6 rule")\n• High contrast — dark text on light BG or vice versa\n• Images and charts beat text walls\n• Consistent fonts: 1 heading + 1 body font, that's it\n\nDELIVERY TIPS\n• Eye contact — sweep the room; never read the screen\n• Speak slower than feels natural — nerves speed you up\n• Pause after key points — silence is powerful\n• Memorize your opening line; opening nerves are the worst\n• Practice out loud, not just in your head\n\nQ&A HANDLING\n• "Great question" is filler — just answer\n• If you don't know: "I don't have that data on hand; I'll follow up"\n• Restate hostile questions neutrally before answering\n\nPBL COMPETITION-SPECIFIC\n• Know the judge rubric and structure your talk to match it\n• Time yourself — going over costs points\n• Business casual dress minimum\n• Bring printed handouts if the event rules allow`},
-  {title:'Business Plan Structure',category:'Strategy',icon:'📋',pinned:true,open:false,content:`1. EXECUTIVE SUMMARY  (write last, present first)\n   Business concept, mission, product/service overview\n   Target market and competitive advantage\n   Financial highlights and funding request\n\n2. COMPANY DESCRIPTION\n   Business name, location, legal structure\n   History/origin, vision, and mission statement\n   Short-term and long-term goals\n\n3. MARKET ANALYSIS\n   Industry overview and trends (cite real data)\n   Target customer profile (demographics, behavior)\n   Competitive analysis — direct and indirect competitors\n   Market size and estimated market share\n\n4. PRODUCTS & SERVICES\n   Description of offerings\n   Unique value proposition\n   Pricing strategy and rationale\n\n5. MARKETING & SALES STRATEGY\n   Channels — social media, partnerships, events\n   Customer acquisition and retention plan\n\n6. OPERATIONS PLAN\n   Location, facilities, key equipment\n   Staffing and management structure\n   Key processes and workflows\n\n7. FINANCIAL PROJECTIONS\n   Startup costs breakdown\n   Revenue forecast — Year 1–3\n   Break-even analysis\n   Cash flow statement\n\nTIPS\n• Judges read the executive summary first and last — make it strong\n• Use real numbers and cite your market research sources\n• Avoid vague buzzwords — be specific and direct\n• Proofread financial tables for consistency`},
+  {title:'How to Write a Report',category:'Writing',icon:'ðŸ“',pinned:true,open:false,content:`STRUCTURE\n1. Title Page â€” club name, report title, author, date\n2. Executive Summary â€” 1â€“2 paragraphs: what, why, key findings, recommendation (write this LAST)\n3. Introduction â€” background, purpose, scope of the report\n4. Body â€” clear sections with headings; each paragraph = one idea + evidence + analysis\n5. Conclusion â€” summarize findings and restate the recommendation\n6. References â€” cite all sources (see APA/MLA guide)\n7. Appendix â€” charts, raw data, supporting documents\n\nTIPS\nâ€¢ Use headers and subheaders to make the report scannable\nâ€¢ Aim for concise language â€” cut filler like "it is important to note that"\nâ€¢ Number pages and include a table of contents for longer reports\nâ€¢ Proofread for grammar, consistency, and professional tone\n\nCOMMON MISTAKES\nâ€¢ Opening with "In this report I will..." â€” state the purpose directly instead\nâ€¢ No clear thesis or recommendation anywhere in the report\nâ€¢ Mixing citation styles without consistency\nâ€¢ Forgetting an executive summary (judges read it first)`},
+  {title:'How to Make a Project Display / Model',category:'Presentation',icon:'ðŸ—ï¸',pinned:true,open:false,content:`PLANNING\n1. Define the purpose â€” what does your display or model communicate?\n2. Sketch a layout before building â€” plan sections, visuals, and flow\n3. Gather materials â€” display board, markers, printed visuals, labels\n\nTRI-FOLD BOARD LAYOUT\nLeft Panel:   Background, Research Question, Hypothesis\nCenter Panel: Procedure/Method, Data, Charts\nRight Panel:  Results, Conclusion, References\n\nPHYSICAL MODEL TIPS\nâ€¢ Label every component clearly\nâ€¢ Include a legend or scale notation\nâ€¢ Test structural integrity before presentation day\nâ€¢ Provide a 1-page written summary to accompany the model\n\nVISUAL DESIGN RULES\nâ€¢ 2â€“3 colors max â€” use a consistent palette\nâ€¢ Font hierarchy: Title 24pt+, Headings 16â€“18pt, Body 11â€“12pt\nâ€¢ Leave whitespace â€” don't crowd every inch with text\nâ€¢ Print images at high resolution (300 DPI)\nâ€¢ Use real data charts, not clip art\n\nDAY-OF CHECKLIST\nâ–¡ Model is stable and easy to transport\nâ–¡ All labels are legible from arm's length\nâ–¡ Supporting 1-pager printed\nâ–¡ You can explain every component without looking at the board`},
+  {title:'How to Cite Sources â€” APA & MLA',category:'Writing',icon:'ðŸ“š',pinned:true,open:false,content:`APA 7th EDITION\n\nBook:\n  Author, A. (Year). Title in sentence case. Publisher.\n\nJournal Article:\n  Author, A., & Author, B. (Year). Article title. Journal Name, Volume(Issue), ppâ€“pp. https://doi.org/...\n\nWebsite:\n  Author, A. (Year, Month Day). Page title. Site Name. URL\n\nIn-text: (Author, Year)  |  Direct quote: (Author, Year, p. #)\n\nâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€\nMLA 9th EDITION\n\nBook:\n  Author Last, First. Title of Book. Publisher, Year.\n\nWebsite:\n  Author Last, First. "Page Title." Site Name, Day Mon. Year, URL.\n\nIn-text: (Author Page#)  e.g. (Smith 14)\n\nâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€\nGENERAL RULES\nâ€¢ Alphabetize your reference list by author's last name\nâ€¢ Hanging indent on every entry (first line flush, rest indented)\nâ€¢ Use ONE citation style throughout â€” don't mix APA and MLA\nâ€¢ When in doubt, over-cite rather than risk plagiarism\nâ€¢ Free tools: Zotero, Cite This For Me, Purdue OWL (verify output)`},
+  {title:'Business Presentation Tips',category:'Presentation',icon:'ðŸŽ¤',pinned:true,open:false,content:`STRUCTURE â€” the PREP Formula\n  Point   â€” state your main point upfront\n  Reason  â€” explain why it matters\n  Example â€” support with data, story, or demo\n  Point   â€” restate and issue a call to action\n\nSLIDE DESIGN RULES\nâ€¢ 1 idea per slide\nâ€¢ Max 6 bullets; max 6 words per bullet (the "6Ã—6 rule")\nâ€¢ High contrast â€” dark text on light BG or vice versa\nâ€¢ Images and charts beat text walls\nâ€¢ Consistent fonts: 1 heading + 1 body font, that's it\n\nDELIVERY TIPS\nâ€¢ Eye contact â€” sweep the room; never read the screen\nâ€¢ Speak slower than feels natural â€” nerves speed you up\nâ€¢ Pause after key points â€” silence is powerful\nâ€¢ Memorize your opening line; opening nerves are the worst\nâ€¢ Practice out loud, not just in your head\n\nQ&A HANDLING\nâ€¢ "Great question" is filler â€” just answer\nâ€¢ If you don't know: "I don't have that data on hand; I'll follow up"\nâ€¢ Restate hostile questions neutrally before answering\n\nPBL COMPETITION-SPECIFIC\nâ€¢ Know the judge rubric and structure your talk to match it\nâ€¢ Time yourself â€” going over costs points\nâ€¢ Business casual dress minimum\nâ€¢ Bring printed handouts if the event rules allow`},
+  {title:'Business Plan Structure',category:'Strategy',icon:'ðŸ“‹',pinned:true,open:false,content:`1. EXECUTIVE SUMMARY  (write last, present first)\n   Business concept, mission, product/service overview\n   Target market and competitive advantage\n   Financial highlights and funding request\n\n2. COMPANY DESCRIPTION\n   Business name, location, legal structure\n   History/origin, vision, and mission statement\n   Short-term and long-term goals\n\n3. MARKET ANALYSIS\n   Industry overview and trends (cite real data)\n   Target customer profile (demographics, behavior)\n   Competitive analysis â€” direct and indirect competitors\n   Market size and estimated market share\n\n4. PRODUCTS & SERVICES\n   Description of offerings\n   Unique value proposition\n   Pricing strategy and rationale\n\n5. MARKETING & SALES STRATEGY\n   Channels â€” social media, partnerships, events\n   Customer acquisition and retention plan\n\n6. OPERATIONS PLAN\n   Location, facilities, key equipment\n   Staffing and management structure\n   Key processes and workflows\n\n7. FINANCIAL PROJECTIONS\n   Startup costs breakdown\n   Revenue forecast â€” Year 1â€“3\n   Break-even analysis\n   Cash flow statement\n\nTIPS\nâ€¢ Judges read the executive summary first and last â€” make it strong\nâ€¢ Use real numbers and cite your market research sources\nâ€¢ Avoid vague buzzwords â€” be specific and direct\nâ€¢ Proofread financial tables for consistency`},
 ]));
 
 
@@ -154,7 +154,7 @@ const PORTALS_CFG={
     stats:()=>{
       const inc=transactions.income.reduce((s,t)=>s+t.amount,0);
       const exp=transactions.expense.reduce((s,t)=>s+t.amount,0);
-      return[{l:'Total Income',v:'$'+inc.toLocaleString(),s:'FY 2024–2025'},{l:'Total Expenses',v:'$'+exp.toLocaleString(),s:'FY 2024–2025'},{l:'Net Surplus',v:'$'+(inc-exp).toLocaleString(),s:'End balance $2,991'},{l:'ICC Forms',v:_iccForms.length,s:'Logged this year'}];
+      return[{l:'Total Income',v:'$'+inc.toLocaleString(),s:'FY 2024â€“2025'},{l:'Total Expenses',v:'$'+exp.toLocaleString(),s:'FY 2024â€“2025'},{l:'Net Surplus',v:'$'+(inc-exp).toLocaleString(),s:'End balance $2,991'},{l:'ICC Forms',v:_iccForms.length,s:'Logged this year'}];
     },
     links:[
       {action:"showTab('portal-finance','vpdash');renderVPDash()",label:'VP Dashboard',desc:'Outstanding payments & checklist'},
@@ -283,7 +283,7 @@ function saveData(){
     pblTransactions,merchSales,importedCalEvents,
     nM,nE,nB,nT,nA,nEv,nEmail,nCon,nCli,nDel,nCR,nCE,nCH,nTr,nMin,nPr,nGoal,nTD,nAnn,nMP,nSp,nPl,nRos,
     nEC,nReim,nVen,nVS,nCP,nCurr,nBKC,nBKF,nPost,nMCI,nPblTr,nMerch,
-    // ── pbl_* keys (member portal & shared state) ──
+    // â”€â”€ pbl_* keys (member portal & shared state) â”€â”€
     highlights:typeof highlights!=='undefined'?highlights:[],
     quickLinks:typeof quickLinks!=='undefined'?quickLinks:[],
     confEvents:_confEvents,
@@ -294,13 +294,28 @@ function saveData(){
     execContacts:JSON.parse(localStorage.getItem('pbl_execcontacts')||'{}'),
   };
   try{localStorage.setItem(SAVE_KEY,JSON.stringify(d));}catch(e){}
-  // Save to Firestore (async, non-blocking — keeps all devices in sync)
-  if(window._db){
-    window._db.collection('chapter').doc('main').set(d)
-      .catch(err=>console.warn('Firestore write failed:',err));
-  }
+  // Show local-save indicator immediately
   const ind=document.getElementById('save-indicator');
   if(ind){ind.classList.add('show');clearTimeout(ind._t);ind._t=setTimeout(()=>ind.classList.remove('show'),1800);}
+  // Save to Firestore (async, non-blocking â€” keeps all devices in sync)
+  if(window._db){
+    const _sizeKB=Math.round(new Blob([JSON.stringify(d)]).size/1024);
+    if(_sizeKB>900)console.warn('[DAPBL] Firestore doc size: '+_sizeKB+'KB â€” approaching 1MB limit!');
+    window._db.collection('chapter').doc('main').set(d)
+      .catch(err=>{
+        console.warn('[DAPBL] Firestore write failed ('+_sizeKB+'KB):',err);
+        // Show a visible sync-error toast so this never goes unnoticed
+        let t=document.getElementById('_sync-err-toast');
+        if(!t){
+          t=document.createElement('div');t.id='_sync-err-toast';
+          t.style.cssText='position:fixed;bottom:56px;left:50%;transform:translateX(-50%);background:#c0392b;color:#fff;padding:9px 18px;border-radius:7px;font-size:12px;font-weight:600;z-index:99999;box-shadow:0 3px 10px rgba(0,0,0,.35);white-space:nowrap';
+          document.body.appendChild(t);
+        }
+        t.textContent='âš  Sync failed ('+_sizeKB+'KB) â€” '+((err&&err.code)||'check console')+' â€” changes saved locally only';
+        t.style.display='block';clearTimeout(t._t);
+        t._t=setTimeout(()=>t.style.display='none',8000);
+      });
+  }
 }
 function loadData(){
   try{
@@ -385,8 +400,13 @@ function resetAllData(){
   if(!confirm('Reset ALL data to defaults? This cannot be undone.'))return;
   localStorage.removeItem(SAVE_KEY);location.reload();
 }
-document.addEventListener('click',()=>{clearTimeout(_saveTimer);_saveTimer=setTimeout(saveData,800);});
-document.addEventListener('change',()=>{clearTimeout(_saveTimer);_saveTimer=setTimeout(saveData,800);});
+// Guard: don't let the click/change debounce write to Firestore until we've
+// received the first server snapshot (prevents stale localStorage from
+// overwriting a remote device's freshly-saved data on page load).
+let _fsLoaded=false;
+setTimeout(()=>{_fsLoaded=true;},5000); // fallback if offline
+document.addEventListener('click',()=>{if(!_fsLoaded)return;clearTimeout(_saveTimer);_saveTimer=setTimeout(saveData,800);});
+document.addEventListener('change',()=>{if(!_fsLoaded)return;clearTimeout(_saveTimer);_saveTimer=setTimeout(saveData,800);});
 
 // ---- FEATURE 2: Global search ----
 function gsSearch(q){
@@ -486,7 +506,7 @@ function renderCalendar(){
   bootcamps.forEach(b=>addItem(b.date,'bc',b.name+': '+b.topic,'bootcamps'));
   [...tasks.ebod,...tasks.general].filter(t=>!t.done).forEach(t=>addItem(t.due,'tk',t.text,'tasks'));
   agendas.forEach(a=>addItem(a.date,'ag',a.name,'tasks'));
-  if(importedCalEvents)importedCalEvents.forEach(e=>addItem(e.date,'ev','📅 '+e.name,'calendar'));
+  if(importedCalEvents)importedCalEvents.forEach(e=>addItem(e.date,'ev','ðŸ“… '+e.name,'calendar'));
   let html='';
   ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].forEach(d=>{html+=`<div class="cal-dow">${d}</div>`;});
   for(let i=0;i<first;i++)html+=`<div class="cal-cell out"></div>`;
@@ -582,10 +602,10 @@ let rosData={
   'DAIS 2026':[
     {id:1,time:'8:00 AM',item:'Doors Open / Check-In',notes:'2 volunteers at entrance, sign-in sheet at table'},
     {id:2,time:'8:30 AM',item:'Welcome & Introductions',notes:'President opens, introduce EBOD, housekeeping'},
-    {id:3,time:'9:00 AM',item:'Keynote Speaker',notes:'Confirm A/V 30 min before · 45 min slot'},
-    {id:4,time:'10:00 AM',item:'Breakout Sessions',notes:'3 rooms · assignments on door'},
-    {id:5,time:'12:00 PM',item:'Lunch',notes:'Catering confirmed · dietary restrictions tracked'},
-    {id:6,time:'1:00 PM',item:'Student Presentations',notes:'4 groups · 10 min each · judges panel'},
+    {id:3,time:'9:00 AM',item:'Keynote Speaker',notes:'Confirm A/V 30 min before Â· 45 min slot'},
+    {id:4,time:'10:00 AM',item:'Breakout Sessions',notes:'3 rooms Â· assignments on door'},
+    {id:5,time:'12:00 PM',item:'Lunch',notes:'Catering confirmed Â· dietary restrictions tracked'},
+    {id:6,time:'1:00 PM',item:'Student Presentations',notes:'4 groups Â· 10 min each Â· judges panel'},
     {id:7,time:'2:30 PM',item:'Awards & Closing',notes:'Awards printed by May 28'},
   ]
 };let nRos=8;let currentRosEvent='DAIS 2026';
@@ -599,7 +619,7 @@ function renderRos(){
     sel.innerHTML='<option value="">Select Event...</option>'+allEvents.map(e=>`<option value="${e}"${e===currentRosEvent?' selected':''}>${e}</option>`).join('');
   }
   const title=document.getElementById('ros-event-title');
-  if(title)title.textContent=(currentRosEvent||'Run of Show')+' — Minute by Minute';
+  if(title)title.textContent=(currentRosEvent||'Run of Show')+' â€” Minute by Minute';
   const t=document.getElementById('ros-table');
   if(!t)return;
   const items=rosData[currentRosEvent]||[];
@@ -626,7 +646,7 @@ function switchRos(eventName){
 function openRosDetail(id){
   const items=rosData[currentRosEvent]||[];
   const r=items.find(x=>x.id===id);if(!r)return;
-  openDetail(r.item,currentRosEvent+' · '+r.time,
+  openDetail(r.item,currentRosEvent+' Â· '+r.time,
     row2(fld('Time',inp('ed-rostime',r.time)),fld('Item',inp('ed-rositem',r.item)))+
     fld('Notes',ta('ed-rosnotes',r.notes,4))+
     `<div style="display:flex;gap:7px"><button class="btn btn-p btn-sm" onclick="saveRosItem(${id},this)">Save</button><button class="btn btn-g btn-sm" style="color:#E57373" onclick="deleteRosItem(${id});closeDetail()">Delete</button></div>`,r);
@@ -637,7 +657,7 @@ function saveRosItem(id,btn){
   r.time=g('ed-rostime');r.item=g('ed-rositem');r.notes=g('ed-rosnotes');
   renderRos();saved(btn);
   document.getElementById('d-title').textContent=r.item;
-  document.getElementById('d-sub').textContent=currentRosEvent+' · '+r.time;
+  document.getElementById('d-sub').textContent=currentRosEvent+' Â· '+r.time;
 }
 function addRosItem(){
   if(!currentRosEvent){alert('Select an event first.');return;}
@@ -658,7 +678,7 @@ let csvTarget=null;
 function triggerCsv(target){csvTarget=target;const inp=document.getElementById('csv-input');inp.value='';inp.click();}
 function parseCsv(text){
   // Strip BOM, normalize line endings
-  text=text.replace(/^﻿/,'').replace(/\r\n/g,'\n').replace(/\r/g,'\n');
+  text=text.replace(/^ï»¿/,'').replace(/\r\n/g,'\n').replace(/\r/g,'\n');
   const lines=text.trim().split('\n');if(lines.length<2)return[];
   // Auto-detect separator: tab or comma
   const sep=lines[0].includes('\t')?'\t':',';
@@ -717,7 +737,7 @@ function handleCsvImport(e){
 loadData();
 renderMembers();renderExec();renderBootcamps();renderTasks();renderAgendas();renderEvents();renderRos();renderTemplates();renderSponsors();renderEmailList();renderConsulting();renderCompetition();renderBudget();renderMinutes();renderRecruitment();renderGoals();renderTransition();renderAnnouncements();renderMentorship();renderDashboard();renderPortals();renderEcSelect();renderReimbursements();renderVenues();renderVolSlots();renderCompPrep();renderCurriculum();renderBrandKit();renderContentCalendar();renderCaMentors();renderMemberCheckIns();renderCalendar();
 
-// ── FIRESTORE REAL-TIME SYNC ─────────────────────────────────────────────────
+// â”€â”€ FIRESTORE REAL-TIME SYNC â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 // Applies a Firestore snapshot to all in-memory variables (mirrors loadData)
 function _applyFirestoreData(d){
   if(d.members)members=d.members;
@@ -758,7 +778,7 @@ function _applyFirestoreData(d){
   if(d.pblTransactions)pblTransactions=d.pblTransactions;
   if(d.merchSales)merchSales=d.merchSales;
   if(d.importedCalEvents)importedCalEvents=d.importedCalEvents;
-  // ── pbl_* shared keys ──
+  // â”€â”€ pbl_* shared keys â”€â”€
   if(d.highlights&&typeof highlights!=='undefined'){highlights=d.highlights;try{localStorage.setItem('pbl_highlights',JSON.stringify(d.highlights));}catch(e){}}
   if(d.quickLinks&&typeof quickLinks!=='undefined'){quickLinks=d.quickLinks;try{localStorage.setItem('pbl_quicklinks',JSON.stringify(d.quickLinks));}catch(e){}}
   if(d.confEvents){_confEvents=d.confEvents;try{localStorage.setItem('pbl_confevents',JSON.stringify(d.confEvents));}catch(e){}}
@@ -787,10 +807,12 @@ function initFirestore(){
   if(!window._db)return;
   window._db.collection('chapter').doc('main')
     .onSnapshot({includeMetadataChanges:true},snap=>{
-      // hasPendingWrites=true means this is our OWN local write already in memory — skip
+      // hasPendingWrites=true means this is our OWN local write already in memory â€” skip
       if(snap.metadata.hasPendingWrites)return;
       if(!snap.exists)return;
       const d=snap.data();if(!d)return;
+      // Mark Firestore as loaded so the click/change debounce can now write
+      _fsLoaded=true;
       _applyFirestoreData(d);
       _renderAll();
       // If IM portal is open, refresh it too
@@ -803,7 +825,7 @@ function initFirestore(){
 }
 initFirestore();
 
-// ── EXTRA FIRESTORE LISTENERS (competition signups, reimbursements, leads, mentor check-ins, office hours)
+// â”€â”€ EXTRA FIRESTORE LISTENERS (competition signups, reimbursements, leads, mentor check-ins, office hours)
 let _ebodAllMembersHW={};
 let _imReimbs=[];
 let _officeHourReqs=[];
@@ -859,7 +881,7 @@ function initExtraListeners(){
 function loadEBODHWFromFirestore(){
   if(!window._db)return;
   const el=document.getElementById('ebod-hw-table');
-  if(el)el.innerHTML='<div style="font-size:11px;color:var(--t4);padding:14px 0;text-align:center">Loading from Firestore…</div>';
+  if(el)el.innerHTML='<div style="font-size:11px;color:var(--t4);padding:14px 0;text-align:center">Loading from Firestoreâ€¦</div>';
   _db.collection('members').get().then(snap=>{
     _ebodAllMembersHW={};
     snap.forEach(doc=>{
@@ -871,4 +893,3 @@ function loadEBODHWFromFirestore(){
     renderEBODHomework();
   }).catch(e=>console.warn('loadEBODHWFromFirestore:',e));
 }
-
