@@ -324,11 +324,11 @@ function _attRate(att){
 }
 function toggleAtt(memberId,idx){
   const m=members.find(x=>x.id===memberId);
-  if(m){m.att[idx]=m.att[idx]===1?0:1;openMemberDetail(memberId);renderMembers();}
+  if(m){m.att[idx]=m.att[idx]===1?0:1;openMemberDetail(memberId);renderMembers();saveData();}
 }
 function setAtt(memberId,idx,val){
   const m=members.find(x=>x.id===memberId);
-  if(m){m.att[idx]=val;openMemberDetail(memberId);renderMembers();}
+  if(m){m.att[idx]=val;openMemberDetail(memberId);renderMembers();saveData();}
 }
 
 // ── QUICK ATTENDANCE ──────────────────────────────────────────────────────────
@@ -375,7 +375,7 @@ function qaToggle(memberId,sessIdx){
   if(!m.att)m.att=[];
   while(m.att.length<=sessIdx)m.att.push(0);
   m.att[sessIdx]=m.att[sessIdx]===1?0:1;
-  renderQuickAtt(sessIdx);renderMembers();
+  renderQuickAtt(sessIdx);renderMembers();saveData();
 }
 function qaSetAtt(memberId,sessIdx,val){
   const m=members.find(x=>x.id===memberId);
@@ -383,7 +383,7 @@ function qaSetAtt(memberId,sessIdx,val){
   if(!m.att)m.att=[];
   while(m.att.length<=sessIdx)m.att.push(0);
   m.att[sessIdx]=val;
-  renderQuickAtt(sessIdx);renderMembers();
+  renderQuickAtt(sessIdx);renderMembers();saveData();
 }
 
 function saveMember(id,btn){
@@ -413,7 +413,7 @@ function saveExec(id,btn){
   if(oldName!==e.name)delete _ec[oldName];
   _ec[e.name]={email:g('ed-email'),phone:g('ed-phone')};
   localStorage.setItem('pbl_execcontacts',JSON.stringify(_ec));
-  renderExec();saved(btn);
+  renderExec();saveData();if(typeof imeRefresh==='function')imeRefresh();saved(btn);
   document.getElementById('d-title').textContent=e.name;
   document.getElementById('d-sub').textContent=e.position;
 }
@@ -682,7 +682,7 @@ function updateStats(){
 
 // CRUD
 function removeMember(id){members=members.filter(m=>m.id!==id);renderMembers();}
-function removeExec(id){execTeam=execTeam.filter(e=>e.id!==id);renderExec();}
+function removeExec(id){execTeam=execTeam.filter(e=>e.id!==id);renderExec();if(typeof imeRefresh==='function')imeRefresh();}
 function removeTask(id,board){tasks[board]=tasks[board].filter(t=>t.id!==id);renderTasks();}
 function toggleTask(id,board){const t=tasks[board].find(x=>x.id===id);if(t){t.done=!t.done;renderTasks();}}
 function addMember(){
@@ -1298,90 +1298,52 @@ function renderMemberContent(){
     </div>`).join('')||'<div style="font-size:11px;color:var(--t4);padding:8px 0">No lecture slides yet.</div>';
 }
 // ── IM REMOTE EDITOR ──────────────────────────────────────────────────────────
-let _imeSection=null;
+let _imePage=null;
 
-function renderIMEditor(){renderIMPreview();}
+function renderIMEditor(){imeShowPage('home');}
 
-function renderIMPreview(){
-  _imePrevAnn();_imePrevEvents();_imePrevHighlights();_imePrevLinks();_imePrevResources();
-  if(_imeSection)imeSelect(_imeSection);
-}
-
+// Legacy shim so any old imeSelect() calls still work
 function imeSelect(section){
-  _imeSection=section;
-  document.querySelectorAll('.ime-sec').forEach(el=>el.classList.remove('ime-active'));
-  const sec=document.getElementById('ime-sec-'+section);
-  if(sec){sec.classList.add('ime-active');sec.scrollIntoView({behavior:'smooth',block:'nearest'});}
-  const ed=document.getElementById('ime-editor');if(!ed)return;
-  const editors={announcements:_imeEdAnn,events:_imeEdEvents,highlights:_imeEdHighlights,links:_imeEdLinks,resources:_imeEdResources};
-  if(editors[section])ed.innerHTML=editors[section]();
+  const map={announcements:'announcements',events:'events',highlights:'home',links:'home',resources:'resources',bootcamps:'bootcamps'};
+  imeShowPage(map[section]||section);
 }
+// Legacy preview renderers — now just trigger a page refresh
+function renderIMPreview(){if(_imePage)imeShowPage(_imePage);else imeShowPage('home');}
+function _imePrevAnn(){imeRefresh();}
+function _imePrevEvents(){imeRefresh();}
+function _imePrevHighlights(){imeRefresh();}
+function _imePrevLinks(){imeRefresh();}
+function _imePrevResources(){imeRefresh();}
 
-// ─── PREVIEW RENDERERS ────────────────────────────────────────────────────────
-function _imePrevAnn(){
-  const el=document.getElementById('ime-prev-ann');if(!el)return;
-  const all=[...(announcements.sent||[]),...(announcements.draft||[])].filter(a=>a.published);
-  el.innerHTML=all.length?all.slice(0,3).map(a=>`
-    <div style="padding:10px 14px;border-bottom:1px solid var(--bd)">
-      <div style="font-size:12px;font-weight:600;color:var(--t1)">${a.title}</div>
-      <div style="font-size:10px;color:var(--t3);margin:2px 0">${a.channel||''} · ${a.date||''}</div>
-      <div style="font-size:11px;color:var(--t2);line-height:1.5">${(a.content||'').slice(0,90)}${(a.content||'').length>90?'…':''}</div>
-    </div>`).join('')
-    :`<div style="padding:14px;font-size:11px;color:var(--t4);text-align:center">No published announcements</div>`;
-}
-function _imePrevEvents(){
-  const el=document.getElementById('ime-prev-events');if(!el)return;
-  const evts=(typeof mEventsData!=='undefined'&&mEventsData.upcoming)||events||[];
-  const upcoming=evts.slice(0,4);
-  el.innerHTML=upcoming.length?upcoming.map(e=>{
-    const d=new Date(e.date);
-    const mo=isNaN(d)?'':d.toLocaleString('default',{month:'short'}).toUpperCase();
-    const dy=isNaN(d)?'':d.getDate();
-    return`<div style="display:flex;align-items:center;gap:10px;padding:8px 14px;border-bottom:1px solid var(--bd)">
-      <div style="min-width:34px;height:34px;border-radius:6px;background:var(--cr);color:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center">
-        <div style="font-size:7px;line-height:1">${mo}</div><div style="font-size:13px;font-weight:700;line-height:1">${dy||'?'}</div>
-      </div>
-      <div><div style="font-size:12px;font-weight:600;color:var(--t1)">${e.name}</div><div style="font-size:10px;color:var(--t3)">${e.loc||e.location||''}</div></div>
-    </div>`;}).join('')
-    :`<div style="padding:14px;font-size:11px;color:var(--t4);text-align:center">No upcoming events</div>`;
-}
-function _imePrevHighlights(){
-  const el=document.getElementById('ime-prev-highlights');if(!el)return;
-  if(typeof highlights==='undefined'||!highlights.length){el.innerHTML='<div style="padding:14px;font-size:11px;color:var(--t4);text-align:center">No highlights</div>';return;}
-  el.innerHTML=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:12px">`+
-    highlights.map(h=>`<div style="background:var(--s2);border:1px solid var(--bd);border-radius:6px;padding:10px;border-left:3px solid ${h.color}">
-      <div style="font-size:9px;color:var(--t3);letter-spacing:1px;text-transform:uppercase;margin-bottom:3px">${h.label}</div>
-      <div style="font-size:20px;font-weight:800;color:${h.color}">${h.value}</div>
-      <div style="font-size:10px;color:var(--t3);margin-top:2px">${h.sub}</div>
-    </div>`).join('')+`</div>`;
-}
-function _imePrevLinks(){
-  const el=document.getElementById('ime-prev-links');if(!el)return;
-  if(typeof quickLinks==='undefined'||!quickLinks.length){el.innerHTML='<div style="padding:14px;font-size:11px;color:var(--t4);text-align:center">No quick links</div>';return;}
-  el.innerHTML=`<div style="padding:10px 14px">`+quickLinks.map(l=>`
-    <div style="display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--bd)">
-      <div style="width:26px;height:26px;border-radius:5px;background:${l.bg};color:${l.ic};font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0">${l.icon}</div>
-      <div><div style="font-size:11px;font-weight:600;color:var(--t1)">${l.label}</div><div style="font-size:10px;color:var(--t3)">${l.desc}</div></div>
-    </div>`).join('')+`</div>`;
-}
-function _imePrevResources(){
-  const el=document.getElementById('ime-prev-resources');if(!el)return;
-  const guides=(resources&&resources.guides)||[];
-  const templates=(resources&&resources.templates)||[];
-  const total=guides.length+templates.length+eventSlides.length+lectureSlides.length;
-  el.innerHTML=`<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:0">
-    ${[['Guides',guides.length,'📖'],['Templates',templates.length,'📄'],['Event Slides',eventSlides.length,'🎞'],['Lecture Slides',lectureSlides.length,'📓']].map(([l,c,i])=>`
-    <div style="padding:12px 8px;text-align:center;border-right:1px solid var(--bd)">
-      <div style="font-size:20px">${i}</div><div style="font-size:15px;font-weight:700;color:var(--t1)">${c}</div><div style="font-size:9px;color:var(--t3)">${l}</div>
-    </div>`).join('')}
-  </div>`;
+function imeRefresh(){if(_imePage)imeShowPage(_imePage);}
+
+function imeShowPage(page){
+  _imePage=page;
+  // Highlight active nav item
+  document.querySelectorAll('[id^="ime-ni-"]').forEach(el=>el.classList.remove('active'));
+  const navEl=document.getElementById('ime-ni-'+page);
+  if(navEl)navEl.classList.add('active');
+  const content=document.getElementById('ime-content');
+  if(!content)return;
+  const pages={
+    home:()=>_imeEdHighlights()+_imeEdLinks(),
+    announcements:_imeEdAnn,
+    events:_imeEdEvents,
+    resources:_imeEdResources,
+    bootcamps:_imePageBootcamps,
+    fbla:_imePageFBLA,
+    execteam:_imePageExecTeam,
+    officehours:_imePageOfficeHours,
+    contacts:_imePageContacts,
+  };
+  if(pages[page])content.innerHTML=pages[page]();
 }
 
 // ─── EDITOR PANELS ────────────────────────────────────────────────────────────
 function _imeEdAnn(){
   const all=[...(announcements.sent||[]),...(announcements.draft||[])];
   return`<div class="card">
-    <div class="ch"><div class="ct">Announcements</div><button class="btn btn-p btn-sm" onclick="addAnnouncement('draft');_imePrevAnn()">+ New</button></div>
+    <div class="ch"><div class="ct">Announcements</div><button class="btn btn-p btn-sm" onclick="addAnnouncement('draft');imeRefresh()">+ New</button></div>
     <div style="font-size:10px;color:var(--t3);padding:6px 16px 8px">Toggle "Publish to Members" on each announcement to control what members see.</div>
     ${all.length?all.map(a=>{
       const bucket=announcements.sent.find(x=>x.id===a.id)?'sent':'draft';
@@ -1390,7 +1352,7 @@ function _imeEdAnn(){
           <div class="ime-ed-title">${a.title}</div>
           <div class="ime-ed-sub">${a.channel||''} · ${a.date||''}</div>
           <div style="margin-top:4px">
-            <span class="badge ${a.published?'bg':'bo'}" style="cursor:pointer" onclick="publishAnnouncement(${a.id},'${bucket}',this);_imePrevAnn()">${a.published?'✓ Published':'Unpublished — click to publish'}</span>
+            <span class="badge ${a.published?'bg':'bo'}" style="cursor:pointer" onclick="publishAnnouncement(${a.id},'${bucket}',this);imeRefresh()">${a.published?'✓ Published':'Unpublished — click to publish'}</span>
           </div>
         </div>
         <button class="btn btn-g btn-sm" onclick="openAnnouncementDetail(${a.id},'${bucket}')">Edit</button>
@@ -1401,7 +1363,7 @@ function _imeEdAnn(){
 function _imeEdEvents(){
   const evts=events||[];
   return`<div class="card">
-    <div class="ch"><div class="ct">Events</div><button class="btn btn-p btn-sm" onclick="openModal('event-modal')">+ Add Event</button></div>
+    <div class="ch"><div class="ct">Events</div><button class="btn btn-p btn-sm" onclick="openModal('ev-modal')">+ Add Event</button></div>
     ${evts.length?evts.slice(0,15).map(e=>`<div class="ime-ed-item">
       <div style="flex:1;min-width:0">
         <div class="ime-ed-title">${e.name}</div>
@@ -1413,7 +1375,7 @@ function _imeEdEvents(){
   </div>`;
 }
 function _imeEdHighlights(){
-  return`<div class="card">
+  return`<div class="card" style="margin-bottom:12px">
     <div class="ch"><div class="ct">Season Highlights</div><button class="btn btn-p btn-sm" onclick="imeAddHighlight()">+ Add</button></div>
     <div style="font-size:10px;color:var(--t3);padding:6px 16px 8px">These appear as the stat cards on the IM home page.</div>
     ${(typeof highlights!=='undefined'?highlights:[]).map((h,i)=>`<div class="ime-ed-item">
@@ -1450,21 +1412,21 @@ function _imeEdLinks(){
 function _imeEdResources(){
   const guides=(resources&&resources.guides)||[];
   const templates=(resources&&resources.templates)||[];
-  const _list=(items,type,editFn,addFn)=>items.length?items.map((x,i)=>`<div class="ime-ed-item">
+  const _list=(items,type,editFn)=>items.length?items.map((x,i)=>`<div class="ime-ed-item">
     <div style="flex:1;min-width:0"><div class="ime-ed-title">${x.name}</div><div class="ime-ed-sub">${x.desc||''}</div></div>
     <div style="display:flex;gap:5px">
       <button class="btn btn-g btn-sm" onclick="${editFn}(${i})">Edit</button>
-      <button class="btn btn-g btn-sm" style="color:var(--cr)" onclick="deleteMCItem('${type}',${i});document.getElementById('ime-editor').innerHTML=_imeEdResources()">✕</button>
+      <button class="btn btn-g btn-sm" style="color:var(--cr)" onclick="deleteMCItem('${type}',${i});imeRefresh()">✕</button>
     </div>
   </div>`).join(''):`<div style="padding:10px 16px;font-size:11px;color:var(--t4)">None yet</div>`;
   return`
   <div class="card" style="margin-bottom:12px">
     <div class="ch"><div class="ct">Member Guides</div><button class="btn btn-p btn-sm" onclick="addMCGuide()">+ Add</button></div>
-    ${_list(guides,'guides','editMCGuide','')}
+    ${_list(guides,'guides','editMCGuide')}
   </div>
   <div class="card" style="margin-bottom:12px">
     <div class="ch"><div class="ct">Templates</div><button class="btn btn-p btn-sm" onclick="addMCTemplate()">+ Add</button></div>
-    ${_list(templates,'templates','editMCTemplate','')}
+    ${_list(templates,'templates','editMCTemplate')}
   </div>
   <div class="card" style="margin-bottom:12px">
     <div class="ch"><div class="ct">Event Slides</div><button class="btn btn-p btn-sm" onclick="addEventSlide()">+ Add</button></div>
@@ -1472,7 +1434,7 @@ function _imeEdResources(){
       <div style="flex:1;min-width:0"><div class="ime-ed-title">${s.name}</div><div class="ime-ed-sub">${s.event} · ${s.date}</div></div>
       <div style="display:flex;gap:5px">
         <button class="btn btn-g btn-sm" onclick="editEventSlide(${i})">Edit</button>
-        <button class="btn btn-g btn-sm" style="color:var(--cr)" onclick="deleteSlide('event',${i});imeSelect('resources')">✕</button>
+        <button class="btn btn-g btn-sm" style="color:var(--cr)" onclick="deleteSlide('event',${i});imeRefresh()">✕</button>
       </div>
     </div>`).join(''):`<div style="padding:10px 16px;font-size:11px;color:var(--t4)">None yet</div>`}
   </div>
@@ -1482,9 +1444,118 @@ function _imeEdResources(){
       <div style="flex:1;min-width:0"><div class="ime-ed-title">${s.session} — ${s.topic}</div><div class="ime-ed-sub">${s.date} · ${s.desc}</div></div>
       <div style="display:flex;gap:5px">
         <button class="btn btn-g btn-sm" onclick="editLectureSlide(${i})">Edit</button>
-        <button class="btn btn-g btn-sm" style="color:var(--cr)" onclick="deleteSlide('lecture',${i});imeSelect('resources')">✕</button>
+        <button class="btn btn-g btn-sm" style="color:var(--cr)" onclick="deleteSlide('lecture',${i});imeRefresh()">✕</button>
       </div>
     </div>`).join(''):`<div style="padding:10px 16px;font-size:11px;color:var(--t4)">None yet</div>`}
+  </div>`;
+}
+
+// ─── NEW PAGE RENDERERS ───────────────────────────────────────────────────────
+function _imePageBootcamps(){
+  const bc=typeof bootcamps!=='undefined'?bootcamps:[];
+  return`<div class="card">
+    <div class="ch"><div class="ct">Bootcamp Sessions</div><button class="btn btn-p btn-sm" onclick="openModal('bc-modal')">+ Add Session</button></div>
+    <div style="font-size:10px;color:var(--t3);padding:6px 16px 8px">These are the study/practice sessions shown to members on the Bootcamp tab.</div>
+    ${bc.length?bc.map((b,i)=>`<div class="ime-ed-item">
+      <div style="flex:1;min-width:0">
+        <div class="ime-ed-title">${b.topic||b.name||'Session '+(i+1)}</div>
+        <div class="ime-ed-sub">${b.date||''} · ${b.topic||''}</div>
+      </div>
+      <button class="btn btn-g btn-sm" onclick="openBcDetail(${b.id})">Edit</button>
+    </div>`).join('')
+    :`<div style="padding:16px;font-size:11px;color:var(--t4);text-align:center">No bootcamp sessions yet</div>`}
+  </div>`;
+}
+function _imePageFBLA(){
+  const ev=typeof _fblaEvents!=='undefined'?_fblaEvents:[];
+  return`<div class="card">
+    <div class="ch"><div class="ct">FBLA Event Roster</div><button class="btn btn-p btn-sm" onclick="addFBLAEvent()">+ Add Event</button></div>
+    <div style="font-size:10px;color:var(--t3);padding:6px 16px 8px">Members see this roster on their dashboard under "FBLA Event Roster."</div>
+    ${ev.length?ev.map((e,i)=>`<div class="ime-ed-item">
+      <div style="flex:1;min-width:0">
+        <div class="ime-ed-title">${e.name}</div>
+        <div class="ime-ed-sub">${e.event||''} · ${e.date||''}</div>
+      </div>
+      <div style="display:flex;gap:5px">
+        <button class="btn btn-g btn-sm" onclick="editFBLAEvent(${i})">Edit</button>
+        <button class="btn btn-g btn-sm" style="color:var(--cr)" onclick="deleteFBLAEvent(${i})">✕</button>
+      </div>
+    </div>`).join('')
+    :`<div style="padding:16px;font-size:11px;color:var(--t4);text-align:center">No FBLA events added yet</div>`}
+  </div>`;
+}
+function _imePageExecTeam(){
+  const _ec=JSON.parse(localStorage.getItem('pbl_execcontacts')||'{}');
+  return`<div class="card">
+    <div class="ch"><div class="ct">Exec Team</div><button class="btn btn-p btn-sm" onclick="imeAddNewExec()">+ Add Member</button></div>
+    <div style="font-size:10px;color:var(--t3);padding:6px 16px 8px">Add email and phone so members can reach exec directly from the portal.</div>
+    ${execTeam&&execTeam.length?execTeam.map(e=>{
+      const ct=_ec[e.name]||{};
+      return`<div class="ime-ed-item">
+        <div style="width:34px;height:34px;border-radius:50%;background:var(--cr);color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0">${(e.name||'?')[0]}</div>
+        <div style="flex:1;min-width:0">
+          <div class="ime-ed-title">${e.name}</div>
+          <div class="ime-ed-sub">${e.position||''}</div>
+          ${ct.email?`<div style="font-size:10px;color:var(--blu);margin-top:1px">${ct.email}${ct.phone?' · '+ct.phone:''}</div>`:'<div style="font-size:10px;color:var(--t4);margin-top:1px">No contact info yet</div>'}
+        </div>
+        <button class="btn btn-g btn-sm" onclick="openExecDetail(${e.id})">Edit</button>
+      </div>`;}).join('')
+    :`<div style="padding:16px;font-size:11px;color:var(--t4);text-align:center">No exec members yet</div>`}
+  </div>`;
+}
+function imeAddNewExec(){
+  const positions=['President','VP of Finance','VP of Operations','VP of Strategy & Development','VP of Marketing','VP of Club Affairs','Director','Custom'];
+  openDetail('Add Exec Member','',
+    row2(fld('Name',inp('new-exec-name','')),fld('Position',sel('new-exec-pos',positions,'President')))+
+    row2(fld('Email (visible to members)',inp('new-exec-email','')),fld('Phone / GroupMe',inp('new-exec-phone','')))+
+    `<button class="btn btn-p btn-sm" onclick="imeSaveNewExec(this)">Add</button>`);
+}
+function imeSaveNewExec(btn){
+  const name=g('new-exec-name');const pos=g('new-exec-pos');
+  if(!name||!pos){return;}
+  execTeam.push({id:nE++,name,position:pos});
+  const _ec=JSON.parse(localStorage.getItem('pbl_execcontacts')||'{}');
+  _ec[name]={email:g('new-exec-email'),phone:g('new-exec-phone')};
+  localStorage.setItem('pbl_execcontacts',JSON.stringify(_ec));
+  renderExec();saveData();imeRefresh();closeDetail();saved(btn);
+}
+function _imePageOfficeHours(){
+  const slots=typeof _ohSlots!=='undefined'?_ohSlots:[];
+  return`<div class="card">
+    <div class="ch"><div class="ct">Office Hour Availability</div><button class="btn btn-p btn-sm" onclick="addOHSlot()">+ Add Slot</button></div>
+    <div style="font-size:10px;color:var(--t3);padding:6px 16px 8px">Members can request to book these slots from the Dues &amp; Office Hours tab.</div>
+    ${slots.length?slots.map((s,i)=>`<div class="ime-ed-item">
+      <div style="flex:1;min-width:0">
+        <div class="ime-ed-title">${s.day} · ${s.time}</div>
+        <div class="ime-ed-sub">${s.host||''}${s.note?' — '+s.note:''}</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:6px">
+        <span class="badge ${s.available?'bg':'bo'}" style="cursor:pointer;font-size:9px" onclick="toggleOHSlot(${i})">${s.available?'Open':'Closed'}</span>
+        <button class="btn btn-g btn-sm" onclick="editOHSlot(${i})">Edit</button>
+        <button class="btn btn-g btn-sm" style="color:var(--cr)" onclick="deleteOHSlot(${i})">✕</button>
+      </div>
+    </div>`).join('')
+    :`<div style="padding:16px;font-size:11px;color:var(--t4);text-align:center">No office hour slots yet</div>`}
+  </div>`;
+}
+function _imePageContacts(){
+  const cts=typeof _contacts!=='undefined'?_contacts:[];
+  return`<div class="card">
+    <div class="ch"><div class="ct">Contacts Directory</div><button class="btn btn-p btn-sm" onclick="addContact()">+ Add Contact</button></div>
+    <div style="font-size:10px;color:var(--t3);padding:6px 16px 8px">These contacts (bus company, embroidery, state/national leadership, etc.) appear on the Contacts page for EBOD reference.</div>
+    ${cts.length?cts.map(c=>`<div class="ime-ed-item">
+      <div style="width:34px;height:34px;border-radius:8px;background:var(--s2);border:1px solid var(--bd);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0">${c.emoji||'📋'}</div>
+      <div style="flex:1;min-width:0">
+        <div class="ime-ed-title">${c.name}</div>
+        <div class="ime-ed-sub">${c.category||''} · ${c.role||''}</div>
+        ${c.phone||c.email?`<div style="font-size:10px;color:var(--blu);margin-top:1px">${[c.phone,c.email].filter(Boolean).join(' · ')}</div>`:''}
+      </div>
+      <div style="display:flex;gap:5px">
+        <button class="btn btn-g btn-sm" onclick="editContact(${c.id})">Edit</button>
+        <button class="btn btn-g btn-sm" style="color:var(--cr)" onclick="deleteContact(${c.id})">✕</button>
+      </div>
+    </div>`).join('')
+    :`<div style="padding:16px;font-size:11px;color:var(--t4);text-align:center">No contacts yet</div>`}
   </div>`;
 }
 
@@ -1498,7 +1569,7 @@ function imeAddHighlight(){
 function imeSaveNewHighlight(btn){
   highlights.push({label:g('hl-label'),value:g('hl-value'),sub:g('hl-sub'),color:g('hl-color')});
   localStorage.setItem('pbl_highlights',JSON.stringify(highlights));
-  _imePrevHighlights();closeDetail();imeSelect('highlights');
+  saveData();closeDetail();imeRefresh();
 }
 function imeEditHighlight(i){
   const h=highlights[i];
@@ -1510,9 +1581,9 @@ function imeEditHighlight(i){
 function imeSaveHighlight(i,btn){
   highlights[i]={label:g('hl-label'),value:g('hl-value'),sub:g('hl-sub'),color:g('hl-color')};
   localStorage.setItem('pbl_highlights',JSON.stringify(highlights));
-  _imePrevHighlights();closeDetail();imeSelect('highlights');
+  saveData();closeDetail();imeRefresh();
 }
-function imeDeleteHighlight(i){highlights.splice(i,1);localStorage.setItem('pbl_highlights',JSON.stringify(highlights));_imePrevHighlights();imeSelect('highlights');}
+function imeDeleteHighlight(i){highlights.splice(i,1);localStorage.setItem('pbl_highlights',JSON.stringify(highlights));saveData();imeRefresh();}
 
 // ─── QUICK LINKS CRUD ─────────────────────────────────────────────────────────
 function imeAddLink(){
@@ -1526,7 +1597,7 @@ function imeAddLink(){
 function imeSaveNewLink(btn){
   quickLinks.push({label:g('ql-label'),icon:g('ql-icon'),desc:g('ql-desc'),url:g('ql-url'),bg:g('ql-bg'),ic:g('ql-ic')});
   localStorage.setItem('pbl_quicklinks',JSON.stringify(quickLinks));
-  _imePrevLinks();closeDetail();imeSelect('links');
+  saveData();closeDetail();imeRefresh();
 }
 function imeEditLink(i){
   const l=quickLinks[i];
@@ -1540,9 +1611,9 @@ function imeEditLink(i){
 function imeSaveLink(i,btn){
   quickLinks[i]={label:g('ql-label'),icon:g('ql-icon'),desc:g('ql-desc'),url:g('ql-url'),bg:g('ql-bg'),ic:g('ql-ic')};
   localStorage.setItem('pbl_quicklinks',JSON.stringify(quickLinks));
-  _imePrevLinks();closeDetail();imeSelect('links');
+  saveData();closeDetail();imeRefresh();
 }
-function imeDeleteLink(i){quickLinks.splice(i,1);localStorage.setItem('pbl_quicklinks',JSON.stringify(quickLinks));_imePrevLinks();imeSelect('links');}
+function imeDeleteLink(i){quickLinks.splice(i,1);localStorage.setItem('pbl_quicklinks',JSON.stringify(quickLinks));saveData();imeRefresh();}
 
 function addMCGuide(){
   resources.guides.push({name:'New Guide',desc:'',content:''});
