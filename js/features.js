@@ -7,7 +7,7 @@ let _fblaEvents=JSON.parse(localStorage.getItem('pbl_fblaevents')||JSON.stringif
   {name:'Public Speaking',members:'Nisa Pradhan',competition:'NLC 2026',type:'Individual',notes:''},
   {name:'Community Service Project',members:'Christina Tran, Carine Chan',competition:'NLC 2026',type:'Team',notes:'1st place SBLC 2026'},
 ]));
-function saveFBLAEvents(){localStorage.setItem('pbl_fblaevents',JSON.stringify(_fblaEvents));}
+function saveFBLAEvents(){localStorage.setItem('pbl_fblaevents',JSON.stringify(_fblaEvents));if(typeof saveData==='function')saveData();}
 function renderFBLAEvents(){
   const el=document.getElementById('fbla-events-list');if(!el)return;
   if(!_fblaEvents.length){el.innerHTML='<div style="padding:14px;font-size:11px;color:var(--t4)">No events added yet. Add one to display on the member dashboard.</div>';return;}
@@ -33,7 +33,7 @@ function addFBLAEvent(){
 function saveFBLAEventNew(btn){
   const e={name:g('fbla-name'),competition:g('fbla-comp'),type:g('fbla-type'),notes:g('fbla-notes'),members:g('fbla-members')};
   if(!e.name)return;
-  _fblaEvents.push(e);saveFBLAEvents();renderFBLAEvents();closeDetail();saved(btn);
+  _fblaEvents.push(e);saveFBLAEvents();renderFBLAEvents();if(typeof imeRefresh==='function')imeRefresh();closeDetail();saved(btn);
 }
 function editFBLAEvent(i){
   const e=_fblaEvents[i];
@@ -45,9 +45,9 @@ function editFBLAEvent(i){
 }
 function saveFBLAEventEdit(i,btn){
   _fblaEvents[i]={name:g('fbla-name'),competition:g('fbla-comp'),type:g('fbla-type'),notes:g('fbla-notes'),members:g('fbla-members')};
-  saveFBLAEvents();renderFBLAEvents();closeDetail();saved(btn);
+  saveFBLAEvents();renderFBLAEvents();if(typeof imeRefresh==='function')imeRefresh();closeDetail();saved(btn);
 }
-function deleteFBLAEvent(i){_fblaEvents.splice(i,1);saveFBLAEvents();renderFBLAEvents();}
+function deleteFBLAEvent(i){_fblaEvents.splice(i,1);saveFBLAEvents();renderFBLAEvents();if(typeof imeRefresh==='function')imeRefresh();}
 
 // ── CONTACTS DIRECTORY ───────────────────────────────────────────────────────
 let _contacts=JSON.parse(localStorage.getItem('pbl_contacts')||JSON.stringify([
@@ -58,7 +58,7 @@ let _contacts=JSON.parse(localStorage.getItem('pbl_contacts')||JSON.stringify([
   {id:5,name:'Faculty Advisor',org:'De Anza College',cat:'School',phone:'',email:'',notes:'Required signatory on ICC forms and conference travel approvals.'},
 ]));
 let _nContact=(_contacts.length?Math.max(..._contacts.map(c=>c.id||0)):0)+1;
-function saveContacts(){localStorage.setItem('pbl_contacts',JSON.stringify(_contacts));}
+function saveContacts(){localStorage.setItem('pbl_contacts',JSON.stringify(_contacts));if(typeof saveData==='function')saveData();}
 
 let _contactFilter='';
 function filterContacts(cat){
@@ -122,7 +122,7 @@ function addContact(){
 function saveContactNew(btn){
   const name=g('ct-name');if(!name)return;
   _contacts.push({id:_nContact++,name,org:g('ct-org'),cat:g('ct-cat'),phone:g('ct-phone'),email:g('ct-email'),notes:g('ct-notes')});
-  saveContacts();renderContacts();closeDetail();saved(btn);
+  saveContacts();renderContacts();if(typeof imeRefresh==='function')imeRefresh();closeDetail();saved(btn);
 }
 function editContact(id){
   const c=_contacts.find(x=>x.id===id);if(!c)return;
@@ -136,14 +136,14 @@ function editContact(id){
 function saveContactEdit(id,btn){
   const idx=_contacts.findIndex(x=>x.id===id);if(idx<0)return;
   _contacts[idx]={..._contacts[idx],name:g('ct-name'),org:g('ct-org'),cat:g('ct-cat'),phone:g('ct-phone'),email:g('ct-email'),notes:g('ct-notes')};
-  saveContacts();renderContacts();closeDetail();saved(btn);
+  saveContacts();renderContacts();if(typeof imeRefresh==='function')imeRefresh();closeDetail();saved(btn);
 }
-function deleteContact(id){_contacts=_contacts.filter(x=>x.id!==id);saveContacts();renderContacts();}
+function deleteContact(id){_contacts=_contacts.filter(x=>x.id!==id);saveContacts();renderContacts();if(typeof imeRefresh==='function')imeRefresh();}
 
 // ── HOMEWORK GRADING (EBOD) ──────────────────────────────────────────────────
 let hwAssignments=JSON.parse(localStorage.getItem('pblhub_hw_assignments')||'[]');
 
-function saveHWAssignments(){localStorage.setItem('pblhub_hw_assignments',JSON.stringify(hwAssignments));}
+function saveHWAssignments(){localStorage.setItem('pblhub_hw_assignments',JSON.stringify(hwAssignments));if(typeof saveData==='function')saveData();}
 
 function renderEBODHomework(){
   // populate session filter
@@ -954,7 +954,7 @@ function updateImReimb(id,status){
 // ── OFFICE HOURS ─────────────────────────────────────────────
 // ============================================================
 let _ohSlots=JSON.parse(localStorage.getItem('pbl_ohslots')||'[]');
-function saveOHSlots(){localStorage.setItem('pbl_ohslots',JSON.stringify(_ohSlots));}
+function saveOHSlots(){localStorage.setItem('pbl_ohslots',JSON.stringify(_ohSlots));if(typeof saveData==='function')saveData();}
 let _nOHSlot=(_ohSlots.length?Math.max(..._ohSlots.map(s=>s.id||0)):0)+1;
 
 function renderOHSlots(){
@@ -985,7 +985,7 @@ function addOHSlot(){
 function saveOHSlotNew(btn){
   const s={id:_nOHSlot++,officer:g('ohs-officer'),day:g('ohs-day'),time:g('ohs-time'),note:g('ohs-note'),available:true};
   if(!s.officer||!s.day||!s.time)return;
-  _ohSlots.push(s);saveOHSlots();renderOHSlots();closeDetail();saved(btn);
+  _ohSlots.push(s);saveOHSlots();renderOHSlots();if(typeof imeRefresh==='function')imeRefresh();closeDetail();saved(btn);
 }
 function editOHSlot(i){
   const s=_ohSlots[i];
@@ -997,10 +997,10 @@ function editOHSlot(i){
 }
 function saveOHSlotEdit(i,btn){
   _ohSlots[i]={..._ohSlots[i],officer:g('ohs-officer'),day:g('ohs-day'),time:g('ohs-time'),note:g('ohs-note')};
-  saveOHSlots();renderOHSlots();closeDetail();saved(btn);
+  saveOHSlots();renderOHSlots();if(typeof imeRefresh==='function')imeRefresh();closeDetail();saved(btn);
 }
-function deleteOHSlot(i){_ohSlots.splice(i,1);saveOHSlots();renderOHSlots();}
-function toggleOHSlot(i){_ohSlots[i].available=!_ohSlots[i].available;saveOHSlots();renderOHSlots();}
+function deleteOHSlot(i){_ohSlots.splice(i,1);saveOHSlots();renderOHSlots();if(typeof imeRefresh==='function')imeRefresh();}
+function toggleOHSlot(i){_ohSlots[i].available=!_ohSlots[i].available;saveOHSlots();renderOHSlots();if(typeof imeRefresh==='function')imeRefresh();}
 function renderIMConsulting(){
   const el=document.getElementById('im-consult-list');if(!el)return;
   const uid=firebase.auth().currentUser?.uid;
@@ -2555,5 +2555,4 @@ function submitCompResult(){
   ['ch-member','ch-event','ch-conf','ch-placement','ch-notes'].forEach(id=>document.getElementById(id).value='');
 }
 function deleteCompResult(i){_compResults.splice(i,1);saveRoleData('compresults',_compResults);renderCompHistory();}
-
 
