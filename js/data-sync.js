@@ -282,7 +282,16 @@ function saveData(){
     compEvents,resources,eventSlides,lectureSlides,
     pblTransactions,merchSales,importedCalEvents,
     nM,nE,nB,nT,nA,nEv,nEmail,nCon,nCli,nDel,nCR,nCE,nCH,nTr,nMin,nPr,nGoal,nTD,nAnn,nMP,nSp,nPl,nRos,
-    nEC,nReim,nVen,nVS,nCP,nCurr,nBKC,nBKF,nPost,nMCI,nPblTr,nMerch
+    nEC,nReim,nVen,nVS,nCP,nCurr,nBKC,nBKF,nPost,nMCI,nPblTr,nMerch,
+    // ── pbl_* keys (member portal & shared state) ──
+    highlights:typeof highlights!=='undefined'?highlights:[],
+    quickLinks:typeof quickLinks!=='undefined'?quickLinks:[],
+    confEvents:_confEvents,
+    fblaEvents:typeof _fblaEvents!=='undefined'?_fblaEvents:[],
+    ohSlots:typeof _ohSlots!=='undefined'?_ohSlots:[],
+    contacts:typeof _contacts!=='undefined'?_contacts:[],
+    hwAssignments:typeof hwAssignments!=='undefined'?hwAssignments:[],
+    execContacts:JSON.parse(localStorage.getItem('pbl_execcontacts')||'{}'),
   };
   try{localStorage.setItem(SAVE_KEY,JSON.stringify(d));}catch(e){}
   // Save to Firestore (async, non-blocking — keeps all devices in sync)
@@ -749,6 +758,15 @@ function _applyFirestoreData(d){
   if(d.pblTransactions)pblTransactions=d.pblTransactions;
   if(d.merchSales)merchSales=d.merchSales;
   if(d.importedCalEvents)importedCalEvents=d.importedCalEvents;
+  // ── pbl_* shared keys ──
+  if(d.highlights&&typeof highlights!=='undefined'){highlights=d.highlights;try{localStorage.setItem('pbl_highlights',JSON.stringify(d.highlights));}catch(e){}}
+  if(d.quickLinks&&typeof quickLinks!=='undefined'){quickLinks=d.quickLinks;try{localStorage.setItem('pbl_quicklinks',JSON.stringify(d.quickLinks));}catch(e){}}
+  if(d.confEvents){_confEvents=d.confEvents;try{localStorage.setItem('pbl_confevents',JSON.stringify(d.confEvents));}catch(e){}}
+  if(d.fblaEvents&&typeof _fblaEvents!=='undefined'){_fblaEvents=d.fblaEvents;try{localStorage.setItem('pbl_fblaevents',JSON.stringify(d.fblaEvents));}catch(e){}}
+  if(d.ohSlots&&typeof _ohSlots!=='undefined'){_ohSlots=d.ohSlots;try{localStorage.setItem('pbl_ohslots',JSON.stringify(d.ohSlots));}catch(e){}}
+  if(d.contacts&&typeof _contacts!=='undefined'){_contacts=d.contacts;try{localStorage.setItem('pbl_contacts',JSON.stringify(d.contacts));}catch(e){}}
+  if(d.hwAssignments&&typeof hwAssignments!=='undefined'){hwAssignments=d.hwAssignments;try{localStorage.setItem('pblhub_hw_assignments',JSON.stringify(d.hwAssignments));}catch(e){}}
+  if(d.execContacts){try{localStorage.setItem('pbl_execcontacts',JSON.stringify(d.execContacts));}catch(e){}}
   // Also write to localStorage so syncFromEBOD() still works same-device
   try{localStorage.setItem(SAVE_KEY,JSON.stringify(d));}catch(e){}
 }
@@ -758,6 +776,12 @@ function _renderAll(){
   renderBudget();renderMinutes();renderRecruitment();renderAnnouncements();
   renderMentorship();renderDashboard();renderEcSelect();renderReimbursements();
   renderMemberContent();renderMerch();
+  // pbl_* sections
+  if(typeof renderFBLAEvents==='function')renderFBLAEvents();
+  if(typeof renderOHSlots==='function')renderOHSlots();
+  if(typeof renderContacts==='function')renderContacts();
+  if(typeof renderEBODHomework==='function')renderEBODHomework();
+  if(typeof imeRefresh==='function')imeRefresh();
 }
 function initFirestore(){
   if(!window._db)return;
