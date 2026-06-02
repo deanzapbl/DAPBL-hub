@@ -305,6 +305,9 @@ function _enterEBOD(){
   if(typeof updateMemberDisplay==='function')updateMemberDisplay();
   initExtraListeners();
   loadEBODHWFromFirestore();
+  // Re-establish Firestore listener now that we are authenticated â€” this is
+  // the critical call that ensures real-time cross-device sync works after login.
+  if(typeof initFirestore==='function')initFirestore();
 }
 function loginEBOD(){
   const email=document.getElementById('land-ebod-email').value.trim();
@@ -341,6 +344,7 @@ firebase.auth().onAuthStateChanged(user=>{
       document.getElementById('landing').style.display='none';
       document.getElementById('app-im').style.display='block';
       initExtraListeners();
+      if(typeof initFirestore==='function')initFirestore();
       initIM();
       _loadMemberData(user.uid);
     }
