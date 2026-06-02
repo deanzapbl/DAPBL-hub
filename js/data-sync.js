@@ -855,12 +855,43 @@ function handleCsvImport(e){
 }
 
 (function(){const sb=document.getElementById('sidebar');const rz=document.getElementById('sb-resizer');let dragging=false,startX=0,startW=0;rz.addEventListener('mousedown',e=>{dragging=true;startX=e.clientX;startW=sb.offsetWidth;rz.classList.add('dragging');document.body.style.cursor='col-resize';document.body.style.userSelect='none';e.preventDefault();});document.addEventListener('mousemove',e=>{if(!dragging)return;const w=Math.min(360,Math.max(160,startW+(e.clientX-startX)));sb.style.setProperty('--sb-width',w+'px');sb.style.width=w+'px';});document.addEventListener('mouseup',()=>{if(!dragging)return;dragging=false;rz.classList.remove('dragging');document.body.style.cursor='';document.body.style.userSelect='';});})();
+// â”€â”€ ENCODING SANITIZER â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// Fixes UTF-8-as-Latin1 Mojibake (Ã¢â‚¬", Ã¢â‚¬â„¢, etc.) in any saved data.
+// Runs once per device; after that the _encFixed flag prevents repeat runs.
+function _fixStr(s){
+  if(typeof s!=='string')return s;
+  return s.replace(/Ã¢â‚¬"/g,'â€”').replace(/Ã¢â‚¬â„¢/g,"'").replace(/Ã¢â‚¬Ëœ/g,"'")
+          .replace(/Ã¢â‚¬Å“/g,'"').replace(/Ã¢â‚¬/g,'"').replace(/Ã¢â‚¬Â¦/g,'...')
+          .replace(/Ã¢â‚¬Â¢/g,'â€¢').replace(/Ã¢â‚¬"/g,'â€“').replace(/ÃƒÂ©/g,'Ã©')
+          .replace(/ÃƒÂ¨/g,'Ã¨').replace(/Ãƒ /g,'Ã ').replace(/ÃƒÂ¡/g,'Ã¡')
+          .replace(/ÃƒÂ±/g,'Ã±').replace(/ÃƒÂ³/g,'Ã³').replace(/ÃƒÂ­/g,'Ã­')
+          .replace(/Ãƒ /g,'Ã').replace(/ÃƒÂ¼/g,'Ã¼').replace(/ÃƒÂ¶/g,'Ã¶');
+}
+function _deepFix(v){
+  if(typeof v==='string')return _fixStr(v);
+  if(Array.isArray(v))return v.map(_deepFix);
+  if(v&&typeof v==='object'){const o={};for(const k in v)o[k]=_deepFix(v[k]);return o;}
+  return v;
+}
+function _runEncodingFix(){
+  if(localStorage.getItem('_encFixed')==='1')return; // already done on this device
+  members=_deepFix(members);bootcamps=_deepFix(bootcamps);tasks=_deepFix(tasks);
+  agendas=_deepFix(agendas);eventsData=_deepFix(eventsData);
+  announcements=_deepFix(announcements);meetingMinutes=_deepFix(meetingMinutes);
+  transitionDocs=_deepFix(transitionDocs);goals=_deepFix(goals);
+  resources=_deepFix(resources);sponsors=_deepFix(sponsors);
+  prospects=_deepFix(prospects);consultingProjects=_deepFix(consultingProjects);
+  saveData();
+  localStorage.setItem('_encFixed','1');
+}
 loadData();
+_runEncodingFix();
 renderMembers();renderExec();renderBootcamps();renderTasks();renderAgendas();renderEvents();renderRos();renderTemplates();renderSponsors();renderEmailList();renderConsulting();renderCompetition();renderBudget();renderMinutes();renderRecruitment();renderGoals();renderTransition();renderAnnouncements();renderMentorship();renderDashboard();renderPortals();renderEcSelect();renderReimbursements();renderVenues();renderVolSlots();renderCompPrep();renderCurriculum();renderBrandKit();renderContentCalendar();renderCaMentors();renderMemberCheckIns();renderCalendar();
 
 // â”€â”€ FIRESTORE REAL-TIME SYNC â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 // Applies a Firestore snapshot to all in-memory variables (mirrors loadData)
 function _applyFirestoreData(d){
+  d=_deepFix(d); // sanitize any garbled characters before applying
   if(d.members)members=d.members;
   if(d.execTeam)execTeam=d.execTeam;
   if(d.bootcamps)bootcamps=d.bootcamps;
