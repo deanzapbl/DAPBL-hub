@@ -397,8 +397,40 @@ function loadData(){
   }catch(e){}
 }
 function resetAllData(){
-  if(!confirm('Reset ALL data to defaults? This cannot be undone.'))return;
+  if(!confirm('âš ï¸ Reset EVERYTHING to defaults?\n\nThis wipes all members, documents, events, bootcamps, tasks, and ALL other data. This cannot be undone.\n\nAre you absolutely sure?'))return;
+  if(!confirm('Last warning â€” this deletes everything. Continue?'))return;
+  // Also clear Firestore so the listener doesn\'t restore the old data
+  if(window._db){window._db.collection('chapter').doc('main').delete().catch(()=>{});}
   localStorage.removeItem(SAVE_KEY);location.reload();
+}
+// Reset ONLY the members/attendance list back to the code defaults.
+// Everything else (events, bootcamps, tasks, documents, etc.) is untouched.
+function resetMembersOnly(){
+  if(!confirm('Reset the member & attendance list to defaults?\n\nAll other data (events, bootcamps, tasks, documents) will be kept.'))return;
+  // Pull defaults straight from the source-of-truth in core.js
+  members=[
+    {id:1,first:'Nisa',last:'Pradhan',role:'Exec',email:'',att:[1,1,1,1,1,1]},
+    {id:2,first:'Carine',last:'Chan',role:'Exec',email:'',att:[1,1,1,1,1,1]},
+    {id:3,first:'Arya',last:'Somu',role:'Exec',email:'',att:[1,1,0,1,1,1]},
+    {id:4,first:'George',last:'Huang',role:'Exec',email:'',att:[1,1,1,1,0,1]},
+    {id:5,first:'Addy',last:'Hu',role:'Exec',email:'',att:[1,1,1,1,1,0]},
+    {id:6,first:'Nhi',last:'Tran',role:'Exec',email:'',att:[1,0,1,1,1,1]},
+    {id:7,first:'Christina',last:'Tran',role:'Exec',email:'',att:[1,1,1,0,1,1]},
+    {id:8,first:'Anna',last:'Huynh',role:'Exec',email:'',att:[1,1,1,1,1,1]},
+    {id:9,first:'Iker',last:'Jimenez',role:'Exec',email:'',att:[1,1,0,1,1,1]},
+    {id:10,first:'Jordan',last:'Nguyen',role:'Exec',email:'',att:[1,1,1,1,0,1]},
+    {id:11,first:'Dianne',last:'Johnson',role:'Exec',email:'',att:[1,1,1,0,1,1]},
+    {id:12,first:'Derick',last:'Nguyen',role:'Exec',email:'',att:[0,0,0,0,0,0]},
+    {id:13,first:'Rameesha',last:'Farrukh',role:'Exec',email:'',att:[0,0,0,0,0,0]},
+    {id:14,first:'Arin',last:'Kumar',role:'Exec',email:'',att:[0,0,0,0,0,0]},
+    {id:15,first:'Jayden',last:'Phan',role:'Exec',email:'',att:[0,0,0,0,0,0]},
+    {id:16,first:'William',last:'Devanney',role:'Exec',email:'',att:[0,0,0,0,0,0]},
+    {id:17,first:'Ruirui',last:'Wu',role:'Exec',email:'',att:[0,0,0,0,0,0]},
+    {id:18,first:'Bryant',last:'Vo',role:'Exec',email:'',att:[0,0,0,0,0,0]},
+  ];
+  nM=19;
+  renderMembers();saveData();
+  alert('Member list reset. All other data is unchanged.');
 }
 // Guard: don't let the click/change debounce write to Firestore until we've
 // received the first server snapshot (prevents stale localStorage from
