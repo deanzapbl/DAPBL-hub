@@ -409,35 +409,124 @@ document.addEventListener('click',()=>{if(!_fsLoaded)return;clearTimeout(_saveTi
 document.addEventListener('change',()=>{if(!_fsLoaded)return;clearTimeout(_saveTimer);_saveTimer=setTimeout(saveData,800);});
 
 // ---- FEATURE 2: Global search ----
+let _gsItems=[]; // holds the current result set for click dispatch
 function gsSearch(q){
   const drop=document.getElementById('gs-drop');
   if(!q.trim()){gsClose();return;}
   const lq=q.toLowerCase();
   const sections=[];
-  const cap=4;
+  const cap=5;
+
+  // â”€â”€ Members â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   const mRes=members.filter(m=>(m.first+' '+m.last).toLowerCase().includes(lq)).slice(0,cap);
-  if(mRes.length)sections.push({cat:'Members',items:mRes.map(m=>({label:m.first+' '+m.last,sub:m.role,page:'attendance'}))});
+  if(mRes.length)sections.push({cat:'Members',items:mRes.map(m=>({
+    label:m.first+' '+m.last,sub:m.role,go(){showPage('attendance');}
+  }))});
+
+  // â”€â”€ Tasks â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   const tRes=[...tasks.ebod,...tasks.general].filter(t=>t.text.toLowerCase().includes(lq)).slice(0,cap);
-  if(tRes.length)sections.push({cat:'Tasks',items:tRes.map(t=>({label:t.text,sub:'Due '+t.due,page:'tasks'}))});
+  if(tRes.length)sections.push({cat:'Tasks',items:tRes.map(t=>({
+    label:t.text,sub:'Due '+t.due,go(){showPage('tasks');}
+  }))});
+
+  // â”€â”€ Templates â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  const tmplRes=[];
+  [['proposals','Proposals'],['resources','Resources'],['ros','Run of Show']].forEach(([sec,label])=>{
+    (templates[sec]||[]).forEach((t,i)=>{
+      if((t.name+' '+t.desc+' '+(t.content||'')).toLowerCase().includes(lq)){
+        const tabId=sec==='ros'?'ros-t':sec;
+        tmplRes.push({label:t.name,sub:'Template Â· '+label,go(){
+          showPage('templates');showTab('templates',tabId);
+          setTimeout(()=>openTemplateDetail(sec,i),60);
+        }});
+      }
+    });
+  });
+  if(tmplRes.length)sections.push({cat:'Templates',items:tmplRes.slice(0,cap)});
+
+  // â”€â”€ Announcements â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  const annAll=[...(announcements.draft||[]),...(announcements.sent||[])];
+  const annRes=annAll.filter(a=>(a.title+' '+(a.content||'')).toLowerCase().includes(lq)).slice(0,cap);
+  if(annRes.length)sections.push({cat:'Announcements',items:annRes.map(a=>({
+    label:a.title,sub:a.channel+(a.date?' Â· '+a.date:''),go(){showPage('announcements');}
+  }))});
+
+  // â”€â”€ Meeting Minutes â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  const minRes=(meetingMinutes||[]).filter(m=>(m.name+' '+(m.notes||'')+' '+(m.actions||'')).toLowerCase().includes(lq)).slice(0,cap);
+  if(minRes.length)sections.push({cat:'Minutes',items:minRes.map(m=>({
+    label:m.name,sub:m.date||'',go(){showPage('minutes');}
+  }))});
+
+  // â”€â”€ Transition Docs â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  const tdRes=(transitionDocs||[]).filter(t=>(t.position+' '+(t.content||'')).toLowerCase().includes(lq)).slice(0,cap);
+  if(tdRes.length)sections.push({cat:'Transition',items:tdRes.map(t=>({
+    label:t.position,sub:'By '+t.author,go(){showPage('transition');}
+  }))});
+
+  // â”€â”€ Member Resources (guides + resource templates) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  const resAll=[...((resources&&resources.guides)||[]).map(r=>({...r,_type:'Guide'})),
+                ...((resources&&resources.templates)||[]).map(r=>({...r,_type:'Template'}))];
+  const resRes=resAll.filter(r=>(r.name+' '+(r.desc||'')+' '+(r.content||'')).toLowerCase().includes(lq)).slice(0,cap);
+  if(resRes.length)sections.push({cat:'Member Resources',items:resRes.map(r=>({
+    label:r.name,sub:r._type+(r.desc?' Â· '+r.desc.slice(0,40):''),go(){showPage('member-content');}
+  }))});
+
+  // â”€â”€ Sponsors â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   const spRes=sponsors.filter(s=>s.name.toLowerCase().includes(lq)).slice(0,cap);
-  if(spRes.length)sections.push({cat:'Sponsors',items:spRes.map(s=>({label:s.name,sub:s.tier,page:'sponsors'}))});
+  if(spRes.length)sections.push({cat:'Sponsors',items:spRes.map(s=>({
+    label:s.name,sub:s.tier,go(){showPage('sponsors');}
+  }))});
+
+  // â”€â”€ Events â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   const evRes=[...eventsData.upcoming,...(eventsData.past||[])].filter(e=>e.name.toLowerCase().includes(lq)).slice(0,cap);
-  if(evRes.length)sections.push({cat:'Events',items:evRes.map(e=>({label:e.name,sub:e.date,page:'events'}))});
+  if(evRes.length)sections.push({cat:'Events',items:evRes.map(e=>({
+    label:e.name,sub:e.date,go(){showPage('events');}
+  }))});
+
+  // â”€â”€ Bootcamps â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   const bcRes=bootcamps.filter(b=>(b.name+' '+b.topic).toLowerCase().includes(lq)).slice(0,cap);
-  if(bcRes.length)sections.push({cat:'Bootcamps',items:bcRes.map(b=>({label:b.name,sub:b.topic,page:'bootcamps'}))});
+  if(bcRes.length)sections.push({cat:'Bootcamps',items:bcRes.map(b=>({
+    label:b.name,sub:b.topic,go(){showPage('bootcamps');}
+  }))});
+
+  // â”€â”€ Consulting Projects â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  const cpRes=(consultingProjects||[]).filter(p=>(p.name+' '+p.client+' '+(p.notes||'')).toLowerCase().includes(lq)).slice(0,cap);
+  if(cpRes.length)sections.push({cat:'Consulting',items:cpRes.map(p=>({
+    label:p.name,sub:p.client+' Â· '+p.status,go(){showPage('consulting');}
+  }))});
+
+  // â”€â”€ Goals â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   const gRes=goals.filter(g2=>g2.title.toLowerCase().includes(lq)).slice(0,cap);
-  if(gRes.length)sections.push({cat:'Goals',items:gRes.map(g2=>({label:g2.title,sub:g2.metric,page:'goals'}))});
+  if(gRes.length)sections.push({cat:'Goals',items:gRes.map(g2=>({
+    label:g2.title,sub:g2.metric||'',go(){showPage('goals');}
+  }))});
+
+  // â”€â”€ Venues â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   const vRes=venues.filter(v=>v.name.toLowerCase().includes(lq)).slice(0,cap);
-  if(vRes.length)sections.push({cat:'Venues',items:vRes.map(v=>({label:v.name,sub:v.status,page:'portal-operations'}))});
-  if(!sections.length){drop.innerHTML='<div class="gs-item" style="color:var(--t4)">No results</div>';drop.classList.add('open');return;}
-  drop.innerHTML=sections.map(s=>`<div class="gs-cat">${s.cat}</div>`+s.items.map(it=>`<div class="gs-item" onclick="gsGo('${it.page}')"><span style="font-weight:500">${it.label}</span>${it.sub?`<span style="font-size:10px;color:var(--t3);margin-left:6px">${it.sub}</span>`:''}</div>`).join('')).join('');
+  if(vRes.length)sections.push({cat:'Venues',items:vRes.map(v=>({
+    label:v.name,sub:v.status||'',go(){showPage('portal-operations');}
+  }))});
+
+  if(!sections.length){
+    drop.innerHTML='<div class="gs-item" style="color:var(--t4)">No results</div>';
+    drop.classList.add('open');return;
+  }
+
+  // Flatten items and assign index for click dispatch
+  _gsItems=sections.flatMap(s=>s.items);
+  let idx=0;
+  drop.innerHTML=sections.map(s=>`<div class="gs-cat">${s.cat}</div>`+
+    s.items.map(it=>`<div class="gs-item" data-gi="${idx++}"><span style="font-weight:500">${it.label}</span>${it.sub?`<span style="font-size:10px;color:var(--t3);margin-left:6px">${it.sub}</span>`:''}</div>`).join('')
+  ).join('');
+  drop.querySelectorAll('[data-gi]').forEach(el=>el.addEventListener('click',()=>{
+    const item=_gsItems[+el.dataset.gi];
+    if(item&&item.go)item.go();
+    document.getElementById('gs-input').value='';
+    gsClose();
+  }));
   drop.classList.add('open');
 }
-function gsGo(page){
-  showPage(page);
-  document.getElementById('gs-input').value='';
-  gsClose();
-}
+function gsGo(page){showPage(page);document.getElementById('gs-input').value='';gsClose();}
 function gsClose(){document.getElementById('gs-drop').classList.remove('open');}
 document.addEventListener('click',e=>{if(!e.target.closest('.gs-wrap'))gsClose();});
 
@@ -619,7 +708,7 @@ function renderRos(){
     sel.innerHTML='<option value="">Select Event...</option>'+allEvents.map(e=>`<option value="${e}"${e===currentRosEvent?' selected':''}>${e}</option>`).join('');
   }
   const title=document.getElementById('ros-event-title');
-  if(title)title.textContent=(currentRosEvent||'Run of Show')+' â€” Minute by Minute';
+  if(title)title.textContent=currentRosEvent||'Run of Show';
   const t=document.getElementById('ros-table');
   if(!t)return;
   const items=rosData[currentRosEvent]||[];
@@ -803,11 +892,14 @@ function _renderAll(){
   if(typeof renderEBODHomework==='function')renderEBODHomework();
   if(typeof imeRefresh==='function')imeRefresh();
 }
+let _firestoreUnsub=null;
 function initFirestore(){
   if(!window._db)return;
-  window._db.collection('chapter').doc('main')
+  // Tear down any previous listener before creating a new one (idempotent)
+  if(_firestoreUnsub){try{_firestoreUnsub();}catch(e){}}_firestoreUnsub=null;
+  _firestoreUnsub=window._db.collection('chapter').doc('main')
     .onSnapshot({includeMetadataChanges:true},snap=>{
-      // hasPendingWrites=true means this is our OWN local write already in memory â€” skip
+      // hasPendingWrites=true means this is our OWN local write echoing back â€” skip
       if(snap.metadata.hasPendingWrites)return;
       if(!snap.exists)return;
       const d=snap.data();if(!d)return;
@@ -821,8 +913,16 @@ function initFirestore(){
         syncFromEBOD();
         mRenderBootcamps();mRenderAnnouncements();mRenderEvents();renderHome();renderResources();renderTeam();
       }
-    },err=>console.warn('Firestore listener error:',err));
+    },err=>{
+      console.warn('Firestore listener error:',err);
+      // Show visible error so sync failures never go unnoticed
+      let t=document.getElementById('_sync-err-toast');
+      if(!t){t=document.createElement('div');t.id='_sync-err-toast';t.style.cssText='position:fixed;bottom:56px;left:50%;transform:translateX(-50%);background:#c0392b;color:#fff;padding:9px 18px;border-radius:7px;font-size:12px;font-weight:600;z-index:99999;box-shadow:0 3px 10px rgba(0,0,0,.35);white-space:nowrap';document.body.appendChild(t);}
+      t.textContent='âš  Firestore listener failed: '+((err&&err.code)||'check console');
+      t.style.display='block';clearTimeout(t._t);t._t=setTimeout(()=>t.style.display='none',10000);
+    });
 }
+// Attempt early init (may fail if unauthenticated â€” _enterEBOD re-calls after login)
 initFirestore();
 
 // â”€â”€ EXTRA FIRESTORE LISTENERS (competition signups, reimbursements, leads, mentor check-ins, office hours)
