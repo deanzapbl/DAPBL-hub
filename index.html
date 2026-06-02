@@ -179,7 +179,8 @@
     </div>
     <div class="tb-right"><button class="btn btn-g btn-sm" onclick="switchToLanding()" style="font-size:10px">⟵ Switch Portal</button>
       <span id="save-indicator">Saved</span>
-      <button onclick="resetAllData()" title="Reset all data to defaults" style="background:none;border:none;color:var(--t4);cursor:pointer;font-size:10px;font-family:'IBM Plex Sans',sans-serif;padding:3px 6px;border-radius:3px;" onmouseover="this.style.color='var(--t3)'" onmouseout="this.style.color='var(--t4)'">&#8635; Reset</button>
+      <button onclick="resetMembersOnly()" title="Reset member list only — keeps all other data" style="background:none;border:none;color:var(--t4);cursor:pointer;font-size:10px;font-family:'IBM Plex Sans',sans-serif;padding:3px 6px;border-radius:3px;" onmouseover="this.style.color='var(--t3)'" onmouseout="this.style.color='var(--t4)'">&#8635; Reset Members</button>
+      <button onclick="resetAllData()" title="Reset ALL data to defaults — deletes everything" style="background:none;border:none;color:#E57373;cursor:pointer;font-size:10px;font-family:'IBM Plex Sans',sans-serif;padding:3px 6px;border-radius:3px;" onmouseover="this.style.color='#c0392b'" onmouseout="this.style.color='#E57373'">&#9888; Reset All</button>
       <button class="btn btn-p" onclick="openModal('add-modal')">+ Add</button>
     </div>
   </div>
