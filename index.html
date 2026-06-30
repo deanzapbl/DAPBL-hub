@@ -450,6 +450,9 @@ textarea{resize:vertical;min-height:120px;}
     </div>
     <div class="nav-group">
       <div class="ngl">Exec</div>
+      <div class="ni" onclick="showPage('exec-team')">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="5" cy="5" r="3"/><path d="M1 14c0-3 1.8-5 4-5"/><circle cx="11" cy="5" r="3"/><path d="M10 9h4M12 7v4"/></svg>Exec Team
+      </div>
       <div class="ni" onclick="showPage('tasks')">
         <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="2" width="12" height="12" rx="1"/><path d="M5 8h6M5 5h6M5 11h4"/></svg>Tasks &amp; Agendas<span class="nbadge" id="task-badge">4</span>
       </div>
@@ -517,15 +520,6 @@ textarea{resize:vertical;min-height:120px;}
 
       <!-- CALENDAR -->
       <div class="page" id="page-calendar">
-        <div class="card" style="margin-bottom:12px">
-          <div class="ch"><div class="ct">Google Calendar Import</div><div id="ical-status" style="font-size:10px;color:var(--grn)"></div></div>
-          <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-            <input id="ical-url" type="text" placeholder="Paste public Google Calendar iCal URL (ends in .ics)..." style="flex:1;min-width:200px;background:var(--s2);border:1px solid var(--bd);border-radius:5px;padding:7px 10px;font-size:11px;font-family:'IBM Plex Mono',monospace;color:var(--t1);outline:none">
-            <button class="btn btn-p btn-sm" onclick="importIcal()">Import</button>
-            <button class="btn btn-g btn-sm" onclick="clearImportedCal()">Clear</button>
-          </div>
-          <div style="font-size:10px;color:var(--t3);margin-top:6px;line-height:1.5">Calendar must be set to <strong>public</strong> in Google Calendar settings. In Google Calendar: Settings → your calendar → Access permissions → Make available to public. Then copy the <strong>iCal address</strong> link.</div>
-        </div>
         <div class="card">
           <div class="cal-nav">
             <button onclick="calPrev()">&#8249;</button>
@@ -593,7 +587,14 @@ textarea{resize:vertical;min-height:120px;}
         </div>
       </div>
 
-      <!-- EXEC -->
+      <!-- EXEC TEAM -->
+      <div class="page" id="page-exec-team">
+        <div class="card">
+          <div class="ch"><div class="ct">Exec Team Roster</div><div style="display:flex;gap:6px"><button class="btn-csv" onclick="openImportDataModal('exec')">Import CSV</button><button class="btn btn-p btn-sm" onclick="openModal('exec-modal')">+ Add Member</button></div></div>
+          <div id="exec-list"></div>
+        </div>
+      </div>
+
       <!-- MENTORSHIP -->
       <div class="page" id="page-mentorship">
         <div class="sg">
@@ -1800,7 +1801,7 @@ textarea{resize:vertical;min-height:120px;}
         <div class="tabs">
           <div class="tab active" onclick="showTab('portal-president','overview')">Overview</div>
           <div class="tab" onclick="showTab('portal-president','conferences');renderConfDues()">Conference Tracker</div>
-          <div class="tab" onclick="showTab('portal-president','agendas');renderPresAgendas()">Meeting Agendas</div>
+          <div class="tab" onclick="showTab('portal-president','agendas');renderPresAgendas()">General Meetings</div>
           <div class="tab" onclick="showTab('portal-president','delegation');renderDelegation()">Board Delegation</div>
           <div class="tab" onclick="showTab('portal-president','officercheckins');renderOfficerCheckins()">Officer Check-Ins</div>
           <div class="tab" onclick="showTab('portal-president','decisions');renderDecisionLog()">Decision Log</div>
@@ -1822,18 +1823,13 @@ textarea{resize:vertical;min-height:120px;}
           </div>
         </div>
 
-        <!-- MEETING AGENDAS TAB -->
+        <!-- GENERAL MEETINGS TAB -->
         <div class="sub" id="portal-president-agendas">
           <div class="card" style="margin-bottom:14px">
             <div class="ch">
-              <div class="ct">Meeting Agenda Builder</div>
+              <div class="ct">General Meetings</div>
               <div style="display:flex;gap:6px">
-                <select id="agenda-type-select" style="font-size:10px;padding:3px 8px;background:var(--s2);border:1px solid var(--bd);border-radius:4px;color:var(--t1)">
-                  <option value="EB">Executive Board</option>
-                  <option value="BOD">Board of Directors</option>
-                  <option value="Internal">Internal Member</option>
-                </select>
-                <button class="btn btn-p btn-sm" onclick="newPresAgenda()">+ New Agenda</button>
+                <button class="btn btn-p btn-sm" onclick="newPresAgenda()">+ New Meeting</button>
               </div>
             </div>
             <div id="pres-agendas-list" style="padding:0 16px 16px"></div>
@@ -1975,11 +1971,18 @@ textarea{resize:vertical;min-height:120px;}
     <div class="mf"><button class="btn btn-g" onclick="closeModals()">Cancel</button><button class="btn btn-p" onclick="addMember()">Add Member</button></div>
   </div>
 </div>
+<div class="overlay" id="exec-modal">
+  <div class="modal"><div class="mt">Add Exec Member</div>
+    <div class="fg"><div class="fl">Full Name</div><input id="exec-name" type="text" placeholder="e.g. Nisa Pradhan"></div>
+    <div class="fg"><div class="fl">Position / Title</div><input id="exec-pos" type="text" placeholder="e.g. President, VP of Finance"></div>
+    <div class="mf"><button class="btn btn-g" onclick="closeModals()">Cancel</button><button class="btn btn-p" onclick="addExecMember()">Add</button></div>
+  </div>
+</div>
 <div class="overlay" id="task-modal">
   <div class="modal"><div class="mt">Add Task</div>
     <input type="hidden" id="task-board">
     <div class="fg"><div class="fl">Task</div><input id="t-text" type="text"></div>
-    <div class="fr"><div class="fg"><div class="fl">Assigned To</div><select id="t-owner"><option>Nisa Pradhan</option><option>Carine Chan</option><option>Arya Somu</option><option>George Huang</option><option>Addy Hu</option><option>Nhi Tran</option><option>Christina Tran</option><option>Anna Huynh</option><option>Iker Jimenez</option><option>Jordan Nguyen</option><option>Dianne Johnson</option></select></div><div class="fg"><div class="fl">Due Date</div><input id="t-due" type="date"></div></div>
+    <div class="fr"><div class="fg"><div class="fl">Assigned To</div><select id="t-owner"></select></div><div class="fg"><div class="fl">Due Date</div><input id="t-due" type="date"></div></div>
     <div class="fg"><div class="fl">Notes</div><textarea id="t-notes"></textarea></div>
     <div class="mf"><button class="btn btn-g" onclick="closeModals()">Cancel</button><button class="btn btn-p" onclick="addTask()">Add Task</button></div>
   </div>
@@ -1990,6 +1993,14 @@ textarea{resize:vertical;min-height:120px;}
     <div class="fg"><div class="fl">Agenda Items (one per line)</div><textarea id="ag-items"></textarea></div>
     <div class="fg"><div class="fl">Notes</div><textarea id="ag-notes"></textarea></div>
     <div class="mf"><button class="btn btn-g" onclick="closeModals()">Cancel</button><button class="btn btn-p" onclick="addAgenda()">Create Agenda</button></div>
+  </div>
+</div>
+<div class="overlay" id="agendapres-modal">
+  <div class="modal" style="max-width:520px"><div class="mt">New General Meeting</div>
+    <div class="fr"><div class="fg"><div class="fl">Meeting Title</div><input id="ap-title" type="text" placeholder="e.g. EBOD Meeting, Board of Directors"></div><div class="fg"><div class="fl">Date</div><input id="ap-date" type="date"></div></div>
+    <div class="fr"><div class="fg"><div class="fl">Start Time</div><input id="ap-start" type="text" placeholder="e.g. 5:00 PM"></div><div class="fg"><div class="fl">End Time</div><input id="ap-end" type="text" placeholder="e.g. 8:00 PM"></div></div>
+    <div class="fr"><div class="fg"><div class="fl">Chair</div><input id="ap-chair" type="text" placeholder="Name of chair"></div><div class="fg"><div class="fl">Timezone</div><input id="ap-tz" type="text" value="PST"></div></div>
+    <div class="mf"><button class="btn btn-g" onclick="closeModals()">Cancel</button><button class="btn btn-p" onclick="submitPresAgenda()">Create</button></div>
   </div>
 </div>
 <div class="overlay" id="ev-modal">
@@ -4765,6 +4776,7 @@ const META={
   calendar:['Calendar','Monthly view of events, tasks & bootcamps'],
   attendance:['Attendance','Member roster & session records'],
   exec:['Exec Team','Executive board management'],
+  'exec-team':['Exec Team','Add, edit and manage executive board members'],
   mentorship:['Mentor / Mentee','Pair tracking & check-ins'],
   bootcamps:['Bootcamps','Session notes & attendance'],
   tasks:['Tasks & Agendas','EBOD task board & agendas'],
@@ -4804,7 +4816,21 @@ function showTab(page,tab){
 
 // MODALS
 function openModal(id){document.getElementById(id).classList.add('open');}
-function openTaskModal(b){document.getElementById('task-board').value=b;openModal('task-modal');}
+function openTaskModal(b){
+  document.getElementById('task-board').value=b;
+  const sel=document.getElementById('t-owner');
+  sel.innerHTML=execTeam.map(e=>`<option value="${e.name}">${e.name} — ${e.position}</option>`).join('');
+  openModal('task-modal');
+}
+function addExecMember(){
+  const name=document.getElementById('exec-name').value.trim();
+  const pos=document.getElementById('exec-pos').value.trim();
+  if(!name)return;
+  execTeam.push({id:nE++,name,position:pos||'Member'});
+  document.getElementById('exec-name').value='';
+  document.getElementById('exec-pos').value='';
+  closeModals();renderExec();saveData();
+}
 function closeModals(){document.querySelectorAll('.overlay').forEach(m=>m.classList.remove('open'));}
 document.querySelectorAll('.overlay').forEach(m=>m.addEventListener('click',function(e){if(e.target===this)closeModals();}));
 
@@ -6190,31 +6216,163 @@ function submitDuesPaid(){
 }
 function deleteConfEvent(ci){_confEvents.splice(ci,1);saveRoleData('confevents',_confEvents);renderConfDues();}
 
+// ── GENERAL MEETINGS (President Hub) ────────────────────────────────────────
+let _paId=1000;
+function _paNew(title,date,timeStart,timeEnd,timezone,chair){
+  const att=execTeam.map(e=>({role:e.position,name:e.name.split(' ')[0],status:'present'}));
+  const upd=execTeam.map(e=>({role:e.position,name:e.name.split(' ')[0],content:''}));
+  const tsk=execTeam.map(e=>({person:e.name.split(' ')[0],items:['']}));
+  return{id:_paId++,title:title||'EBOD Meeting',date:date||'',timeStart:timeStart||'',timeEnd:timeEnd||'',timezone:timezone||'PST',chair:chair||'',callToOrder:'',adjournTime:'',slidesUrl:'',generalNotes:'',attendance:att,updates:upd,agendaItems:[],taskList:tsk,comments:'',minuteByMinute:[],status:'Draft'};
+}
 function renderPresAgendas(){
   const el=document.getElementById('pres-agendas-list');if(!el)return;
-  if(!_presAgendas.length){el.innerHTML='<div style="padding:20px;text-align:center;color:var(--t4);font-size:11px">No agendas yet. Use "New Agenda" to build one.</div>';return;}
-  el.innerHTML=_presAgendas.map((a,i)=>`
-    <div style="border:1px solid var(--bd);border-radius:8px;margin-bottom:10px;overflow:hidden">
-      <div style="padding:10px 14px;background:var(--s2);display:flex;justify-content:space-between;align-items:center">
+  if(!_presAgendas.length){el.innerHTML='<div style="padding:20px;text-align:center;color:var(--t4);font-size:11px">No meetings yet. Click "+ New Meeting" to start.</div>';return;}
+  el.innerHTML=_presAgendas.map((a,i)=>{
+    const d=a.date?new Date(a.date+'T00:00').toLocaleDateString('en-US',{month:'long',day:'numeric',year:'numeric'}):'No date';
+    const ni=a.agendaItems?a.agendaItems.length:0;
+    const sc=a.status==='Final'?'var(--grn)':'var(--gold2)';
+    return`<div style="border:1px solid var(--bd);border-radius:8px;margin-bottom:10px;overflow:hidden">
+      <div style="padding:11px 16px;background:var(--s2);display:flex;justify-content:space-between;align-items:center;gap:8px">
         <div>
-          <span style="font-size:9px;font-weight:700;text-transform:uppercase;padding:2px 8px;border-radius:10px;background:var(--cr)22;color:var(--cr);margin-right:6px">${a.type}</span>
-          <span style="font-size:12px;font-weight:700;color:var(--t1)">${a.date}</span>
+          <span style="font-size:12px;font-weight:700;color:var(--t1)">${a.title||'Untitled'}</span>
+          <span style="font-size:10px;color:var(--t3);margin-left:8px">${d}${a.timeStart?' · '+a.timeStart+(a.timeEnd?' – '+a.timeEnd:''):''}</span>
         </div>
-        <button class="btn btn-g btn-sm" style="color:var(--cr)" onclick="deletePresAgenda(${i})">✕</button>
+        <div style="display:flex;gap:6px;align-items:center">
+          <span style="font-size:9px;font-weight:700;color:${sc};text-transform:uppercase">${a.status||'Draft'}</span>
+          <button class="btn btn-p btn-sm" onclick="openPresAgendaDetail(${i})">Open</button>
+          <button class="btn btn-g btn-sm" style="color:var(--cr)" onclick="deletePresAgenda(${i})">✕</button>
+        </div>
       </div>
-      <div style="padding:10px 14px;font-size:11px;white-space:pre-wrap;color:var(--t2);line-height:1.6">${a.items||'(No items)'}</div>
-    </div>`).join('');
+      <div style="padding:8px 16px;font-size:10.5px;color:var(--t3)">Chair: ${a.chair||'—'} &nbsp;·&nbsp; ${ni} agenda item${ni!==1?'s':''} &nbsp;·&nbsp; ${(a.minuteByMinute||[]).length} min-by-min entries</div>
+    </div>`;
+  }).join('');
 }
-function newPresAgenda(){openModal('agendapres-modal');}
+function newPresAgenda(){
+  const el=document.getElementById('ap-chair');
+  if(el&&!el.value){const pres=execTeam.find(e=>e.position.toLowerCase().includes('president')&&!e.position.toLowerCase().includes('vice'));if(pres)el.value=pres.name.split(' ')[0];}
+  openModal('agendapres-modal');
+}
 function submitPresAgenda(){
-  const type=document.getElementById('ap-type').value;
+  const title=document.getElementById('ap-title').value.trim();
   const date=document.getElementById('ap-date').value;if(!date)return;
-  const items=document.getElementById('ap-items').value.trim();
-  _presAgendas.unshift({type,date,items});
+  const a=_paNew(title,date,document.getElementById('ap-start').value,document.getElementById('ap-end').value,document.getElementById('ap-tz').value,document.getElementById('ap-chair').value);
+  _presAgendas.unshift(a);
   saveRoleData('agendas',_presAgendas);renderPresAgendas();closeModals();
-  document.getElementById('ap-date').value='';document.getElementById('ap-items').value='';
+  ['ap-title','ap-date','ap-start','ap-end','ap-chair'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+  document.getElementById('ap-tz').value='PST';
+  openPresAgendaDetail(0);
 }
-function deletePresAgenda(i){_presAgendas.splice(i,1);saveRoleData('agendas',_presAgendas);renderPresAgendas();}
+function deletePresAgenda(i){if(!confirm('Delete this meeting?'))return;_presAgendas.splice(i,1);saveRoleData('agendas',_presAgendas);renderPresAgendas();}
+function openPresAgendaDetail(i){
+  const a=_presAgendas[i];if(!a)return;
+  const attStatuses=['present','absent','late','excused'];
+  const attTable=grp=>`<table style="width:100%;border-collapse:collapse;font-size:11px;margin-bottom:10px">
+    <thead><tr style="background:var(--cr);color:#fff"><th style="padding:5px 8px;text-align:left">${grp}</th><th style="padding:5px 8px;text-align:left">Name</th><th style="padding:5px 8px;text-align:center">Present</th><th style="padding:5px 8px;text-align:center">Absent</th><th style="padding:5px 8px;text-align:center">Late</th><th style="padding:5px 8px;text-align:center">Excused</th></tr></thead>
+    <tbody>${(a.attendance||[]).filter(r=>{
+      const rlo=r.role.toLowerCase();
+      if(grp==='Executives')return !rlo.includes('director');
+      return rlo.includes('director');
+    }).map((r,ri)=>{
+      const gi=a.attendance.indexOf(r);
+      return`<tr style="border-bottom:1px solid var(--bd)"><td style="padding:5px 8px;color:var(--t3)">${r.role}</td><td style="padding:5px 8px;font-weight:600">${r.name}</td>${attStatuses.map(s=>`<td style="padding:5px 8px;text-align:center"><input type="radio" name="att_${gi}" value="${s}" ${r.status===s?'checked':''} onchange="_paSetAtt(${i},${gi},'${s}')"></td>`).join('')}</tr>`;
+    }).join('')}</tbody></table>`;
+  const agItems=(a.agendaItems||[]).map((it,ii)=>`
+    <div style="border:1px solid var(--bd);border-radius:6px;margin-bottom:10px;overflow:hidden">
+      <div style="background:var(--cr);padding:7px 12px;color:#fff;font-size:11px;font-weight:600;display:flex;justify-content:space-between;align-items:center">
+        <span>${it.title||'Untitled Item'}</span>
+        <button onclick="_paRemoveItem(${i},${ii})" style="background:none;border:none;color:#fff;cursor:pointer;font-size:14px;line-height:1;opacity:.7">&times;</button>
+      </div>
+      <div style="background:var(--s2);padding:5px 12px;font-size:10.5px;color:var(--t3);font-weight:500">${it.type||'Information + Discussion + Action'}</div>
+      <div style="padding:10px 12px;display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:11px">
+        <div><div style="font-size:9px;font-weight:600;color:var(--cr);text-transform:uppercase;margin-bottom:3px">Description</div><textarea style="width:100%;font-size:11px;font-family:inherit;padding:5px 8px;background:var(--s1);border:1px solid var(--bd);border-radius:4px;resize:vertical;color:var(--t1);outline:none" rows="2" onchange="_paItemField(${i},${ii},'description',this.value)">${it.description||''}</textarea></div>
+        <div><div style="font-size:9px;font-weight:600;color:var(--cr);text-transform:uppercase;margin-bottom:3px">Time</div><input type="text" value="${it.time||''}" placeholder="e.g. 10 min" style="width:100%;font-size:11px;font-family:inherit;padding:5px 8px;background:var(--s1);border:1px solid var(--bd);border-radius:4px;color:var(--t1);outline:none" onchange="_paItemField(${i},${ii},'time',this.value)"></div>
+        <div><div style="font-size:9px;font-weight:600;color:var(--cr);text-transform:uppercase;margin-bottom:3px">Presenter</div><input type="text" value="${it.presenter||''}" placeholder="Name" style="width:100%;font-size:11px;font-family:inherit;padding:5px 8px;background:var(--s1);border:1px solid var(--bd);border-radius:4px;color:var(--t1);outline:none" onchange="_paItemField(${i},${ii},'presenter',this.value)"></div>
+        <div><div style="font-size:9px;font-weight:600;color:var(--cr);text-transform:uppercase;margin-bottom:3px">Resources</div><input type="text" value="${it.resources||''}" placeholder="Link or doc name" style="width:100%;font-size:11px;font-family:inherit;padding:5px 8px;background:var(--s1);border:1px solid var(--bd);border-radius:4px;color:var(--t1);outline:none" onchange="_paItemField(${i},${ii},'resources',this.value)"></div>
+      </div>
+      <div style="padding:0 12px 10px">
+        <div style="font-size:9px;font-weight:600;color:var(--t3);text-transform:uppercase;margin-bottom:4px">Discussion Items</div>
+        <textarea style="width:100%;font-size:11px;font-family:inherit;padding:5px 8px;background:var(--s1);border:1px solid var(--bd);border-radius:4px;resize:vertical;color:var(--t1);outline:none" rows="3" placeholder="1) ..." onchange="_paItemField(${i},${ii},'discussionItems',this.value)">${Array.isArray(it.discussionItems)?it.discussionItems.join('\n'):it.discussionItems||''}</textarea>
+      </div>
+    </div>`).join('');
+  const updHtml=(a.updates||[]).map((u,ui)=>`
+    <div style="margin-bottom:8px;display:grid;grid-template-columns:160px 1fr;gap:8px;align-items:start">
+      <div style="font-size:10.5px;font-weight:600;color:var(--t2);padding-top:6px">${u.name}<div style="font-size:9px;font-weight:400;color:var(--t4)">${u.role}</div></div>
+      <textarea style="font-size:11px;font-family:inherit;padding:5px 8px;background:var(--s1);border:1px solid var(--bd);border-radius:4px;resize:vertical;color:var(--t1);outline:none" rows="2" placeholder="Updates from this person..." onchange="_paUpdField(${i},${ui},this.value)">${u.content||''}</textarea>
+    </div>`).join('');
+  const tskHtml=(a.taskList||[]).map((tl,ti)=>`
+    <div style="border:1px solid var(--bd);border-radius:5px;padding:8px 10px;margin-bottom:6px;font-size:11px">
+      <div style="font-weight:600;color:var(--t1);margin-bottom:4px">${tl.person}</div>
+      <textarea style="width:100%;font-size:11px;font-family:inherit;padding:4px 8px;background:var(--s1);border:1px solid var(--bd);border-radius:4px;resize:vertical;color:var(--t1);outline:none" rows="2" placeholder="• Task 1&#10;• Task 2" onchange="_paTskField(${i},${ti},this.value)">${Array.isArray(tl.items)?tl.items.join('\n'):tl.items||''}</textarea>
+    </div>`).join('');
+  const mbmHtml=(a.minuteByMinute||[]).map((m,mi)=>`
+    <div style="display:grid;grid-template-columns:90px 1fr auto;gap:6px;align-items:center;margin-bottom:6px">
+      <input type="text" value="${m.time||''}" placeholder="5:15 PM" style="font-size:11px;font-family:inherit;padding:4px 8px;background:var(--s1);border:1px solid var(--bd);border-radius:4px;color:var(--t1);outline:none" onchange="_paMbmField(${i},${mi},'time',this.value)">
+      <input type="text" value="${m.item||''}" placeholder="Agenda item or note" style="font-size:11px;font-family:inherit;padding:4px 8px;background:var(--s1);border:1px solid var(--bd);border-radius:4px;color:var(--t1);outline:none" onchange="_paMbmField(${i},${mi},'item',this.value)">
+      <button onclick="_paRemoveMbm(${i},${mi})" style="background:none;border:none;color:var(--t4);cursor:pointer;font-size:14px;padding:0 4px">&times;</button>
+    </div>`).join('');
+  const body=`
+    <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap">
+      <select onchange="_paField(${i},'status',this.value)" style="font-size:10px;padding:3px 8px;background:var(--s2);border:1px solid var(--bd);border-radius:4px;color:var(--t1)">
+        <option${a.status==='Draft'?' selected':''}>Draft</option>
+        <option${a.status==='Final'?' selected':''}>Final</option>
+      </select>
+      <button class="btn btn-g btn-sm" onclick="window.print()">Print</button>
+      <button class="btn btn-g btn-sm" onclick="deletePresAgenda(${i});closeDetail()">Delete</button>
+    </div>
+    <div style="background:var(--cr);color:#fff;padding:10px 14px;border-radius:7px 7px 0 0;text-align:center;margin-bottom:0">
+      <div style="font-size:20px;font-weight:800;letter-spacing:1px">ΦΒΛ</div>
+      <div style="font-size:9px;letter-spacing:2px;opacity:.8">PHI BETA LAMBDA</div>
+    </div>
+    <div style="border:1px solid var(--bd);border-top:none;border-radius:0 0 7px 7px;padding:14px;margin-bottom:14px">
+      <div style="text-align:center;font-size:12px;margin-bottom:8px">
+        <input type="text" value="${a.title||''}" placeholder="Meeting Title" style="font-size:14px;font-weight:700;text-align:center;border:none;border-bottom:1px solid var(--bd);background:none;color:var(--t1);outline:none;width:100%;margin-bottom:4px" onchange="_paField(${i},'title',this.value)"><br>
+        <input type="date" value="${a.date||''}" style="font-size:11px;border:none;background:none;color:var(--t2);outline:none" onchange="_paField(${i},'date',this.value)">
+        <input type="text" value="${a.timeStart||''}" placeholder="5:00 PM" style="font-size:11px;border:none;background:none;color:var(--t2);outline:none;width:60px" onchange="_paField(${i},'timeStart',this.value)"> –
+        <input type="text" value="${a.timeEnd||''}" placeholder="8:00 PM" style="font-size:11px;border:none;background:none;color:var(--t2);outline:none;width:60px" onchange="_paField(${i},'timeEnd',this.value)">
+        <input type="text" value="${a.timezone||'PST'}" style="font-size:11px;border:none;background:none;color:var(--t2);outline:none;width:35px" onchange="_paField(${i},'timezone',this.value)"><br>
+        <span style="font-size:11px;color:var(--t3)">Chair: </span><input type="text" value="${a.chair||''}" placeholder="Chair name" style="font-size:11px;border:none;border-bottom:1px solid var(--bd);background:none;color:var(--t1);outline:none" onchange="_paField(${i},'chair',this.value)">
+      </div>
+      <div style="font-size:11px;color:var(--t2);margin-bottom:4px"><strong>Call to Order:</strong> <input type="text" value="${a.callToOrder||''}" placeholder="5:XX PM" style="font-size:11px;border:none;border-bottom:1px solid var(--bd);background:none;color:var(--t1);outline:none;width:80px" onchange="_paField(${i},'callToOrder',this.value)"> calls the meeting to order.</div>
+    </div>
+    <div style="font-size:11px;font-weight:700;color:var(--t1);margin:14px 0 8px;text-transform:uppercase;letter-spacing:.5px">Attendance</div>
+    ${attTable('Executives')}${attTable('Directors')}
+    <div style="font-size:11px;font-weight:700;color:var(--t1);margin:14px 0 8px;text-transform:uppercase;letter-spacing:.5px">Updates</div>
+    <div style="border:1px solid var(--bd);border-radius:7px;padding:12px">${updHtml}</div>
+    <div style="font-size:11px;font-weight:700;color:var(--t1);margin:14px 0 8px;text-transform:uppercase;letter-spacing:.5px;display:flex;justify-content:space-between;align-items:center">
+      Agenda Items
+      <button class="btn btn-p btn-sm" onclick="_paAddItem(${i})">+ Add Item</button>
+    </div>
+    ${agItems||'<div style="font-size:11px;color:var(--t4);padding:10px">No items yet.</div>'}
+    <div style="font-size:11px;font-weight:700;color:var(--t1);margin:14px 0 8px;text-transform:uppercase;letter-spacing:.5px">Task List</div>
+    <div style="border:1px solid var(--bd);border-radius:7px;padding:12px">${tskHtml}</div>
+    <div style="font-size:11px;font-weight:700;color:var(--t1);margin:14px 0 8px;text-transform:uppercase;letter-spacing:.5px">Comments</div>
+    <textarea style="width:100%;font-size:11px;font-family:inherit;padding:8px 10px;background:var(--s1);border:1px solid var(--bd);border-radius:5px;resize:vertical;color:var(--t1);outline:none" rows="3" onchange="_paField(${i},'comments',this.value)">${a.comments||''}</textarea>
+    <div style="font-size:11px;font-weight:700;color:var(--t1);margin:14px 0 8px;text-transform:uppercase;letter-spacing:.5px;display:flex;justify-content:space-between;align-items:center">
+      Min-by-Min Tracker
+      <button class="btn btn-p btn-sm" onclick="_paAddMbm(${i})">+ Add Entry</button>
+    </div>
+    <div id="mbm-list-${i}">${mbmHtml||'<div style="font-size:11px;color:var(--t4);padding:4px">No entries yet.</div>'}</div>
+    <div style="margin-top:14px;display:grid;grid-template-columns:1fr 1fr;gap:10px">
+      <div><div style="font-size:9px;font-weight:600;color:var(--t3);text-transform:uppercase;margin-bottom:4px">Slides URL</div><input type="text" value="${a.slidesUrl||''}" placeholder="https://docs.google.com/..." style="width:100%;font-size:11px;font-family:inherit;padding:5px 8px;background:var(--s1);border:1px solid var(--bd);border-radius:4px;color:var(--t1);outline:none" onchange="_paField(${i},'slidesUrl',this.value)"></div>
+      <div><div style="font-size:9px;font-weight:600;color:var(--t3);text-transform:uppercase;margin-bottom:4px">Adjournment Time</div><input type="text" value="${a.adjournTime||''}" placeholder="8:XX PM" style="width:100%;font-size:11px;font-family:inherit;padding:5px 8px;background:var(--s1);border:1px solid var(--bd);border-radius:4px;color:var(--t1);outline:none" onchange="_paField(${i},'adjournTime',this.value)"></div>
+    </div>
+    <div style="margin-top:10px"><div style="font-size:9px;font-weight:600;color:var(--t3);text-transform:uppercase;margin-bottom:4px">Meeting Notes</div><textarea style="width:100%;font-size:11px;font-family:inherit;padding:5px 8px;background:var(--s1);border:1px solid var(--bd);border-radius:4px;resize:vertical;color:var(--t1);outline:none" rows="4" onchange="_paField(${i},'generalNotes',this.value)">${a.generalNotes||''}</textarea></div>`;
+  openDetail(a.title||'Meeting',a.date||'No date',body,a);
+}
+function _paField(i,k,v){if(_presAgendas[i])_presAgendas[i][k]=v;saveRoleData('agendas',_presAgendas);renderPresAgendas();}
+function _paSetAtt(i,gi,status){if(_presAgendas[i]&&_presAgendas[i].attendance[gi])_presAgendas[i].attendance[gi].status=status;saveRoleData('agendas',_presAgendas);}
+function _paUpdField(i,ui,v){if(_presAgendas[i]&&_presAgendas[i].updates[ui])_presAgendas[i].updates[ui].content=v;saveRoleData('agendas',_presAgendas);}
+function _paTskField(i,ti,v){if(_presAgendas[i]&&_presAgendas[i].taskList[ti])_presAgendas[i].taskList[ti].items=v;saveRoleData('agendas',_presAgendas);}
+function _paItemField(i,ii,k,v){if(_presAgendas[i]&&_presAgendas[i].agendaItems[ii])_presAgendas[i].agendaItems[ii][k]=v;saveRoleData('agendas',_presAgendas);}
+function _paAddItem(i){
+  if(!_presAgendas[i])return;
+  _presAgendas[i].agendaItems.push({title:'New Item',type:'Information + Discussion + Action',description:'',time:'',presenter:'',resources:'',discussionItems:''});
+  saveRoleData('agendas',_presAgendas);openPresAgendaDetail(i);
+}
+function _paRemoveItem(i,ii){if(!_presAgendas[i])return;_presAgendas[i].agendaItems.splice(ii,1);saveRoleData('agendas',_presAgendas);openPresAgendaDetail(i);}
+function _paAddMbm(i){if(!_presAgendas[i])return;if(!_presAgendas[i].minuteByMinute)_presAgendas[i].minuteByMinute=[];_presAgendas[i].minuteByMinute.push({time:'',item:''});saveRoleData('agendas',_presAgendas);openPresAgendaDetail(i);}
+function _paRemoveMbm(i,mi){if(!_presAgendas[i])return;_presAgendas[i].minuteByMinute.splice(mi,1);saveRoleData('agendas',_presAgendas);openPresAgendaDetail(i);}
+function _paMbmField(i,mi,k,v){if(_presAgendas[i]&&_presAgendas[i].minuteByMinute[mi])_presAgendas[i].minuteByMinute[mi][k]=v;saveRoleData('agendas',_presAgendas);}
 
 function renderDelegation(){
   const t=document.getElementById('delegation-table');if(!t)return;
