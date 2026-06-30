@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>PBL Hub — De Anza</title>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap');
 
@@ -1716,8 +1717,27 @@ textarea{resize:vertical;min-height:120px;}
     <!-- DRIVE PANEL -->
     <div class="dp" id="drive-panel">
       <div class="dp-hdr"><div class="dp-ttl">Google Drive</div><button class="dp-x" onclick="toggleDrive()">&times;</button></div>
-      <div class="dp-srch"><input type="text" id="drive-search" placeholder="Search files..." oninput="filterDrive(this.value)"></div>
-      <div class="dp-list" id="drive-list"><div style="padding:20px;text-align:center;color:var(--t4);font-size:11px">Loading...</div></div>
+      <div id="drive-auth-bar" style="padding:10px 14px;border-bottom:1px solid var(--bd)">
+        <div id="drive-signed-out" style="display:flex;align-items:center;gap:8px">
+          <button onclick="driveSignIn()" style="display:flex;align-items:center;gap:6px;padding:6px 12px;background:#4285F4;color:#fff;border:none;border-radius:5px;font-size:11px;font-weight:600;cursor:pointer;font-family:'IBM Plex Sans',sans-serif">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l3.66-2.84z"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+            Sign in with Google
+          </button>
+          <span style="font-size:10px;color:var(--t4)">to browse your Drive</span>
+        </div>
+        <div id="drive-signed-in" style="display:none;align-items:center;justify-content:space-between">
+          <div style="display:flex;align-items:center;gap:7px">
+            <img id="drive-user-avatar" src="" width="22" height="22" style="border-radius:50%;display:none">
+            <div>
+              <div id="drive-user-name" style="font-size:11px;font-weight:600;color:var(--t1)"></div>
+              <div id="drive-user-email" style="font-size:10px;color:var(--t3)"></div>
+            </div>
+          </div>
+          <button onclick="driveSignOut()" style="font-size:10px;color:var(--t3);background:none;border:1px solid var(--bd);border-radius:4px;padding:3px 8px;cursor:pointer;font-family:'IBM Plex Sans',sans-serif">Switch</button>
+        </div>
+      </div>
+      <div id="drive-search-bar" style="display:none"><div class="dp-srch"><input type="text" id="drive-search" placeholder="Search files..." oninput="filterDriveQuery(this.value)"></div></div>
+      <div class="dp-list" id="drive-list"><div style="padding:20px;text-align:center;color:var(--t4);font-size:11px">Sign in to see your Drive files.</div></div>
     </div>
 
   </div>
@@ -2617,47 +2637,162 @@ let templates={
   ]
 };
 
-// DRIVE FILES - loaded from your actual Google Drive
-let driveFiles=[
-  {id:'1YNMpslxRGmfxrT411-Xj2FdrajsdcyUXY7IKzl8YiMw',title:'Phan, Jayden, DAPBL SGP',type:'doc',url:'https://docs.google.com/document/d/1YNMpslxRGmfxrT411-Xj2FdrajsdcyUXY7IKzl8YiMw/edit',modified:'May 8, 2026'},
-  {id:'1sq1QU0OF3r6W3dbNAmy-eVE5DS2VfVhR_6kLorAQWYc',title:'SGP - De Anza PBL Club Operations Hub',type:'doc',url:'https://docs.google.com/document/d/1sq1QU0OF3r6W3dbNAmy-eVE5DS2VfVhR_6kLorAQWYc/edit',modified:'May 1, 2026'},
-  {id:'1mDURR3HFgWFYqCDaLzm5vZEyIFt1tXYhSpqg7paz8yg',title:'Studentpreneur',type:'doc',url:'https://docs.google.com/document/d/1mDURR3HFgWFYqCDaLzm5vZEyIFt1tXYhSpqg7paz8yg/edit',modified:'May 4, 2026'},
-  {id:'1nxYBkr5koNe5WSTiq5goM2jRIS5ntzt8bBnfmMqGND4',title:'ACCT 1B - Spring QTR',type:'doc',url:'https://docs.google.com/document/d/1nxYBkr5koNe5WSTiq5goM2jRIS5ntzt8bBnfmMqGND4/edit',modified:'May 6, 2026'},
-  {id:'1OTOdZfeIKig0PRjKa7QgmOXTjTKgTZCSABo7oJhgKwo',title:'Orkizz Marketing Strategy',type:'doc',url:'https://docs.google.com/document/d/1OTOdZfeIKig0PRjKa7QgmOXTjTKgTZCSABo7oJhgKwo/edit',modified:'Apr 8, 2026'},
-  {id:'1Uh1_BnGQe5H5p0RwodUeprKTd9DqhNVD',title:'Phan, Jayden, Portfolio',type:'folder',url:'https://drive.google.com/drive/folders/1Uh1_BnGQe5H5p0RwodUeprKTd9DqhNVD',modified:'May 8, 2026'},
-  {id:'1Etxi3aktTkjWrx7MMwGhjJEWhptryrLr',title:'Studentprenuer Videos',type:'folder',url:'https://drive.google.com/drive/folders/1Etxi3aktTkjWrx7MMwGhjJEWhptryrLr',modified:'May 8, 2026'},
-];
+// ─── GOOGLE DRIVE OAUTH ──────────────────────────────────────────────────────
+// Replace YOUR_CLIENT_ID below with the OAuth 2.0 client ID from Google Cloud Console.
+// Steps: console.cloud.google.com → APIs & Services → Credentials → Create OAuth Client ID
+// Application type: Web application. Add your hosted URL to Authorized JavaScript Origins.
+const DRIVE_CLIENT_ID = '1059697973377-0kqmjj6q1as6eo35g4od15tcalkkp2n4.apps.googleusercontent.com';
+const DRIVE_SCOPES = 'https://www.googleapis.com/auth/drive.metadata.readonly';
 
+let driveFiles=[];
+let driveTokenClient=null;
+let driveAccessToken=null;
+let driveSearchQuery='';
+let driveNextPageToken=null;
 let currentTarget=null;
 let driveOpen=false;
 
-function typeIcon(t){return{doc:'D',sheet:'S',folder:'F',pdf:'P',slide:'Sl',other:'?'}[t]||'?';}
-function typeClass(t){return{doc:'t-doc',sheet:'t-sheet',folder:'t-folder',pdf:'t-pdf',slide:'t-doc',other:'t-other'}[t]||'t-other';}
-function typeLabel(t){return{doc:'Google Doc',sheet:'Google Sheet',folder:'Drive Folder',pdf:'PDF',slide:'Google Slides',other:'Drive File'}[t]||'Drive File';}
+function typeIcon(t){return{document:'D','spreadsheet':'S',folder:'F',pdf:'P',presentation:'Sl',other:'?'}[t]||'F';}
+function typeClass(t){return{document:'t-doc',spreadsheet:'t-sheet',folder:'t-folder',presentation:'t-doc',pdf:'t-pdf'}[t]||'t-other';}
+function typeLabel(t){return{document:'Google Doc',spreadsheet:'Google Sheet',folder:'Drive Folder',pdf:'PDF',presentation:'Google Slides'}[t]||'Drive File';}
+
+function _driveFileType(mimeType){
+  if(!mimeType)return 'other';
+  if(mimeType.includes('folder'))return 'folder';
+  if(mimeType.includes('document'))return 'document';
+  if(mimeType.includes('spreadsheet'))return 'spreadsheet';
+  if(mimeType.includes('presentation'))return 'presentation';
+  if(mimeType.includes('pdf'))return 'pdf';
+  return 'other';
+}
+
+function _driveFileUrl(f){
+  const mime=f.mimeType||'';
+  const id=f.id;
+  if(mime.includes('folder'))return `https://drive.google.com/drive/folders/${id}`;
+  if(mime.includes('document'))return `https://docs.google.com/document/d/${id}/edit`;
+  if(mime.includes('spreadsheet'))return `https://docs.google.com/spreadsheets/d/${id}/edit`;
+  if(mime.includes('presentation'))return `https://docs.google.com/presentation/d/${id}/edit`;
+  return `https://drive.google.com/file/d/${id}/view`;
+}
+
+function initDriveClient(){
+  if(!window.google||DRIVE_CLIENT_ID==='YOUR_CLIENT_ID')return;
+  driveTokenClient=google.accounts.oauth2.initTokenClient({
+    client_id:DRIVE_CLIENT_ID,
+    scope:DRIVE_SCOPES,
+    callback:(resp)=>{
+      if(resp.error){console.error('Drive auth error',resp);return;}
+      driveAccessToken=resp.access_token;
+      fetchDriveUserInfo();
+      fetchDriveFiles();
+    }
+  });
+}
+
+function driveSignIn(){
+  if(DRIVE_CLIENT_ID==='YOUR_CLIENT_ID'){
+    alert('Google Drive is not configured yet.\n\nReplace YOUR_CLIENT_ID in the code with your OAuth 2.0 client ID.\nSee the comment near "DRIVE_CLIENT_ID" in the script for instructions.');
+    return;
+  }
+  if(!driveTokenClient)initDriveClient();
+  if(!driveTokenClient){alert('Google Identity Services not loaded. Check your internet connection.');return;}
+  driveTokenClient.requestAccessToken({prompt:'select_account'});
+}
+
+function driveSignOut(){
+  if(driveAccessToken&&window.google){
+    google.accounts.oauth2.revoke(driveAccessToken,()=>{});
+  }
+  driveAccessToken=null;driveFiles=[];driveNextPageToken=null;
+  document.getElementById('drive-signed-in').style.display='none';
+  document.getElementById('drive-signed-out').style.display='flex';
+  document.getElementById('drive-search-bar').style.display='none';
+  document.getElementById('drive-list').innerHTML='<div style="padding:20px;text-align:center;color:var(--t4);font-size:11px">Sign in to see your Drive files.</div>';
+}
+
+function fetchDriveUserInfo(){
+  fetch('https://www.googleapis.com/oauth2/v3/userinfo',{headers:{Authorization:'Bearer '+driveAccessToken}})
+    .then(r=>r.json()).then(u=>{
+      document.getElementById('drive-signed-out').style.display='none';
+      const si=document.getElementById('drive-signed-in');
+      si.style.display='flex';
+      document.getElementById('drive-user-name').textContent=u.name||'';
+      document.getElementById('drive-user-email').textContent=u.email||'';
+      const av=document.getElementById('drive-user-avatar');
+      if(u.picture){av.src=u.picture;av.style.display='block';}
+      document.getElementById('drive-search-bar').style.display='block';
+    }).catch(console.error);
+}
+
+function fetchDriveFiles(pageToken){
+  if(!driveAccessToken)return;
+  document.getElementById('drive-list').innerHTML='<div style="padding:20px;text-align:center;color:var(--t4);font-size:11px">Loading...</div>';
+  const q=driveSearchQuery?`name contains '${driveSearchQuery.replace(/'/g,"\\'")}' and trashed=false`:'trashed=false';
+  const fields='nextPageToken,files(id,name,mimeType,modifiedTime,webViewLink)';
+  let url=`https://www.googleapis.com/drive/v3/files?pageSize=50&orderBy=modifiedTime desc&q=${encodeURIComponent(q)}&fields=${encodeURIComponent(fields)}`;
+  if(pageToken)url+='&pageToken='+pageToken;
+  fetch(url,{headers:{Authorization:'Bearer '+driveAccessToken}})
+    .then(r=>r.json()).then(data=>{
+      if(data.error){if(data.error.code===401){driveSignOut();return;}console.error(data.error);return;}
+      driveNextPageToken=data.nextPageToken||null;
+      const mapped=(data.files||[]).map(f=>({
+        id:f.id,
+        title:f.name,
+        type:_driveFileType(f.mimeType),
+        url:f.webViewLink||_driveFileUrl(f),
+        modified:f.modifiedTime?new Date(f.modifiedTime).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}):''
+      }));
+      if(!pageToken)driveFiles=mapped;
+      else driveFiles=[...driveFiles,...mapped];
+      renderDriveList(driveFiles);
+    }).catch(err=>{
+      document.getElementById('drive-list').innerHTML='<div style="padding:20px;text-align:center;color:#E57373;font-size:11px">Error loading files. Try signing in again.</div>';
+      console.error(err);
+    });
+}
+
+let _driveSearchTimer=null;
+function filterDriveQuery(q){
+  driveSearchQuery=q.trim();
+  clearTimeout(_driveSearchTimer);
+  _driveSearchTimer=setTimeout(()=>{if(driveAccessToken)fetchDriveFiles();},400);
+}
 
 function renderDriveList(files){
   const l=document.getElementById('drive-list');if(!l)return;
-  if(!files.length){l.innerHTML='<div style="padding:20px;text-align:center;color:var(--t4);font-size:11px">No files found</div>';return;}
-  l.innerHTML=files.map(f=>`
-    <div class="dp-item">
-      <div class="dp-ico ${typeClass(f.type)}">${typeIcon(f.type)}</div>
-      <div class="dp-info"><div class="dp-name">${f.title}</div><div class="dp-meta">${typeLabel(f.type)} &middot; ${f.modified||''}</div></div>
-      <a href="${f.url}" target="_blank" class="dp-open">Open</a>
-      <button class="dp-attach" onclick="attachFile('${f.id}','${f.title.replace(/'/g,"\\'")}','${f.type}','${f.url}',this)">Attach</button>
-    </div>`).join('');
+  let html='';
+  if(!files.length){
+    html='<div style="padding:20px;text-align:center;color:var(--t4);font-size:11px">No files found</div>';
+  } else {
+    html=files.map(f=>{
+      const safeTitle=f.title.replace(/\\/g,'\\\\').replace(/'/g,"\\'");
+      const safeUrl=f.url.replace(/\\/g,'\\\\').replace(/'/g,"\\'");
+      return `<div class="dp-item">
+        <div class="dp-ico ${typeClass(f.type)}">${typeIcon(f.type)}</div>
+        <div class="dp-info"><div class="dp-name">${f.title}</div><div class="dp-meta">${typeLabel(f.type)}&middot;${f.modified}</div></div>
+        <a href="${f.url}" target="_blank" class="dp-open">Open</a>
+        <button class="dp-attach" onclick="attachFile('${f.id}','${safeTitle}','${f.type}','${safeUrl}',this)">Attach</button>
+      </div>`;
+    }).join('');
+    if(driveNextPageToken)html+='<div style="padding:10px;text-align:center"><button onclick="fetchDriveFiles(driveNextPageToken)" style="font-size:11px;padding:5px 14px;background:var(--s2);border:1px solid var(--bd);border-radius:4px;cursor:pointer;color:var(--t2);font-family:\'IBM Plex Sans\',sans-serif">Load more</button></div>';
+  }
+  l.innerHTML=html;
 }
 
-function filterDrive(q){
-  const f=q.trim().toLowerCase();
-  renderDriveList(f?driveFiles.filter(x=>x.title.toLowerCase().includes(f)):driveFiles);
-}
+// Kept for backward compat (old filterDrive calls)
+function filterDrive(q){filterDriveQuery(q);}
 
 function toggleDrive(){
   driveOpen=!driveOpen;
   const p=document.getElementById('drive-panel');
   const b=document.getElementById('drive-btn');
-  if(driveOpen){p.classList.add('open');b.classList.add('on');renderDriveList(driveFiles);}
-  else{p.classList.remove('open');b.classList.remove('on');}
+  if(driveOpen){
+    p.classList.add('open');b.classList.add('on');
+    if(driveAccessToken)renderDriveList(driveFiles);
+  } else {
+    p.classList.remove('open');b.classList.remove('on');
+  }
 }
 
 function attachFile(id,title,type,url,btn){
@@ -5248,7 +5383,9 @@ function handleCsvImport(e){
 
 (function(){const sb=document.getElementById('sidebar');const rz=document.getElementById('sb-resizer');let dragging=false,startX=0,startW=0;rz.addEventListener('mousedown',e=>{dragging=true;startX=e.clientX;startW=sb.offsetWidth;rz.classList.add('dragging');document.body.style.cursor='col-resize';document.body.style.userSelect='none';e.preventDefault();});document.addEventListener('mousemove',e=>{if(!dragging)return;const w=Math.min(360,Math.max(160,startW+(e.clientX-startX)));sb.style.setProperty('--sb-width',w+'px');sb.style.width=w+'px';});document.addEventListener('mouseup',()=>{if(!dragging)return;dragging=false;rz.classList.remove('dragging');document.body.style.cursor='';document.body.style.userSelect='';});})();
 loadData();
-renderMembers();renderExec();renderBootcamps();renderTasks();renderAgendas();renderEvents();renderRos();renderTemplates();renderSponsors();renderEmailList();renderConsulting();renderCompetition();renderBudget();renderMinutes();renderRecruitment();renderGoals();renderTransition();renderAnnouncements();renderMentorship();renderDashboard();renderPortals();renderEcSelect();renderReimbursements();renderVenues();renderVolSlots();renderCompPrep();renderCurriculum();renderBrandKit();renderContentCalendar();renderCaMentors();renderMemberCheckIns();renderCalendar();
+renderMembers();renderExec();renderBootcamps();renderTasks();renderAgendas();renderEvents();renderRos();renderTemplates();renderSponsors();renderEmailList();renderConsulting();renderCompetition();renderBudget();renderMinutes();renderGoals();renderTransition();renderAnnouncements();renderMentorship();renderDashboard();renderPortals();renderEcSelect();renderReimbursements();renderVenues();renderCompPrep();renderCurriculum();renderBrandKit();renderContentCalendar();renderCaMentors();renderMemberCheckIns();renderCalendar();
+// Init Google Drive OAuth after GIS library loads
+window.addEventListener('load',()=>{setTimeout(initDriveClient,500);});
 
 // ── FIRESTORE REAL-TIME SYNC ─────────────────────────────────────────────────
 // Applies a Firestore snapshot to all in-memory variables (mirrors loadData)
