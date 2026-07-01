@@ -661,7 +661,7 @@ textarea{resize:vertical;min-height:120px;}
         </div>
         <div class="sub" id="events-ros">
           <div class="card">
-            <div class="ch"><div class="ct" id="ros-event-title">Run of Show</div><div style="display:flex;gap:7px"><select id="ros-event-select" onchange="switchRos(this.value)" style="font-size:10px;padding:3px 7px;width:auto"><option value="">Select Event...</option></select><button class="btn btn-p btn-sm" onclick="addRosItem()">+ Add Item</button></div></div>
+            <div class="ch"><div class="ct" id="ros-event-title">Run of Show</div><div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap"><select id="ros-event-select" onchange="switchRos(this.value)" style="font-size:10px;padding:3px 7px;width:auto"><option value="">Select Event...</option></select><button class="btn btn-g btn-sm" onclick="addRosEvent()">+ New Event</button><button class="btn btn-g btn-sm" style="color:#E57373" onclick="removeRosEvent()">Remove Event</button><button class="btn btn-p btn-sm" onclick="addRosItem()">+ Add Item</button></div></div>
             <div id="ros-table"></div>
           </div>
         </div>
@@ -2872,32 +2872,13 @@ function saveExec(id,btn){
 // BOOTCAMP EDIT
 function openBcDetail(id){
   const b=bootcamps.find(x=>x.id===id);
-  const idx=bootcamps.indexOf(b);
-  const memberList=members.map((m,mi)=>{
-    const checked=m.att&&m.att[idx]===1;
-    return`<label style="display:flex;align-items:center;gap:7px;padding:4px 0;font-size:12px;cursor:pointer">
-      <input type="checkbox" data-mi="${mi}" ${checked?'checked':''} onchange="toggleBcAtt(${id},${idx},this)">
-      <span>${m.first} ${m.last}</span><span style="color:var(--t4);font-size:10px">${m.role||''}</span>
-    </label>`;
-  }).join('');
   openDetail(b.name+' — '+b.topic,b.date,
     row2(fld('Session Name',inp('ed-bname',b.name)),fld('Date',inp('ed-bdate',b.date)))+
     row2(fld('Topic',inp('ed-btopic',b.topic)),'<div></div>')+
     row2(fld('Attended',inp('ed-batt',b.att,'number')),fld('Total Members',inp('ed-btot',b.tot,'number')))+
     fld('Session Notes & Slides',ta('ed-bnotes',b.notes,6))+
-    sec('Mark Individual Attendance',`<div style="max-height:220px;overflow-y:auto;padding:4px 0">${memberList||'<span style="color:var(--t4);font-size:11px">No members added yet.</span>'}</div>`)+
     sec('Linked Drive Files',`<div id="d-attached-files">${renderAttachedFiles(b.files)}</div><button class="btn btn-g btn-sm" style="margin-top:8px" onclick="toggleDrive()">Browse Drive</button>`)+
     `<button class="btn btn-p btn-sm" onclick="saveBc(${id},this)">Save</button>`,b);
-}
-function toggleBcAtt(sessionId,sessionIdx,cb){
-  const mi=parseInt(cb.dataset.mi);
-  const m=members[mi];if(!m)return;
-  if(!m.att)m.att=bootcamps.map(()=>0);
-  m.att[sessionIdx]=cb.checked?1:0;
-  const b=bootcamps.find(x=>x.id===sessionId);
-  if(b){b.att=members.filter(m=>m.att&&m.att[sessionIdx]===1).length;
-    document.getElementById('ed-batt').value=b.att;}
-  saveData();renderBootcamps();
 }
 function saveBc(id,btn){
   const b=bootcamps.find(x=>x.id===id);
@@ -5319,6 +5300,22 @@ function deleteRosItem(id){
   if(!rosData[currentRosEvent])return;
   rosData[currentRosEvent]=rosData[currentRosEvent].filter(x=>x.id!==id);
   renderRos();
+}
+function addRosEvent(){
+  const name=prompt('Event name:');
+  if(!name||!name.trim())return;
+  const n=name.trim();
+  if(rosData[n]){currentRosEvent=n;renderRos();return;}
+  rosData[n]=[];
+  currentRosEvent=n;
+  saveData();renderRos();
+}
+function removeRosEvent(){
+  if(!currentRosEvent){alert('Select an event first.');return;}
+  if(!confirm('Remove "'+currentRosEvent+'" and all its items?'))return;
+  delete rosData[currentRosEvent];
+  currentRosEvent=Object.keys(rosData)[0]||'';
+  saveData();renderRos();
 }
 
 // ---- CSV IMPORT ENGINE ----
