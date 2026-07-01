@@ -661,7 +661,12 @@ textarea{resize:vertical;min-height:120px;}
         </div>
         <div class="sub" id="events-ros">
           <div class="card">
-            <div class="ch"><div class="ct" id="ros-event-title">Run of Show</div><div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap"><select id="ros-event-select" onchange="switchRos(this.value)" style="font-size:10px;padding:3px 7px;width:auto"><option value="">Select Event...</option></select><button class="btn btn-g btn-sm" onclick="addRosEvent()">+ New Event</button><button class="btn btn-g btn-sm" style="color:#E57373" onclick="removeRosEvent()">Remove Event</button><button class="btn btn-p btn-sm" onclick="addRosItem()">+ Add Item</button></div></div>
+            <div class="ch"><div class="ct" id="ros-event-title">Run of Show</div><div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap"><select id="ros-event-select" onchange="switchRos(this.value)" style="font-size:10px;padding:3px 7px;width:auto"><option value="">Select Event...</option></select><button class="btn btn-g btn-sm" onclick="addRosEvent()">+ New Event</button><button class="btn btn-g btn-sm" style="color:#E57373" onclick="removeRosEvent()">Remove Event</button></div></div>
+            <div id="ros-sheet-bar" style="display:flex;gap:7px;align-items:center;margin-bottom:10px">
+              <input id="ros-url-input" type="text" placeholder="Paste Google Sheets URL…" style="flex:1;font-size:11px;padding:6px 9px;background:var(--s2);border:1px solid var(--bd);border-radius:5px;color:var(--t1);font-family:'IBM Plex Sans',sans-serif;outline:none">
+              <button class="btn btn-p btn-sm" onclick="setRosSheet()">Embed</button>
+              <button class="btn btn-g btn-sm" style="color:#E57373" onclick="clearRosSheet()">Clear</button>
+            </div>
             <div id="ros-table"></div>
           </div>
         </div>
@@ -2935,6 +2940,7 @@ function saveAgenda(id,btn){
 // EVENT EDIT
 function openEventDetail(id,bucket){
   const e=eventsData[bucket].find(x=>x.id===id);
+  if(!e.files)e.files=[];
   openDetail(e.name,e.date+' · '+e.loc,
     row2(fld('Event Name',inp('ed-evname',e.name)),fld('Date',inp('ed-evdate',e.date)))+
     row2(fld('Location',inp('ed-evloc',e.loc)),fld('Est. Attendance',inp('ed-evatt',e.att,'number')))+
@@ -5228,77 +5234,36 @@ document.querySelectorAll('.overlay').forEach(m=>m.addEventListener('click',func
 // INIT
 // RUN OF SHOW DATA
 let rosData={
-  'DAIS 2026':[
-    {id:1,time:'8:00 AM',item:'Doors Open / Check-In',notes:'2 volunteers at entrance, sign-in sheet at table'},
-    {id:2,time:'8:30 AM',item:'Welcome & Introductions',notes:'President opens, introduce EBOD, housekeeping'},
-    {id:3,time:'9:00 AM',item:'Keynote Speaker',notes:'Confirm A/V 30 min before · 45 min slot'},
-    {id:4,time:'10:00 AM',item:'Breakout Sessions',notes:'3 rooms · assignments on door'},
-    {id:5,time:'12:00 PM',item:'Lunch',notes:'Catering confirmed · dietary restrictions tracked'},
-    {id:6,time:'1:00 PM',item:'Student Presentations',notes:'4 groups · 10 min each · judges panel'},
-    {id:7,time:'2:30 PM',item:'Awards & Closing',notes:'Awards printed by May 28'},
-  ]
+  'DAIS 2026':{sheetUrl:''}
 };let nRos=8;let currentRosEvent='DAIS 2026';
 
 function renderRos(){
-  // Populate event select
   const sel=document.getElementById('ros-event-select');
   if(sel){
-    const events=[...eventsData.upcoming,...eventsData.past].map(e=>e.name);
-    const allEvents=[...new Set([...Object.keys(rosData),...events])];
+    const allEvents=[...new Set([...Object.keys(rosData)])];
     sel.innerHTML='<option value="">Select Event...</option>'+allEvents.map(e=>`<option value="${e}"${e===currentRosEvent?' selected':''}>${e}</option>`).join('');
   }
   const title=document.getElementById('ros-event-title');
-  if(title)title.textContent=(currentRosEvent||'Run of Show')+' — Minute by Minute';
+  if(title)title.textContent=currentRosEvent||'Run of Show';
+  const urlInput=document.getElementById('ros-url-input');
+  const entry=rosData[currentRosEvent];
+  const sheetUrl=entry&&entry.sheetUrl||'';
+  if(urlInput)urlInput.value=sheetUrl;
   const t=document.getElementById('ros-table');
   if(!t)return;
-  const items=rosData[currentRosEvent]||[];
-  const dotColors=['var(--cr)','var(--gold2)','var(--grn)','var(--blu)','var(--cr2)','var(--gold)'];
-  t.innerHTML=`<div class="tl">${items.map((r,i)=>`
-    <div class="tli" style="cursor:pointer" onclick="openRosDetail(${r.id})">
-      <div class="tld" style="background:${dotColors[i%dotColors.length]}"></div>
-      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px">
-        <div style="flex:1">
-          <div class="tlt">${r.time}</div>
-          <div class="tll">${r.item}</div>
-          ${r.notes?`<div class="tln">${r.notes}</div>`:''}
-        </div>
-        <button class="rb" style="opacity:.5;flex-shrink:0;margin-top:2px" onmouseenter="this.style.opacity=1" onmouseleave="this.style.opacity=.5" onclick="event.stopPropagation();deleteRosItem(${r.id})">&times;</button>
-      </div>
-    </div>`).join('')}</div>`;
+  if(sheetUrl){
+    const embedUrl=sheetUrl.replace('/edit','').replace(/\/pub(\?.*)?$/,'')+'/preview';
+    t.innerHTML=`<iframe src="${embedUrl}" style="width:100%;height:600px;border:1px solid var(--bd);border-radius:6px;margin-top:4px" frameborder="0" allowfullscreen></iframe>`;
+  } else if(currentRosEvent){
+    t.innerHTML=`<div style="color:var(--t4);font-size:12px;padding:24px 0 8px">No sheet linked yet. Paste a Google Sheets URL above and click <strong>Embed</strong>.</div>`;
+  } else {
+    t.innerHTML=`<div style="color:var(--t4);font-size:12px;padding:24px 0 8px">Select or create an event to get started.</div>`;
+  }
 }
 function switchRos(eventName){
   if(!eventName)return;
   currentRosEvent=eventName;
-  if(!rosData[eventName])rosData[eventName]=[];
-  renderRos();
-}
-function openRosDetail(id){
-  const items=rosData[currentRosEvent]||[];
-  const r=items.find(x=>x.id===id);if(!r)return;
-  openDetail(r.item,currentRosEvent+' · '+r.time,
-    row2(fld('Time',inp('ed-rostime',r.time)),fld('Item',inp('ed-rositem',r.item)))+
-    fld('Notes',ta('ed-rosnotes',r.notes,4))+
-    `<div style="display:flex;gap:7px"><button class="btn btn-p btn-sm" onclick="saveRosItem(${id},this)">Save</button><button class="btn btn-g btn-sm" style="color:#E57373" onclick="deleteRosItem(${id});closeDetail()">Delete</button></div>`,r);
-}
-function saveRosItem(id,btn){
-  const items=rosData[currentRosEvent]||[];
-  const r=items.find(x=>x.id===id);if(!r)return;
-  r.time=g('ed-rostime');r.item=g('ed-rositem');r.notes=g('ed-rosnotes');
-  renderRos();saved(btn);
-  document.getElementById('d-title').textContent=r.item;
-  document.getElementById('d-sub').textContent=currentRosEvent+' · '+r.time;
-}
-function addRosItem(){
-  if(!currentRosEvent){alert('Select an event first.');return;}
-  if(!rosData[currentRosEvent])rosData[currentRosEvent]=[];
-  rosData[currentRosEvent].push({id:nRos++,time:'',item:'New Item',notes:''});
-  renderRos();
-  const items=rosData[currentRosEvent];
-  openRosDetail(items[items.length-1].id);
-}
-function deleteRosItem(id){
-  if(!rosData[currentRosEvent])return;
-  rosData[currentRosEvent]=rosData[currentRosEvent].filter(x=>x.id!==id);
+  if(!rosData[eventName])rosData[eventName]={sheetUrl:''};
   renderRos();
 }
 function addRosEvent(){
@@ -5306,15 +5271,29 @@ function addRosEvent(){
   if(!name||!name.trim())return;
   const n=name.trim();
   if(rosData[n]){currentRosEvent=n;renderRos();return;}
-  rosData[n]=[];
+  rosData[n]={sheetUrl:''};
   currentRosEvent=n;
   saveData();renderRos();
 }
 function removeRosEvent(){
   if(!currentRosEvent){alert('Select an event first.');return;}
-  if(!confirm('Remove "'+currentRosEvent+'" and all its items?'))return;
+  if(!confirm('Remove "'+currentRosEvent+'"?'))return;
   delete rosData[currentRosEvent];
   currentRosEvent=Object.keys(rosData)[0]||'';
+  saveData();renderRos();
+}
+function setRosSheet(){
+  if(!currentRosEvent){alert('Select an event first.');return;}
+  const url=document.getElementById('ros-url-input').value.trim();
+  if(!url){alert('Paste a Google Sheets URL first.');return;}
+  if(!rosData[currentRosEvent])rosData[currentRosEvent]={sheetUrl:''};
+  rosData[currentRosEvent].sheetUrl=url;
+  saveData();renderRos();
+}
+function clearRosSheet(){
+  if(!currentRosEvent)return;
+  if(!rosData[currentRosEvent])return;
+  rosData[currentRosEvent].sheetUrl='';
   saveData();renderRos();
 }
 
