@@ -2941,17 +2941,50 @@ function saveAgenda(id,btn){
 function openEventDetail(id,bucket){
   const e=eventsData[bucket].find(x=>x.id===id);
   if(!e.files)e.files=[];
+  if(!e.attendees)e.attendees={};
+  if(!e.attSheet)e.attSheet='';
+  const memberChecklist=members.length
+    ?members.map((m,mi)=>{
+        const checked=!!e.attendees[mi];
+        return`<label style="display:flex;align-items:center;gap:7px;padding:3px 0;font-size:12px;cursor:pointer">
+          <input type="checkbox" data-mi="${mi}" ${checked?'checked':''} onchange="toggleEvAtt(${id},'${bucket}',this)">
+          <span>${m.first} ${m.last}</span><span style="color:var(--t4);font-size:10px">${m.role||''}</span>
+        </label>`;
+      }).join('')
+    :'<span style="color:var(--t4);font-size:11px">No members added yet.</span>';
+  const sheetBar=`<div style="display:flex;gap:6px;align-items:center;margin-bottom:8px">
+    <input id="ev-att-sheet" type="text" value="${e.attSheet||''}" placeholder="Paste Google Sheets sign-in URL…" style="flex:1;font-size:11px;padding:5px 8px;background:var(--s2);border:1px solid var(--bd);border-radius:5px;color:var(--t1);font-family:'IBM Plex Sans',sans-serif;outline:none">
+    <button class="btn btn-g btn-sm" onclick="saveEvSheet(${id},'${bucket}')">Save</button>
+    ${e.attSheet?`<a href="${e.attSheet}" target="_blank" class="btn btn-p btn-sm" style="text-decoration:none">Open ↗</a>`:''}
+  </div>`;
   openDetail(e.name,e.date+' · '+e.loc,
     row2(fld('Event Name',inp('ed-evname',e.name)),fld('Date',inp('ed-evdate',e.date)))+
-    row2(fld('Location',inp('ed-evloc',e.loc)),fld('Est. Attendance',inp('ed-evatt',e.att,'number')))+
-    fld('Description & Notes',ta('ed-evdesc',e.desc,6))+
+    row2(fld('Location',inp('ed-evloc',e.loc)),fld('Attendance',`<input id="ed-evatt" type="number" value="${e.att}" style="background:var(--s2);border:1px solid var(--bd);border-radius:5px;padding:5px 8px;color:var(--t1);font-size:12px;width:100%;box-sizing:border-box;font-family:'IBM Plex Sans',sans-serif" readonly>`))+
+    fld('Description & Notes',ta('ed-evdesc',e.desc,4))+
+    sec('Attendance',sheetBar+`<div style="max-height:200px;overflow-y:auto;padding:2px 0">${memberChecklist}</div><div style="font-size:11px;color:var(--t3);margin-top:6px" id="ev-att-count">Checked in: ${Object.values(e.attendees).filter(Boolean).length} / ${members.length}</div>`)+
     sec('Linked Drive Files',`<div id="d-attached-files">${renderAttachedFiles(e.files)}</div><button class="btn btn-g btn-sm" style="margin-top:8px" onclick="toggleDrive()">Browse Drive</button>`)+
     `<div style="display:flex;gap:7px"><button class="btn btn-p btn-sm" onclick="saveEvent(${id},'${bucket}',this)">Save</button><button class="btn btn-g btn-sm" style="color:#E57373" onclick="eventsData['${bucket}']=eventsData['${bucket}'].filter(x=>x.id!==${id});renderEvents();closeDetail()">Delete</button></div>`,e);
+}
+function toggleEvAtt(id,bucket,cb){
+  const e=eventsData[bucket].find(x=>x.id===id);if(!e)return;
+  if(!e.attendees)e.attendees={};
+  const mi=parseInt(cb.dataset.mi);
+  e.attendees[mi]=cb.checked?1:0;
+  e.att=Object.values(e.attendees).filter(Boolean).length;
+  const countEl=document.getElementById('ev-att-count');
+  if(countEl)countEl.textContent='Checked in: '+e.att+' / '+members.length;
+  document.getElementById('ed-evatt').value=e.att;
+  saveData();renderEvents();
+}
+function saveEvSheet(id,bucket){
+  const e=eventsData[bucket].find(x=>x.id===id);if(!e)return;
+  e.attSheet=document.getElementById('ev-att-sheet').value.trim();
+  saveData();openEventDetail(id,bucket);
 }
 function saveEvent(id,bucket,btn){
   const e=eventsData[bucket].find(x=>x.id===id);
   e.name=g('ed-evname');e.date=g('ed-evdate');e.loc=g('ed-evloc');
-  e.att=parseInt(g('ed-evatt'))||0;e.desc=g('ed-evdesc');
+  e.desc=g('ed-evdesc');
   renderEvents();saved(btn);
   document.getElementById('d-title').textContent=e.name;
   document.getElementById('d-sub').textContent=e.date+' · '+e.loc;
