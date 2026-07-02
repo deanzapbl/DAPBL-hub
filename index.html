@@ -646,15 +646,15 @@ textarea{resize:vertical;min-height:120px;}
             </div>
             <div class="bud-sub-panel active" id="mdb-fbla-members">
               <div class="card"><div class="ch"><div class="ct">FBLA Members</div><button class="btn btn-p btn-sm" onclick="addMemberDb('fbla')">+ Add Member</button></div>
-              <table><thead><tr><th>Member</th><th>Event</th><th>Status</th><th>Last Check-In</th><th>Notes</th><th></th></tr></thead><tbody id="mdb-fbla-members-table"></tbody></table></div>
+              <table><thead><tr><th>Name</th><th>Status</th><th>Last Check-In</th><th>Notes</th><th></th></tr></thead><tbody id="mdb-fbla-members-table"></tbody></table></div>
             </div>
             <div class="bud-sub-panel" id="mdb-fbla-progress">
               <div class="card"><div class="ch"><div class="ct">Progress Log</div><button class="btn btn-p btn-sm" onclick="addMdbProgress('fbla')">+ Add Entry</button></div>
-              <table><thead><tr><th>Member</th><th>Date</th><th>Note</th><th>Next Steps</th><th></th></tr></thead><tbody id="mdb-fbla-progress-table"></tbody></table></div>
+              <table><thead><tr><th>Event / Team</th><th>Date</th><th>Note</th><th>Next Steps</th><th></th></tr></thead><tbody id="mdb-fbla-progress-table"></tbody></table></div>
             </div>
             <div class="bud-sub-panel" id="mdb-fbla-placements">
-              <div class="card"><div class="ch"><div class="ct">Placements & Results</div><button class="btn btn-p btn-sm" onclick="addMdbPlacement('fbla')">+ Add Result</button></div>
-              <table><thead><tr><th>Member</th><th>Event</th><th>Competition</th><th>Placement</th><th>Notes</th><th></th></tr></thead><tbody id="mdb-fbla-placements-table"></tbody></table></div>
+              <div class="card"><div class="ch"><div class="ct">Placements & Results</div><button class="btn btn-p btn-sm" onclick="addMdbPlacement()">+ Add Result</button></div>
+              <table><thead><tr><th>Event</th><th>Type</th><th>Members / Team</th><th>Competition</th><th>Placement</th><th>Notes</th><th></th></tr></thead><tbody id="mdb-placements-table"></tbody></table></div>
             </div>
           </div>
           <!-- Consulting panel -->
@@ -662,19 +662,14 @@ textarea{resize:vertical;min-height:120px;}
             <div class="bud-sub-tabs">
               <div class="bud-sub-tab active" data-mteam="consulting" data-mtab="members" onclick="showMdbTab('consulting','members')">Members</div>
               <div class="bud-sub-tab" data-mteam="consulting" data-mtab="progress" onclick="showMdbTab('consulting','progress')">Progress Log</div>
-              <div class="bud-sub-tab" data-mteam="consulting" data-mtab="placements" onclick="showMdbTab('consulting','placements')">Placements</div>
             </div>
             <div class="bud-sub-panel active" id="mdb-consulting-members">
               <div class="card"><div class="ch"><div class="ct">Consulting Members</div><button class="btn btn-p btn-sm" onclick="addMemberDb('consulting')">+ Add Member</button></div>
-              <table><thead><tr><th>Member</th><th>Role / Focus</th><th>Status</th><th>Last Check-In</th><th>Notes</th><th></th></tr></thead><tbody id="mdb-consulting-members-table"></tbody></table></div>
+              <table><thead><tr><th>Name</th><th>Status</th><th>Last Check-In</th><th>Notes</th><th></th></tr></thead><tbody id="mdb-consulting-members-table"></tbody></table></div>
             </div>
             <div class="bud-sub-panel" id="mdb-consulting-progress">
               <div class="card"><div class="ch"><div class="ct">Progress Log</div><button class="btn btn-p btn-sm" onclick="addMdbProgress('consulting')">+ Add Entry</button></div>
-              <table><thead><tr><th>Member</th><th>Date</th><th>Note</th><th>Next Steps</th><th></th></tr></thead><tbody id="mdb-consulting-progress-table"></tbody></table></div>
-            </div>
-            <div class="bud-sub-panel" id="mdb-consulting-placements">
-              <div class="card"><div class="ch"><div class="ct">Placements & Results</div><button class="btn btn-p btn-sm" onclick="addMdbPlacement('consulting')">+ Add Result</button></div>
-              <table><thead><tr><th>Member</th><th>Project / Event</th><th>Competition</th><th>Placement</th><th>Notes</th><th></th></tr></thead><tbody id="mdb-consulting-placements-table"></tbody></table></div>
+              <table><thead><tr><th>Team / Project</th><th>Date</th><th>Note</th><th>Next Steps</th><th></th></tr></thead><tbody id="mdb-consulting-progress-table"></tbody></table></div>
             </div>
           </div>
         </div>
@@ -4494,19 +4489,21 @@ function renderMemberDb(){
       :`<tr><td colspan="5" style="font-size:11px;color:var(--t4);padding:12px">No entries yet.</td></tr>`;
   });
   // Placements
-  ['fbla','consulting'].forEach(team=>{
-    const t=document.getElementById(`mdb-${team}-placements-table`);if(!t)return;
-    const rows=mdbPlacements.filter(p=>p.team===team);
+  // Placements (FBLA only, event-level)
+  const pt=document.getElementById('mdb-placements-table');
+  if(pt){
     const pc={'1st':'bg','2nd':'bo','3rd':'br'};
-    t.innerHTML=rows.length?rows.map(p=>`<tr class="cr" onclick="openMdbPlacementDetail(${p.id})">
-      <td class="nm">${p.member||'—'}</td>
-      <td style="font-size:11px;color:var(--t3)">${p.event||'—'}</td>
+    const typeLabel={'team':'Team','individual':'Individual'};
+    pt.innerHTML=mdbPlacements.length?mdbPlacements.map(p=>`<tr class="cr" onclick="openMdbPlacementDetail(${p.id})">
+      <td class="nm">${p.event||'—'}</td>
+      <td><span class="badge ${p.type==='individual'?'bo':''}" style="${p.type==='team'?'color:var(--blu)':''}">${typeLabel[p.type]||p.type||'—'}</span></td>
+      <td style="font-size:11px;color:var(--t3);max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${p.members||'—'}</td>
       <td style="font-size:11px;color:var(--t3)">${p.competition||'—'}</td>
       <td><span class="badge ${pc[p.placement]||'bo'}">${p.placement||'—'}</span></td>
-      <td style="font-size:11px;color:var(--t3);max-width:140px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${p.notes||''}</td>
+      <td style="font-size:11px;color:var(--t3);max-width:120px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${p.notes||''}</td>
       <td style="font-size:10px;color:var(--t4)">Edit</td></tr>`).join('')
-      :`<tr><td colspan="6" style="font-size:11px;color:var(--t4);padding:12px">No results yet.</td></tr>`;
-  });
+      :`<tr><td colspan="7" style="font-size:11px;color:var(--t4);padding:12px">No results yet.</td></tr>`;
+  }
   // Stat cards
   const total=memberDb.length;
   const ontrack=memberDb.filter(p=>p.status==='On Track').length;
@@ -4559,19 +4556,24 @@ function addMdbProgress(team){
 function openMdbPlacementDetail(id){
   const p=mdbPlacements.find(x=>x.id===id);if(!p)return;
   const placements=['1st','2nd','3rd','Top 10','Finalist','Did Not Place'];
-  openDetail(p.member||'Placement',p.competition,
-    row2(fld('Member',inp('ed-mdbpl-member',p.member)),fld('Event',inp('ed-mdbpl-event',p.event)))+
+  const types=['team','individual'];
+  openDetail(p.event||'Placement',p.competition||'',
+    row2(fld('Event Name',inp('ed-mdbpl-event',p.event)),fld('Type',sel('ed-mdbpl-type',types,p.type)))+
+    fld('Members / Team Name',inp('ed-mdbpl-members',p.members))+
     row2(fld('Competition',inp('ed-mdbpl-comp',p.competition)),fld('Placement',sel('ed-mdbpl-place',placements,p.placement)))+
     fld('Notes',ta('ed-mdbpl-notes',p.notes,4))+
     `<div style="display:flex;gap:7px;margin-top:4px"><button class="btn btn-p btn-sm" onclick="saveMdbPlacement(${id},this)">Save</button><button class="btn btn-g btn-sm" style="color:#E57373" onclick="mdbPlacements=mdbPlacements.filter(x=>x.id!==${id});renderMemberDb();closeDetail()">Delete</button></div>`,p);
 }
 function saveMdbPlacement(id,btn){
   const p=mdbPlacements.find(x=>x.id===id);if(!p)return;
-  p.member=g('ed-mdbpl-member');p.event=g('ed-mdbpl-event');p.competition=g('ed-mdbpl-comp');p.placement=g('ed-mdbpl-place');p.notes=g('ed-mdbpl-notes');
+  p.event=g('ed-mdbpl-event');p.type=g('ed-mdbpl-type');p.members=g('ed-mdbpl-members');
+  p.competition=g('ed-mdbpl-comp');p.placement=g('ed-mdbpl-place');p.notes=g('ed-mdbpl-notes');
+  document.getElementById('d-title').textContent=p.event||'Placement';
+  document.getElementById('d-sub').textContent=p.competition||'';
   renderMemberDb();saved(btn);saveData();
 }
-function addMdbPlacement(team){
-  mdbPlacements.push({id:nMDbPl++,team,member:'',event:'',competition:'',placement:'1st',notes:''});
+function addMdbPlacement(){
+  mdbPlacements.push({id:nMDbPl++,event:'',type:'team',members:'',competition:'',placement:'1st',notes:''});
   renderMemberDb();openMdbPlacementDetail(mdbPlacements[mdbPlacements.length-1].id);
 }
 
