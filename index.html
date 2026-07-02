@@ -4468,14 +4468,18 @@ function renderMemberDb(){
   ['fbla','consulting'].forEach(team=>{
     const t=document.getElementById(`mdb-${team}-members-table`);if(!t)return;
     const rows=memberDb.filter(p=>p.team===team);
-    t.innerHTML=rows.length?rows.map(p=>`<tr class="cr" onclick="openMemberDbDetail(${p.id})">
-      <td class="nm">${p.name||'—'}</td>
-      <td style="font-size:11px;color:var(--t3)">${p.event||'—'}</td>
-      <td><span class="badge ${sc[p.status]||'bo'}" style="${sc2[p.status]||''}">${p.status}</span></td>
-      <td style="font-size:11px;color:var(--t3)">${p.lastCheckin||'<span style="color:var(--t4)">None</span>'}</td>
-      <td style="font-size:11px;color:var(--t3);max-width:160px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${p.notes||''}</td>
-      <td style="font-size:10px;color:var(--t4)">Edit</td></tr>`).join('')
-      :`<tr><td colspan="6" style="font-size:11px;color:var(--t4);padding:12px">No members yet.</td></tr>`;
+    if(!rows.length){t.innerHTML=`<tr><td colspan="5" style="font-size:11px;color:var(--t4);padding:12px">No members yet.</td></tr>`;return;}
+    const groups={};
+    rows.forEach(p=>{const key=p.event||'Unassigned';if(!groups[key])groups[key]=[];groups[key].push(p);});
+    t.innerHTML=Object.entries(groups).map(([evName,members])=>
+      `<tr><td colspan="5" style="background:var(--s2);padding:6px 10px;font-size:10px;font-weight:700;color:var(--t3);letter-spacing:.04em;text-transform:uppercase;border-top:1px solid var(--bd)">${evName} <span style="font-weight:400;color:var(--t4)">(${members.length})</span></td></tr>`+
+      members.map(p=>`<tr class="cr" onclick="openMemberDbDetail(${p.id})">
+        <td class="nm" style="padding-left:18px">${p.name||'—'}</td>
+        <td><span class="badge ${sc[p.status]||'bo'}" style="${sc2[p.status]||''}">${p.status}</span></td>
+        <td style="font-size:11px;color:var(--t3)">${p.lastCheckin||'<span style="color:var(--t4)">None</span>'}</td>
+        <td style="font-size:11px;color:var(--t3);max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${p.notes||''}</td>
+        <td style="font-size:10px;color:var(--t4)">Edit</td></tr>`).join('')
+    ).join('');
   });
   // Progress logs
   ['fbla','consulting'].forEach(team=>{
