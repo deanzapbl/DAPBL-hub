@@ -4489,12 +4489,14 @@ function renderMemberDb(){
       :`<tr><td colspan="5" style="font-size:11px;color:var(--t4);padding:12px">No entries yet.</td></tr>`;
   });
   // Placements
-  // Placements (FBLA only, event-level)
+  // Placements (FBLA only, event-level) — sorted by placement rank
   const pt=document.getElementById('mdb-placements-table');
   if(pt){
     const pc={'1st':'bg','2nd':'bo','3rd':'br'};
     const typeLabel={'team':'Team','individual':'Individual'};
-    pt.innerHTML=mdbPlacements.length?mdbPlacements.map(p=>`<tr class="cr" onclick="openMdbPlacementDetail(${p.id})">
+    const rankOrder={'1st':1,'2nd':2,'3rd':3,'Top 10':4,'Finalist':5,'Did Not Place':6};
+    const sorted=[...mdbPlacements].sort((a,b)=>(rankOrder[a.placement]||99)-(rankOrder[b.placement]||99));
+    pt.innerHTML=sorted.length?sorted.map(p=>`<tr class="cr" onclick="openMdbPlacementDetail(${p.id})">
       <td class="nm">${p.event||'—'}</td>
       <td><span class="badge ${p.type==='individual'?'bo':''}" style="${p.type==='team'?'color:var(--blu)':''}">${typeLabel[p.type]||p.type||'—'}</span></td>
       <td style="font-size:11px;color:var(--t3);max-width:150px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${p.members||'—'}</td>
