@@ -487,6 +487,9 @@ textarea{resize:vertical;min-height:120px;}
       <div class="ni" onclick="showPage('transition')">
         <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 8h12M10 4l4 4-4 4"/></svg>Transition
       </div>
+      <div class="ni" onclick="showPage('documents')">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 2h6l4 4v9a1 1 0 01-1 1H4a1 1 0 01-1-1V3a1 1 0 011-1z"/><path d="M10 2v4h4"/></svg>Documents
+      </div>
     </div>
   </div>
   <div class="sb-drive">
@@ -879,6 +882,42 @@ textarea{resize:vertical;min-height:120px;}
         <div class="card">
           <div class="ch"><div class="ct">Quarter Goals &amp; OKRs</div><button class="btn btn-p btn-sm" onclick="addGoal()">+ Add Goal</button></div>
           <div id="goals-list"></div>
+        </div>
+      </div>
+
+      <!-- DOCUMENTS -->
+      <div class="page" id="page-documents">
+        <div class="sg" style="margin-bottom:14px">
+          <div class="sc"><div class="sl">Total Docs</div><div class="sv" id="docs-stat-total">0</div><div class="sm">Stored in hub</div></div>
+          <div class="sc"><div class="sl">AI Classified</div><div class="sv" id="docs-stat-ai" style="color:var(--grn)">0</div><div class="sm">Auto-sorted</div></div>
+          <div class="sc"><div class="sl">Sections</div><div class="sv" id="docs-stat-sections">0</div><div class="sm">Categories used</div></div>
+        </div>
+        <div class="card" style="margin-bottom:14px">
+          <div class="ch"><div class="ct">Add from Google Drive</div></div>
+          <div style="font-size:12px;color:var(--t3);margin-bottom:12px">Connect Drive, browse to your doc, and click it — AI will read and classify it automatically.</div>
+          <div style="display:flex;gap:8px;align-items:center">
+            <button class="btn btn-p" onclick="openDriveForDocs()">Browse Drive</button>
+            <span id="doc-ai-status" style="font-size:11px;color:var(--t3)"></span>
+          </div>
+          <!-- AI result preview -->
+          <div id="doc-ai-result" style="display:none;margin-top:14px;padding:12px;background:var(--s2);border:1px solid var(--bd);border-radius:7px">
+            <div style="font-size:11px;font-weight:600;color:var(--t3);margin-bottom:6px">AI SUGGESTION</div>
+            <div style="font-size:13px;font-weight:600;color:var(--t1);margin-bottom:4px" id="doc-ai-name"></div>
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+              <span style="font-size:12px;color:var(--t3)">→</span>
+              <span style="font-size:13px;font-weight:600;color:var(--t1)" id="doc-ai-section"></span>
+              <span id="doc-ai-tags" style="display:flex;gap:4px"></span>
+            </div>
+            <div style="font-size:12px;color:var(--t3);margin-bottom:10px" id="doc-ai-reason"></div>
+            <div style="display:flex;gap:7px">
+              <button class="btn btn-p btn-sm" onclick="confirmDocAI()">Confirm & Save</button>
+              <button class="btn btn-g btn-sm" onclick="document.getElementById('doc-ai-result').style.display='none'">Dismiss</button>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="ch"><div class="ct">Document Library</div><div style="display:flex;gap:6px"><input id="doc-search" type="text" placeholder="Search…" oninput="renderDocs()" style="font-size:11px;padding:5px 8px;background:var(--s2);border:1px solid var(--bd);border-radius:5px;color:var(--t1);font-family:'IBM Plex Sans',sans-serif;outline:none;width:140px"><select id="doc-filter" onchange="renderDocs()" style="font-size:11px;padding:5px 8px;background:var(--s2);border:1px solid var(--bd);border-radius:5px;color:var(--t1)"><option value="">All Sections</option></select></div></div>
+          <div id="docs-library"></div>
         </div>
       </div>
 
@@ -2702,7 +2741,7 @@ let templates={
 // Steps: console.cloud.google.com → APIs & Services → Credentials → Create OAuth Client ID
 // Application type: Web application. Add your hosted URL to Authorized JavaScript Origins.
 const DRIVE_CLIENT_ID = '1059697973377-0kqmjj6q1as6eo35g4od15tcalkkp2n4.apps.googleusercontent.com';
-const DRIVE_SCOPES = 'https://www.googleapis.com/auth/drive.metadata.readonly';
+const DRIVE_SCOPES = 'https://www.googleapis.com/auth/drive.readonly';
 
 let driveFiles=[];
 let driveTokenClient=null;
@@ -2799,6 +2838,7 @@ function fetchDriveFiles(pageToken){
       const mapped=(data.files||[]).map(f=>({
         id:f.id,
         title:f.name,
+        mimeType:f.mimeType,
         type:_driveFileType(f.mimeType),
         url:f.webViewLink||_driveFileUrl(f),
         modified:f.modifiedTime?new Date(f.modifiedTime).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}):''
@@ -2828,11 +2868,14 @@ function renderDriveList(files){
     html=files.map(f=>{
       const safeTitle=f.title.replace(/\\/g,'\\\\').replace(/'/g,"\\'");
       const safeUrl=f.url.replace(/\\/g,'\\\\').replace(/'/g,"\\'");
+      const docModeBtn=window._driveDocMode
+        ?`<button class="dp-attach" style="background:var(--cr);color:#fff" onclick="classifyDriveDoc('${f.id}','${safeTitle}','${f.mimeType}')">✦ Add to Docs</button>`
+        :`<button class="dp-attach" onclick="attachFile('${f.id}','${safeTitle}','${f.type}','${safeUrl}',this)">Attach</button>`;
       return `<div class="dp-item">
         <div class="dp-ico ${typeClass(f.type)}">${typeIcon(f.type)}</div>
         <div class="dp-info"><div class="dp-name">${f.title}</div><div class="dp-meta">${typeLabel(f.type)}&middot;${f.modified}</div></div>
         <a href="${f.url}" target="_blank" class="dp-open">Open</a>
-        <button class="dp-attach" onclick="attachFile('${f.id}','${safeTitle}','${f.type}','${safeUrl}',this)">Attach</button>
+        ${docModeBtn}
       </div>`;
     }).join('');
     if(driveNextPageToken)html+='<div style="padding:10px;text-align:center"><button onclick="fetchDriveFiles(driveNextPageToken)" style="font-size:11px;padding:5px 14px;background:var(--s2);border:1px solid var(--bd);border-radius:4px;cursor:pointer;color:var(--t2);font-family:\'IBM Plex Sans\',sans-serif">Load more</button></div>';
@@ -5151,7 +5194,7 @@ async function saveData(){
     members,execTeam,bootcamps,tasks,agendas,eventsData,emails,consultingProjects,clients,deliverables,
     compResults,compHistory,transactions,meetingMinutes,prospects,goals,transitionDocs,announcements,
     mentorPairs,sponsors,pipeline,rosData,eventCosts,reimbursements,venues,volunteerSlots,compPrep,
-    curriculum,brandKit,contentPosts,memberCheckIns,memberDb,mdbProgress,mdbPlacements,
+    curriculum,brandKit,contentPosts,memberCheckIns,memberDb,mdbProgress,mdbPlacements,hubDocs,
     compEvents,resources,eventSlides,lectureSlides,
     pblTransactions,merchSales,importedCalEvents,
     nM,nE,nB,nT,nA,nEv,nEmail,nCon,nCli,nDel,nCR,nCE,nCH,nTr,nMin,nPr,nGoal,nTD,nAnn,nMP,nSp,nPl,nRos,
@@ -5208,6 +5251,7 @@ function loadData(){
     if(d.memberDb)memberDb=d.memberDb;if(d.nMDb)nMDb=d.nMDb;
     if(d.mdbProgress)mdbProgress=d.mdbProgress;if(d.nMDbP)nMDbP=d.nMDbP;
     if(d.mdbPlacements)mdbPlacements=d.mdbPlacements;if(d.nMDbPl)nMDbPl=d.nMDbPl;
+    if(d.hubDocs)hubDocs=d.hubDocs;if(d.nDoc)nDoc=d.nDoc;
     if(d.resources)resources=d.resources;
     if(d.eventSlides)eventSlides=d.eventSlides;
     if(d.lectureSlides)lectureSlides=d.lectureSlides;
@@ -5526,6 +5570,98 @@ function clearRosSheet(){
   saveData();renderRos();
 }
 
+// ---- DOCUMENTS ----
+let hubDocs=[];let nDoc=1;
+let _pendingDoc=null;
+
+const DOC_SECTIONS=['Members / Attendance','Bootcamps','Tasks / Agendas','Events','Sponsors / Emails','Budget / Finance','Competition Prep','Templates / Resources','Meeting Minutes','Announcements','General'];
+
+function renderDocs(){
+  const q=(document.getElementById('doc-search')?.value||'').toLowerCase();
+  const filt=document.getElementById('doc-filter')?.value||'';
+  const sel=document.getElementById('doc-filter');
+  if(sel){
+    const used=[...new Set(hubDocs.map(d=>d.section))].sort();
+    sel.innerHTML='<option value="">All Sections</option>'+used.map(s=>`<option value="${s}"${s===filt?' selected':''}>${s}</option>`).join('');
+  }
+  const lib=document.getElementById('docs-library');if(!lib)return;
+  let rows=hubDocs.filter(d=>(!q||(d.name+d.content+d.section).toLowerCase().includes(q))&&(!filt||d.section===filt));
+  const groups={};rows.forEach(d=>{if(!groups[d.section])groups[d.section]=[];groups[d.section].push(d);});
+  lib.innerHTML=Object.keys(groups).length?Object.entries(groups).map(([sec,docs])=>
+    `<div style="margin-bottom:18px">
+      <div style="font-size:10px;font-weight:700;color:var(--t3);letter-spacing:.05em;text-transform:uppercase;padding:6px 0 8px;border-bottom:1px solid var(--bd);margin-bottom:8px">${sec}</div>
+      ${docs.map(d=>`<div class="cr" style="display:flex;align-items:center;justify-content:space-between;padding:8px 4px;cursor:pointer;border-radius:5px" onclick="openDocDetail(${d.id})">
+        <div style="flex:1">
+          <div style="font-size:12px;font-weight:600;color:var(--t1)">${d.name}</div>
+          <div style="font-size:11px;color:var(--t3);margin-top:2px">${d.date}${d.aiClassified?' · <span style="color:var(--grn)">✦ AI</span>':''}${d.tags?.length?' · '+d.tags.map(t=>`<span style="background:var(--s2);border:1px solid var(--bd);border-radius:3px;padding:1px 5px;font-size:10px">${t}</span>`).join(' '):''}</div>
+          ${d.content?`<div style="font-size:11px;color:var(--t4);margin-top:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:400px">${d.content.slice(0,120)}…</div>`:''}
+        </div>
+        <button class="rb" style="opacity:.4;margin-left:8px" onmouseenter="this.style.opacity=1" onmouseleave="this.style.opacity=.4" onclick="event.stopPropagation();hubDocs=hubDocs.filter(x=>x.id!==${d.id});renderDocs();updateDocStats();saveData()">&times;</button>
+      </div>`).join('')}
+    </div>`).join('')
+    :'<div style="color:var(--t4);font-size:12px;padding:16px 0">No documents yet. Add one above.</div>';
+  updateDocStats();
+}
+function updateDocStats(){
+  const t=document.getElementById('docs-stat-total');if(t)t.textContent=hubDocs.length;
+  const a=document.getElementById('docs-stat-ai');if(a)a.textContent=hubDocs.filter(d=>d.aiClassified).length;
+  const s=document.getElementById('docs-stat-sections');if(s)s.textContent=[...new Set(hubDocs.map(d=>d.section))].length;
+}
+function openDocDetail(id){
+  const d=hubDocs.find(x=>x.id===id);if(!d)return;
+  openDetail(d.name,d.section,
+    row2(fld('Name',inp('ed-doc-name',d.name)),fld('Section',sel('ed-doc-section',DOC_SECTIONS,d.section)))+
+    fld('Tags (comma separated)',inp('ed-doc-tags',(d.tags||[]).join(', ')))+
+    fld('Content',ta('ed-doc-content',d.content,8))+
+    `<div style="display:flex;gap:7px;margin-top:4px"><button class="btn btn-p btn-sm" onclick="saveDoc(${id},this)">Save</button><button class="btn btn-g btn-sm" style="color:#E57373" onclick="hubDocs=hubDocs.filter(x=>x.id!==${id});renderDocs();updateDocStats();saveData();closeDetail()">Delete</button></div>`,d);
+}
+function saveDoc(id,btn){
+  const d=hubDocs.find(x=>x.id===id);if(!d)return;
+  d.name=g('ed-doc-name');d.section=g('ed-doc-section');d.content=g('ed-doc-content');
+  d.tags=g('ed-doc-tags').split(',').map(t=>t.trim()).filter(Boolean);
+  document.getElementById('d-title').textContent=d.name;
+  document.getElementById('d-sub').textContent=d.section;
+  renderDocs();saved(btn);saveData();
+}
+function openDriveForDocs(){
+  window._driveDocMode=true;
+  toggleDrive();
+}
+async function classifyDriveDoc(fileId,fileName,mimeType){
+  if(!window._driveDocMode)return;
+  window._driveDocMode=false;
+  toggleDrive();
+  const status=document.getElementById('doc-ai-status');
+  status.textContent='Reading doc…';
+  document.getElementById('doc-ai-result').style.display='none';
+  try{
+    // Fetch content via Google Drive export
+    let content='';
+    const exportUrl=mimeType&&mimeType.includes('document')
+      ?`https://www.googleapis.com/drive/v3/files/${fileId}/export?mimeType=text/plain`
+      :`https://www.googleapis.com/drive/v3/files/${fileId}?alt=media`;
+    const r=await fetch(exportUrl,{headers:{Authorization:'Bearer '+driveAccessToken}});
+    content=await r.text();
+    status.textContent='Classifying…';
+    const res=await window._sb.functions.invoke('classify-document',{body:{content:content.slice(0,3000),filename:fileName}});
+    const result=res.data||{};
+    _pendingDoc={name:fileName,content:content.slice(0,5000),driveId:fileId,driveUrl:`https://drive.google.com/file/d/${fileId}/view`,section:result.section||'General',reason:result.reason||'',tags:result.tags||[],aiClassified:true};
+    document.getElementById('doc-ai-name').textContent=fileName;
+    document.getElementById('doc-ai-section').textContent=result.section||'General';
+    document.getElementById('doc-ai-reason').textContent=result.reason||'';
+    document.getElementById('doc-ai-tags').innerHTML=(result.tags||[]).map(t=>`<span style="background:var(--s2);border:1px solid var(--bd);border-radius:3px;padding:1px 6px;font-size:10px">${t}</span>`).join('');
+    document.getElementById('doc-ai-result').style.display='block';
+    status.textContent='';
+  }catch(e){status.textContent='Error: '+e.message;}
+}
+function confirmDocAI(){
+  if(!_pendingDoc)return;
+  hubDocs.push(Object.assign({id:nDoc++,date:new Date().toLocaleDateString()},_pendingDoc));
+  _pendingDoc=null;
+  document.getElementById('doc-ai-result').style.display='none';
+  renderDocs();saveData();
+}
+
 // ---- CSV IMPORT ENGINE ----
 let csvTarget=null;
 function triggerCsv(target){csvTarget=target;const inp=document.getElementById('csv-input');inp.value='';inp.click();}
@@ -5588,7 +5724,7 @@ function handleCsvImport(e){
 
 (function(){const sb=document.getElementById('sidebar');const rz=document.getElementById('sb-resizer');let dragging=false,startX=0,startW=0;rz.addEventListener('mousedown',e=>{dragging=true;startX=e.clientX;startW=sb.offsetWidth;rz.classList.add('dragging');document.body.style.cursor='col-resize';document.body.style.userSelect='none';e.preventDefault();});document.addEventListener('mousemove',e=>{if(!dragging)return;const w=Math.min(360,Math.max(160,startW+(e.clientX-startX)));sb.style.setProperty('--sb-width',w+'px');sb.style.width=w+'px';});document.addEventListener('mouseup',()=>{if(!dragging)return;dragging=false;rz.classList.remove('dragging');document.body.style.cursor='';document.body.style.userSelect='';});})();
 loadData();
-renderMembers();renderExec();renderBootcamps();renderTasks();renderAgendas();renderEvents();renderRos();renderTemplates();renderSponsors();renderEmailList();renderConsulting();renderCompetition();renderBudget();renderMinutes();renderGoals();renderTransition();renderAnnouncements();renderMentorship();renderDashboard();renderPortals();renderEcSelect();renderReimbursements();renderVenues();renderCompPrep();renderCurriculum();renderBrandKit();renderContentCalendar();renderCaMentors();renderMemberCheckIns();renderCalendar();renderMemberDb();
+renderMembers();renderExec();renderBootcamps();renderTasks();renderAgendas();renderEvents();renderRos();renderTemplates();renderSponsors();renderEmailList();renderConsulting();renderCompetition();renderBudget();renderMinutes();renderGoals();renderTransition();renderAnnouncements();renderMentorship();renderDashboard();renderPortals();renderEcSelect();renderReimbursements();renderVenues();renderCompPrep();renderCurriculum();renderBrandKit();renderContentCalendar();renderCaMentors();renderMemberCheckIns();renderCalendar();renderMemberDb();renderDocs();
 // Init Google Drive OAuth after GIS library loads
 window.addEventListener('load',()=>{setTimeout(initDriveClient,500);});
 
