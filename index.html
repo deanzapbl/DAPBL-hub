@@ -613,10 +613,23 @@ textarea{resize:vertical;min-height:120px;}
 
       <!-- BOOTCAMPS -->
       <div class="page" id="page-bootcamps">
-        <div class="card">
-          <div class="ch"><div class="ct">Bootcamp Sessions</div><div style="display:flex;gap:6px"><button class="btn-csv" onclick="openImportDataModal('bootcamps')">Import CSV</button><button class="btn btn-p btn-sm" onclick="openModal('bc-modal')">+ New Session</button></div></div>
-          <table><thead><tr><th>Session</th><th>Date</th><th>Topic</th><th>Attended</th><th>Rate</th><th>Drive Files</th></tr></thead>
-          <tbody id="bc-table"></tbody></table>
+        <div class="tabs">
+          <div class="tab active" onclick="showTab('bootcamps','sessions')">Sessions</div>
+          <div class="tab" onclick="showTab('bootcamps','memberdb')">Member Database</div>
+        </div>
+        <div class="sub active" id="bootcamps-sessions">
+          <div class="card">
+            <div class="ch"><div class="ct">Bootcamp Sessions</div><div style="display:flex;gap:6px"><button class="btn-csv" onclick="openImportDataModal('bootcamps')">Import CSV</button><button class="btn btn-p btn-sm" onclick="openModal('bc-modal')">+ New Session</button></div></div>
+            <table><thead><tr><th>Session</th><th>Date</th><th>Topic</th><th>Attended</th><th>Rate</th><th>Drive Files</th></tr></thead>
+            <tbody id="bc-table"></tbody></table>
+          </div>
+        </div>
+        <div class="sub" id="bootcamps-memberdb">
+          <div class="card">
+            <div class="ch"><div class="ct">Member Progress Database</div><button class="btn btn-p btn-sm" onclick="addMemberDb()">+ Add Member</button></div>
+            <table><thead><tr><th>Member</th><th>Team</th><th>Status</th><th>Last Check-In</th><th>Notes</th><th></th></tr></thead>
+            <tbody id="memberdb-table"></tbody></table>
+          </div>
         </div>
       </div>
 
@@ -4386,6 +4399,46 @@ function addVolSlot(){
 }
 
 // STRATEGY PORTAL DATA
+let memberDb=[
+];let nMDb=1;
+
+function renderMemberDb(){
+  const t=document.getElementById('memberdb-table');if(!t)return;
+  if(!memberDb.length){t.innerHTML=`<tr><td colspan="6" style="font-size:11px;color:var(--t4);padding:12px">No members tracked yet. Click + Add Member to get started.</td></tr>`;return;}
+  const sc={'On Track':'bo','Needs Attention':'br','Excelling':'bg','Inactive':'bg'};
+  const sc2={'Inactive':'var(--t4)'};
+  t.innerHTML=memberDb.map(p=>`<tr class="cr" onclick="openMemberDbDetail(${p.id})">
+    <td class="nm">${p.name||'<span style="color:var(--t4)">—</span>'}</td>
+    <td>${p.team||'<span style="color:var(--t4)">—</span>'}</td>
+    <td><span class="badge ${sc[p.status]||'bo'}" style="${sc2[p.status]?'color:'+sc2[p.status]:''}">${p.status}</span></td>
+    <td style="font-size:11px;color:var(--t3)">${p.lastCheckin||'<span style="color:var(--t4)">None</span>'}</td>
+    <td style="font-size:11px;color:var(--t3);max-width:180px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${p.notes||''}</td>
+    <td style="font-size:10px;color:var(--t4)">Edit</td></tr>`).join('');
+}
+function openMemberDbDetail(id){
+  const p=memberDb.find(x=>x.id===id);if(!p)return;
+  const statuses=['On Track','Excelling','Needs Attention','Inactive'];
+  openDetail(p.name||'Member',p.team||'No Team',
+    row2(fld('Member Name',inp('ed-mdb-name',p.name)),fld('Team / Group',inp('ed-mdb-team',p.team)))+
+    row2(fld('Status',sel('ed-mdb-status',statuses,p.status)),fld('Last Check-In',inp('ed-mdb-date',p.lastCheckin)))+
+    fld('Goals',inp('ed-mdb-goals',p.goals))+
+    fld('Progress Notes',ta('ed-mdb-notes',p.notes,5))+
+    fld('Action Items',ta('ed-mdb-actions',p.actions,3))+
+    `<div style="display:flex;gap:7px;margin-top:4px"><button class="btn btn-p btn-sm" onclick="saveMemberDb(${id},this)">Save</button><button class="btn btn-g btn-sm" style="color:#E57373" onclick="memberDb=memberDb.filter(x=>x.id!==${id});renderMemberDb();closeDetail()">Delete</button></div>`,p);
+}
+function saveMemberDb(id,btn){
+  const p=memberDb.find(x=>x.id===id);if(!p)return;
+  p.name=g('ed-mdb-name');p.team=g('ed-mdb-team');p.status=g('ed-mdb-status');
+  p.lastCheckin=g('ed-mdb-date');p.goals=g('ed-mdb-goals');p.notes=g('ed-mdb-notes');p.actions=g('ed-mdb-actions');
+  document.getElementById('d-title').textContent=p.name||'Member';
+  document.getElementById('d-sub').textContent=p.team||'No Team';
+  renderMemberDb();saved(btn);
+}
+function addMemberDb(){
+  memberDb.push({id:nMDb++,name:'',team:'',status:'On Track',lastCheckin:'',goals:'',notes:'',actions:''});
+  renderMemberDb();openMemberDbDetail(memberDb[memberDb.length-1].id);
+}
+
 let compPrep=[
   {id:1,member:'',event:'Business Management',readiness:'On Track',lastPractice:'',notes:''},
 ];let nCP=2;
@@ -4958,11 +5011,11 @@ async function saveData(){
     members,execTeam,bootcamps,tasks,agendas,eventsData,emails,consultingProjects,clients,deliverables,
     compResults,compHistory,transactions,meetingMinutes,prospects,goals,transitionDocs,announcements,
     mentorPairs,sponsors,pipeline,rosData,eventCosts,reimbursements,venues,volunteerSlots,compPrep,
-    curriculum,brandKit,contentPosts,memberCheckIns,
+    curriculum,brandKit,contentPosts,memberCheckIns,memberDb,
     compEvents,resources,eventSlides,lectureSlides,
     pblTransactions,merchSales,importedCalEvents,
     nM,nE,nB,nT,nA,nEv,nEmail,nCon,nCli,nDel,nCR,nCE,nCH,nTr,nMin,nPr,nGoal,nTD,nAnn,nMP,nSp,nPl,nRos,
-    nEC,nReim,nVen,nVS,nCP,nCurr,nBKC,nBKF,nPost,nMCI,nPblTr,nMerch
+    nEC,nReim,nVen,nVS,nCP,nCurr,nBKC,nBKF,nPost,nMCI,nPblTr,nMerch,nMDb
   };
   try{localStorage.setItem(SAVE_KEY,JSON.stringify(d));}catch(e){}
   // Save to Supabase (async, non-blocking)
@@ -5012,6 +5065,7 @@ function loadData(){
     if(d.brandKit)brandKit=d.brandKit;
     if(d.contentPosts)contentPosts=d.contentPosts;
     if(d.memberCheckIns)memberCheckIns=d.memberCheckIns;
+    if(d.memberDb)memberDb=d.memberDb;if(d.nMDb)nMDb=d.nMDb;
     if(d.resources)resources=d.resources;
     if(d.eventSlides)eventSlides=d.eventSlides;
     if(d.lectureSlides)lectureSlides=d.lectureSlides;
@@ -5392,7 +5446,7 @@ function handleCsvImport(e){
 
 (function(){const sb=document.getElementById('sidebar');const rz=document.getElementById('sb-resizer');let dragging=false,startX=0,startW=0;rz.addEventListener('mousedown',e=>{dragging=true;startX=e.clientX;startW=sb.offsetWidth;rz.classList.add('dragging');document.body.style.cursor='col-resize';document.body.style.userSelect='none';e.preventDefault();});document.addEventListener('mousemove',e=>{if(!dragging)return;const w=Math.min(360,Math.max(160,startW+(e.clientX-startX)));sb.style.setProperty('--sb-width',w+'px');sb.style.width=w+'px';});document.addEventListener('mouseup',()=>{if(!dragging)return;dragging=false;rz.classList.remove('dragging');document.body.style.cursor='';document.body.style.userSelect='';});})();
 loadData();
-renderMembers();renderExec();renderBootcamps();renderTasks();renderAgendas();renderEvents();renderRos();renderTemplates();renderSponsors();renderEmailList();renderConsulting();renderCompetition();renderBudget();renderMinutes();renderGoals();renderTransition();renderAnnouncements();renderMentorship();renderDashboard();renderPortals();renderEcSelect();renderReimbursements();renderVenues();renderCompPrep();renderCurriculum();renderBrandKit();renderContentCalendar();renderCaMentors();renderMemberCheckIns();renderCalendar();
+renderMembers();renderExec();renderBootcamps();renderTasks();renderAgendas();renderEvents();renderRos();renderTemplates();renderSponsors();renderEmailList();renderConsulting();renderCompetition();renderBudget();renderMinutes();renderGoals();renderTransition();renderAnnouncements();renderMentorship();renderDashboard();renderPortals();renderEcSelect();renderReimbursements();renderVenues();renderCompPrep();renderCurriculum();renderBrandKit();renderContentCalendar();renderCaMentors();renderMemberCheckIns();renderCalendar();renderMemberDb();
 // Init Google Drive OAuth after GIS library loads
 window.addEventListener('load',()=>{setTimeout(initDriveClient,500);});
 
@@ -5582,6 +5636,7 @@ async function _loadSupabaseData(){
   if(d.nMCI!==undefined)nMCI=d.nMCI;
   if(d.nPblTr!==undefined)nPblTr=d.nPblTr;
   if(d.nMerch!==undefined)nMerch=d.nMerch;
+  if(d.memberDb)memberDb=d.memberDb;if(d.nMDb!==undefined)nMDb=d.nMDb;
   try{localStorage.setItem(SAVE_KEY,JSON.stringify(d));}catch(e){}
 }
 // Auto-restore session on page refresh
